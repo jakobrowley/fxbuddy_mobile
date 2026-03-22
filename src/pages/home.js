@@ -161,6 +161,17 @@ export function render() {
           <p class="pr-progress-text" id="pr-progress-text">Generating...</p>
         </div>
 
+        <!-- Result video (hidden until generation completes) -->
+        <div class="pr-result" id="pr-result" style="display:none">
+          <div class="pr-result-header">
+            <span class="pr-result-badge">Result</span>
+            <span class="pr-result-prompt" id="pr-result-prompt"></span>
+          </div>
+          <div class="pr-result-video">
+            <video id="pr-result-video" muted playsinline loop></video>
+          </div>
+        </div>
+
         <!-- Footer -->
         <div class="pr-footer">
           <span>FXbuddy</span>
@@ -425,6 +436,33 @@ export function init(container) {
   const progressEl = container.querySelector('#pr-progress');
   const progressFill = container.querySelector('#pr-progress-fill');
   const progressText = container.querySelector('#pr-progress-text');
+  const resultEl = container.querySelector('#pr-result');
+  const resultVideo = container.querySelector('#pr-result-video');
+  const resultPrompt = container.querySelector('#pr-result-prompt');
+
+  // Map prompts to preset effect videos
+  const effectLibrary = {
+    'set on fire':          'effects/set-on-fire-after.mp4',
+    'make the car explode': 'effects/car-explode-after.mp4',
+    'add lightning storm':  'effects/lighting-after.mp4',
+    'add a glitch transition': 'effects/twitter.mp4',
+    'create smoke effect':  'effects/imessage.mp4',
+  };
+
+  function findEffectVideo(prompt) {
+    const lower = prompt.toLowerCase().trim();
+    // Exact match first
+    if (effectLibrary[lower]) return effectLibrary[lower];
+    // Keyword match
+    if (lower.includes('fire') || lower.includes('burn')) return effectLibrary['set on fire'];
+    if (lower.includes('explod') || lower.includes('car')) return effectLibrary['make the car explode'];
+    if (lower.includes('lightning') || lower.includes('storm') || lower.includes('electric')) return effectLibrary['add lightning storm'];
+    if (lower.includes('glitch') || lower.includes('transition')) return effectLibrary['add a glitch transition'];
+    if (lower.includes('smoke') || lower.includes('fog')) return effectLibrary['create smoke effect'];
+    // Fallback — pick a random one
+    const keys = Object.keys(effectLibrary);
+    return effectLibrary[keys[Math.floor(Math.random() * keys.length)]];
+  }
 
   // Enable/disable generate button based on input
   if (promptInput && genBtn) {
@@ -459,15 +497,17 @@ export function init(container) {
     });
   });
 
-  // Generate button — fake generation animation
+  // Generate button — fake generation, then show preset effect video
   if (genBtn) {
     genBtn.addEventListener('click', () => {
       if (!promptInput || !promptInput.value.trim()) return;
+      const prompt = promptInput.value.trim();
       genBtn.disabled = true;
       genBtn.textContent = 'GENERATING...';
       if (progressEl) progressEl.style.display = 'block';
       if (progressFill) progressFill.style.width = '0%';
       if (progressText) progressText.textContent = 'Generating...';
+      if (resultEl) resultEl.style.display = 'none';
 
       // Animate progress bar
       let progress = 0;
@@ -480,7 +520,7 @@ export function init(container) {
         if (progressFill) progressFill.style.width = progress + '%';
       }, 300);
 
-      // Complete the generation
+      // Complete — show the result video
       setTimeout(() => {
         clearInterval(interval);
         if (progressFill) progressFill.style.width = '100%';
@@ -488,12 +528,21 @@ export function init(container) {
         genBtn.textContent = 'GENERATE';
         genBtn.disabled = false;
 
-        // Reset after a moment
+        // Show result video
+        const videoSrc = findEffectVideo(prompt);
+        if (resultEl && resultVideo) {
+          resultVideo.src = videoSrc;
+          resultVideo.play().catch(() => {});
+          if (resultPrompt) resultPrompt.textContent = '"' + prompt + '"';
+          resultEl.style.display = 'block';
+        }
+
+        // Hide progress after a moment
         setTimeout(() => {
           if (progressEl) progressEl.style.display = 'none';
           if (progressFill) progressFill.style.width = '0%';
           if (progressText) progressText.textContent = 'Generating...';
-        }, 2500);
+        }, 1500);
       }, 2000);
     });
   }
@@ -506,6 +555,8 @@ export function init(container) {
       if (genBtn) genBtn.disabled = true;
       if (progressEl) progressEl.style.display = 'none';
       if (progressFill) progressFill.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (resultVideo) { resultVideo.pause(); resultVideo.src = ''; }
     });
   }
 

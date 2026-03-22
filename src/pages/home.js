@@ -459,7 +459,7 @@ export function init(container) {
     });
   });
 
-  // Generate button — fake generation animation then redirect to signup
+  // Generate button — fake generation animation
   if (genBtn) {
     genBtn.addEventListener('click', () => {
       if (!promptInput || !promptInput.value.trim()) return;
@@ -467,6 +467,7 @@ export function init(container) {
       genBtn.textContent = 'GENERATING...';
       if (progressEl) progressEl.style.display = 'block';
       if (progressFill) progressFill.style.width = '0%';
+      if (progressText) progressText.textContent = 'Generating...';
 
       // Animate progress bar
       let progress = 0;
@@ -479,21 +480,20 @@ export function init(container) {
         if (progressFill) progressFill.style.width = progress + '%';
       }, 300);
 
-      // After 2 seconds, show "Sign up to see results" and redirect
+      // Complete the generation
       setTimeout(() => {
         clearInterval(interval);
         if (progressFill) progressFill.style.width = '100%';
-        if (progressText) progressText.textContent = 'Sign up to see your results!';
+        if (progressText) progressText.textContent = 'Done! Effect added to timeline.';
         genBtn.textContent = 'GENERATE';
         genBtn.disabled = false;
 
+        // Reset after a moment
         setTimeout(() => {
-          navigate('#get-started');
-          // Reset state
           if (progressEl) progressEl.style.display = 'none';
           if (progressFill) progressFill.style.width = '0%';
           if (progressText) progressText.textContent = 'Generating...';
-        }, 1200);
+        }, 2500);
       }, 2000);
     });
   }

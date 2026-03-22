@@ -76,6 +76,99 @@ export function render() {
       </div>
     </section>
 
+    <!-- ── Try the Plugin ── -->
+    <section class="plugin-section">
+      <h2 class="section-title">Try the plugin</h2>
+      <p class="section-subtitle" style="margin-top:-8px">This is what FXbuddy looks like inside your editor.</p>
+
+      <div class="plugin-replica">
+        <!-- Tabs -->
+        <div class="pr-tabs">
+          <button type="button" class="pr-tab">Motion</button>
+          <button type="button" class="pr-tab active">Home</button>
+          <button type="button" class="pr-tab">Effects</button>
+        </div>
+
+        <!-- Mini mascot -->
+        <div class="pr-mascot-row">
+          <div class="pr-mini-mascot">
+            <div class="pr-mini-glare"></div>
+            <div class="pr-mini-eyes">
+              <svg width="14" height="18" viewBox="0 0 18 24">
+                <ellipse cx="9" cy="12" rx="7" ry="9" fill="var(--mascot-face)" />
+              </svg>
+              <svg width="14" height="18" viewBox="0 0 18 24">
+                <ellipse cx="9" cy="12" rx="7" ry="9" fill="var(--mascot-face)" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Heading -->
+        <p class="pr-title">What do you want to create?</p>
+
+        <!-- Textarea with wand button -->
+        <div class="pr-input-area">
+          <textarea class="pr-textarea" id="pr-prompt-input" placeholder="Set on fire..." rows="3"></textarea>
+          <button type="button" class="pr-wand" aria-label="Enhance prompt">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+              <path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Preset prompt pills -->
+        <div class="pr-presets">
+          <button type="button" class="pr-preset" data-prompt="Set on fire">Set on fire</button>
+          <button type="button" class="pr-preset" data-prompt="Make the car explode">Car explosion</button>
+          <button type="button" class="pr-preset" data-prompt="Add lightning storm">Lightning</button>
+          <button type="button" class="pr-preset" data-prompt="Add a glitch transition">Glitch</button>
+          <button type="button" class="pr-preset" data-prompt="Create smoke effect">Smoke</button>
+        </div>
+
+        <!-- Duration row -->
+        <div class="pr-duration-row">
+          <span class="pr-dur-label">Duration</span>
+          <div class="pr-dur-toggle">
+            <button type="button" class="pr-dur-btn" data-dur="3">3s</button>
+            <button type="button" class="pr-dur-btn active" data-dur="5">5s</button>
+          </div>
+        </div>
+
+        <!-- Generate button -->
+        <div class="pr-gen-row">
+          <button type="button" class="pr-reset-btn" aria-label="Reset">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+          </button>
+          <button type="button" class="pr-generate-btn" id="pr-gen-btn" disabled>GENERATE</button>
+          <button type="button" class="pr-settings-btn" aria-label="Settings">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Progress bar (hidden by default, shown during "generate") -->
+        <div class="pr-progress" id="pr-progress" style="display:none">
+          <div class="pr-progress-track">
+            <div class="pr-progress-fill" id="pr-progress-fill"></div>
+          </div>
+          <p class="pr-progress-text" id="pr-progress-text">Generating...</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="pr-footer">
+          <span>FXbuddy</span>
+          <span>v1.0</span>
+        </div>
+      </div>
+    </section>
+
     <!-- ── Social Proof Carousel ── -->
     <section class="proof-section">
       <h2 class="section-title">Editors love Buddy</h2>
@@ -325,6 +418,96 @@ export function init(container) {
       card.style.transform = '';
     }, { passive: true });
   });
+
+  // ── Plugin replica interactivity ─────────────────────────────────────────
+  const promptInput = container.querySelector('#pr-prompt-input');
+  const genBtn = container.querySelector('#pr-gen-btn');
+  const progressEl = container.querySelector('#pr-progress');
+  const progressFill = container.querySelector('#pr-progress-fill');
+  const progressText = container.querySelector('#pr-progress-text');
+
+  // Enable/disable generate button based on input
+  if (promptInput && genBtn) {
+    promptInput.addEventListener('input', () => {
+      genBtn.disabled = !promptInput.value.trim();
+    });
+  }
+
+  // Preset pills fill the textarea
+  container.querySelectorAll('.pr-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (promptInput) {
+        promptInput.value = btn.dataset.prompt;
+        promptInput.dispatchEvent(new Event('input'));
+      }
+    });
+  });
+
+  // Duration toggle
+  container.querySelectorAll('.pr-dur-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.pr-dur-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Tab switching (visual only)
+  container.querySelectorAll('.pr-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      container.querySelectorAll('.pr-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Generate button — fake generation animation then redirect to signup
+  if (genBtn) {
+    genBtn.addEventListener('click', () => {
+      if (!promptInput || !promptInput.value.trim()) return;
+      genBtn.disabled = true;
+      genBtn.textContent = 'GENERATING...';
+      if (progressEl) progressEl.style.display = 'block';
+      if (progressFill) progressFill.style.width = '0%';
+
+      // Animate progress bar
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.random() * 15 + 5;
+        if (progress >= 90) {
+          clearInterval(interval);
+          progress = 90;
+        }
+        if (progressFill) progressFill.style.width = progress + '%';
+      }, 300);
+
+      // After 2 seconds, show "Sign up to see results" and redirect
+      setTimeout(() => {
+        clearInterval(interval);
+        if (progressFill) progressFill.style.width = '100%';
+        if (progressText) progressText.textContent = 'Sign up to see your results!';
+        genBtn.textContent = 'GENERATE';
+        genBtn.disabled = false;
+
+        setTimeout(() => {
+          navigate('#get-started');
+          // Reset state
+          if (progressEl) progressEl.style.display = 'none';
+          if (progressFill) progressFill.style.width = '0%';
+          if (progressText) progressText.textContent = 'Generating...';
+        }, 1200);
+      }, 2000);
+    });
+  }
+
+  // Reset button
+  const resetBtn = container.querySelector('.pr-reset-btn');
+  if (resetBtn && promptInput) {
+    resetBtn.addEventListener('click', () => {
+      promptInput.value = '';
+      if (genBtn) genBtn.disabled = true;
+      if (progressEl) progressEl.style.display = 'none';
+      if (progressFill) progressFill.style.width = '0%';
+    });
+  }
 
   // ── Sticky CTA ──────────────────────────────────────────────────────────────
   initStickyCta(container);

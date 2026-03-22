@@ -156,9 +156,6 @@ function renderLoginGate() {
 }
 
 export function render() {
-  const token = localStorage.getItem('fxbuddy-access-token');
-  if (!token) return renderLoginGate();
-
   const cardsHTML = plans.map(p => renderCard(p, false)).join('');
   const dotsHTML = plans.map((_, i) => `<span class="scroll-dot${i === 0 ? ' active' : ''}" data-index="${i}"></span>`).join('');
   const faqHTML = faqs.map((item, i) => `
@@ -285,8 +282,6 @@ export function init(container) {
     });
   }
 
-  // If gated, nothing else to init
-  if (!localStorage.getItem('fxbuddy-access-token')) return;
 
   let isYearly = false;
 

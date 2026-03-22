@@ -250,6 +250,8 @@
     gap: 6px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    padding: 8px 2px;
+    margin: -8px -2px;
 }
 
 .pr-presets::-webkit-scrollbar {

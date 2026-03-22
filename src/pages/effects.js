@@ -34,9 +34,6 @@ function renderEffectCard(effect) {
         ></video>
         <div class="effect-overlay">
           <span class="effect-name pill">${escHtml(effect.name)}</span>
-          <button type="button" class="effect-cta btn-primary" data-effect="${escAttr(effect.name)}">
-            Try this effect
-          </button>
         </div>
       </div>
     </div>

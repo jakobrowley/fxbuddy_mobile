@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>FXbuddy - AI VFX for Video Editors</title>
+    <meta name="description" content="FXbuddy brings AI-powered visual effects to video editors. Apply studio-quality VFX in seconds." />
+
+    <!-- OG / Social -->
+    <meta property="og:title" content="FXbuddy - AI VFX for Video Editors" />
+    <meta property="og:description" content="FXbuddy brings AI-powered visual effects to video editors. Apply studio-quality VFX in seconds." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fxbuddy.app" />
+    <meta property="og:image" content="https://fxbuddy.app/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FXbuddy - AI VFX for Video Editors" />
+    <meta name="twitter:description" content="FXbuddy brings AI-powered visual effects to video editors. Apply studio-quality VFX in seconds." />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#eef0f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#232323" media="(prefers-color-scheme: dark)" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google Fonts preload -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;500;600&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Dark mode flash prevention — must run before paint -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('fxbuddy-dark-mode');
+          if (saved === 'true') {
+            document.documentElement.classList.add('dark');
+          } else if (saved === null) {
+            // Respect OS preference on first visit
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              document.documentElement.classList.add('dark');
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

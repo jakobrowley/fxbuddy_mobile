@@ -1,0 +1,114 @@
+/* ─── Filter Pills Row ───────────────────────────────────────────────────── */
+
+.effects-filter {
+    position: sticky;
+    top: calc(56px + env(safe-area-inset-top, 0px));
+    z-index: 10;
+    background-color: var(--bg-base);
+    padding: 12px 20px;
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.effects-filter::-webkit-scrollbar {
+    display: none;
+}
+
+/* ─── Video Feed ─────────────────────────────────────────────────────────── */
+
+.effects-feed {
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.effect-card {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-raised);
+    transition: box-shadow 150ms ease;
+}
+
+.effect-video-wrapper {
+    position: relative;
+    aspect-ratio: 16 / 9;
+}
+
+.effect-video-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.effect-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.65) 100%
+    );
+    pointer-events: none;
+}
+
+/* Re-enable pointer events on interactive children */
+.effect-overlay .effect-cta,
+.effect-overlay .effect-name {
+    pointer-events: auto;
+}
+
+.effect-name {
+    align-self: flex-start;
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.effect-cta {
+    align-self: center;
+    max-width: 200px;
+    margin-bottom: 8px;
+    /* Override btn-primary dark bg for video overlay readability */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Motion Graphics Placeholder ───────────────────────────────────────── */
+
+.effects-placeholder {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.effects-placeholder .section-title {
+    margin-bottom: 12px;
+}
+
+.effects-placeholder .section-subtitle {
+    margin-bottom: 24px;
+}
+
+/* ─── Bottom "Want more?" CTA ────────────────────────────────────────────── */
+
+.effects-more {
+    padding: 32px 20px;
+    text-align: center;
+}
+
+.effects-more .btn-primary {
+    max-width: 280px;
+    margin: 0 auto;
+}

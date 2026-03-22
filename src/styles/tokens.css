@@ -1,0 +1,35 @@
+:root {
+    --bg-base: #eef0f5;
+    --text-primary: #000000;
+    --text-secondary: #6b7280;
+    --text-tertiary: #8a8a8a;
+    --accent: #000000;
+    --shadow-raised: 9px 9px 16px rgb(163 177 198 / 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
+    --shadow-pressed: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.7), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
+    --shadow-button: 6px 6px 12px #b8b9be, -6px -6px 12px #ffffff;
+    --shadow-button-active: inset 4px 4px 8px #b8b9be, inset -4px -4px 8px #ffffff;
+    --mascot-body: #000000;
+    --mascot-face: #ffffff;
+    --mascot-glare: rgba(255, 255, 255, 0.2);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --radius-pill: 9999px;
+}
+
+.dark {
+    --bg-base: #232323;
+    --text-primary: #e0e0e0;
+    --text-secondary: #9ca3af;
+    --text-tertiary: #6b7280;
+    --accent: #ffffff;
+    --shadow-raised: 6px 6px 12px #1a1a1a, -6px -6px 12px #2c2c2c;
+    --shadow-pressed: inset 4px 4px 8px #1a1a1a, inset -4px -4px 8px #2c2c2c;
+    --shadow-button: 4px 4px 10px #1a1a1a, -4px -4px 10px #2c2c2c;
+    --shadow-button-active: inset 3px 3px 6px #1a1a1a, inset -3px -3px 6px #2c2c2c;
+    --mascot-body: #ffffff;
+    --mascot-face: #232323;
+    --mascot-glare: rgba(0, 0, 0, 0.15);
+}

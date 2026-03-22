@@ -78,8 +78,8 @@ export function render() {
 
     <!-- ── Try the Plugin ── -->
     <section class="plugin-section">
-      <h2 class="section-title">Try the plugin</h2>
-      <p class="section-subtitle" style="margin-top:-8px">This is what FXbuddy looks like inside your editor.</p>
+      <h2 class="section-title">Try it yourself</h2>
+      <p class="section-subtitle" style="margin-top:-8px">Tap the prompt box and pick a preset to see FXbuddy in action. In your editor, you'd type your own prompt and the effect lands right on your timeline.</p>
 
       <div class="plugin-replica">
         <!-- Tabs -->
@@ -107,24 +107,16 @@ export function render() {
         <!-- Heading -->
         <p class="pr-title">What do you want to create?</p>
 
-        <!-- Textarea with wand button -->
+        <!-- Textarea with dropdown presets -->
         <div class="pr-input-area">
-          <textarea class="pr-textarea" id="pr-prompt-input" placeholder="Set on fire..." rows="3"></textarea>
-          <button type="button" class="pr-wand" aria-label="Enhance prompt">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
-              <path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Preset prompt pills -->
-        <div class="pr-presets">
-          <button type="button" class="pr-preset" data-prompt="Set on fire">Set on fire</button>
-          <button type="button" class="pr-preset" data-prompt="Make the car explode">Car explosion</button>
-          <button type="button" class="pr-preset" data-prompt="Add lightning storm">Lightning</button>
-          <button type="button" class="pr-preset" data-prompt="Add a glitch transition">Glitch</button>
-          <button type="button" class="pr-preset" data-prompt="Create smoke effect">Smoke</button>
+          <textarea class="pr-textarea" id="pr-prompt-input" placeholder="Tap to choose a preset..." rows="1" readonly></textarea>
+          <div class="pr-dropdown" id="pr-dropdown">
+            <button type="button" class="pr-dropdown-item" data-prompt="Set on fire">Set on fire</button>
+            <button type="button" class="pr-dropdown-item" data-prompt="Make the car explode">Make the car explode</button>
+            <button type="button" class="pr-dropdown-item" data-prompt="Add lightning storm">Add lightning storm</button>
+            <button type="button" class="pr-dropdown-item" data-prompt="Add a glitch transition">Add a glitch transition</button>
+            <button type="button" class="pr-dropdown-item" data-prompt="Create smoke effect">Create smoke effect</button>
+          </div>
         </div>
 
         <!-- Duration row -->
@@ -464,22 +456,31 @@ export function init(container) {
     return effectLibrary[keys[Math.floor(Math.random() * keys.length)]];
   }
 
-  // Enable/disable generate button based on input
-  if (promptInput && genBtn) {
-    promptInput.addEventListener('input', () => {
-      genBtn.disabled = !promptInput.value.trim();
-    });
-  }
+  // Dropdown preset logic
+  const dropdown = container.querySelector('#pr-dropdown');
 
-  // Preset pills fill the textarea
-  container.querySelectorAll('.pr-preset').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (promptInput) {
-        promptInput.value = btn.dataset.prompt;
-        promptInput.dispatchEvent(new Event('input'));
+  // Show dropdown on textarea tap
+  if (promptInput && dropdown) {
+    promptInput.addEventListener('click', () => {
+      dropdown.classList.toggle('open');
+    });
+
+    // Pick a preset from the dropdown
+    container.querySelectorAll('.pr-dropdown-item').forEach(item => {
+      item.addEventListener('click', () => {
+        promptInput.value = item.dataset.prompt;
+        if (genBtn) genBtn.disabled = false;
+        dropdown.classList.remove('open');
+      });
+    });
+
+    // Close dropdown when tapping outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.pr-input-area')) {
+        dropdown.classList.remove('open');
       }
     });
-  });
+  }
 
   // Duration toggle
   container.querySelectorAll('.pr-dur-btn').forEach(btn => {

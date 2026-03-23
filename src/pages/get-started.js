@@ -46,11 +46,11 @@ const googleIconSVG = `
 function renderLoggedOut() {
   return `
     <div class="auth-page">
-      <!-- Mascot with speech bubble -->
+      <!-- Speech bubble + Mascot -->
       <div class="auth-mascot">
+        <div class="speech-bubble">Let's go!</div>
         <div class="auth-mascot-inner">
           ${mascotHTML}
-          <div class="speech-bubble">Let's go!</div>
         </div>
       </div>
 

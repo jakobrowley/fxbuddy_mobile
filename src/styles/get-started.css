@@ -29,18 +29,16 @@
 }
 
 .speech-bubble {
-  position: absolute;
-  top: -10px;
-  right: calc(50% - 80px);
   background: var(--bg-base);
   box-shadow: var(--shadow-raised);
-  padding: 8px 16px;
-  border-radius: 16px 16px 16px 4px;
-  font-weight: 600;
-  font-size: 14px;
-  font-family: var(--font-body);
+  padding: 8px 20px;
+  border-radius: 18px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  font-family: var(--font-display);
   white-space: nowrap;
   color: var(--text-primary);
+  margin-bottom: 12px;
   pointer-events: none;
 }
 

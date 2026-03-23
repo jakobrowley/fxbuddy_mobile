@@ -1,103 +1,59 @@
 /**
  * Motion Graphics Tab — FXBuddy
- * Sections: Intro, Category Filter, Template Grid, Bottom CTA
+ * Sections: Intro, Category Filter, Template Grid with video previews, Bottom CTA
  */
 
 import '../styles/motion.css';
 import { navigate } from '../router.js';
 
-// ─── Template Data ─────────────────────────────────────────────────────────────
+// ─── Template Data (matching the real plugin) ─────────────────────────────────
+
+const API_BASE = 'https://fxbuddy-production-eccd.up.railway.app/api/template-previews';
 
 const templates = [
-  { name: 'Instagram Post',    category: 'Social Media' },
-  { name: 'TikTok Overlay',    category: 'Social Media' },
-  { name: 'iMessage Chat',     category: 'Social Media' },
-  { name: 'Twitter/X Post',    category: 'Social Media' },
-  { name: 'YouTube Subscribe', category: 'Social Media' },
-  { name: 'iOS Notification',  category: 'Social Media' },
-  { name: 'Title Slam',        category: 'Text & Titles' },
-  { name: 'Lower Third',       category: 'Text & Titles' },
-  { name: 'Logo Reveal',       category: 'Text & Titles' },
-  { name: 'Number Counter',    category: 'Data & Charts' },
-  { name: 'Bar Chart',         category: 'Data & Charts' },
-  { name: 'Product Card',      category: 'Documentary' },
+  { name: 'Instagram Post',    category: 'Social Media',   slug: 'instagram-post' },
+  { name: 'TikTok Overlay',    category: 'Social Media',   slug: 'tiktok-overlay' },
+  { name: 'iMessage Chat',     category: 'Social Media',   slug: 'imessage-chat' },
+  { name: 'iOS Notification',  category: 'Social Media',   slug: 'ios-notification' },
+  { name: 'Twitter/X Post',    category: 'Social Media',   slug: 'twitter-post' },
+  { name: 'YouTube Subscribe', category: 'Social Media',   slug: 'youtube-subscribe' },
+  { name: 'Title Slam',        category: 'Text & Titles',  slug: 'title-slam' },
+  { name: 'Lower Third',       category: 'Text & Titles',  slug: 'lower-third' },
+  { name: 'Logo Reveal',       category: 'Text & Titles',  slug: 'logo-reveal' },
+  { name: 'Number Counter',    category: 'Data & Charts',  slug: 'number-counter' },
+  { name: 'Bar Chart',         category: 'Data & Charts',  slug: 'bar-chart' },
+  { name: 'Product Card',      category: 'SaaS & Product', slug: 'product-card' },
 ];
 
-const categories = ['All', 'Social Media', 'Text & Titles', 'Data & Charts', 'Documentary'];
-
-// ─── Category Icons ────────────────────────────────────────────────────────────
-
-function getCategoryIcon(category) {
-  switch (category) {
-    case 'Social Media':
-      // Heart icon
-      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-      </svg>`;
-    case 'Text & Titles':
-      // Type/text icon
-      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="4 7 4 4 20 4 20 7"/>
-        <line x1="9" y1="20" x2="15" y2="20"/>
-        <line x1="12" y1="4" x2="12" y2="20"/>
-      </svg>`;
-    case 'Data & Charts':
-      // Bar chart icon
-      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <line x1="18" y1="20" x2="18" y2="10"/>
-        <line x1="12" y1="20" x2="12" y2="4"/>
-        <line x1="6" y1="20" x2="6" y2="14"/>
-        <line x1="2" y1="20" x2="22" y2="20"/>
-      </svg>`;
-    case 'Documentary':
-      // Film icon
-      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
-        <line x1="7" y1="2" x2="7" y2="22"/>
-        <line x1="17" y1="2" x2="17" y2="22"/>
-        <line x1="2" y1="12" x2="22" y2="12"/>
-        <line x1="2" y1="7" x2="7" y2="7"/>
-        <line x1="2" y1="17" x2="7" y2="17"/>
-        <line x1="17" y1="17" x2="22" y2="17"/>
-        <line x1="17" y1="7" x2="22" y2="7"/>
-      </svg>`;
-    default:
-      // Grid icon fallback
-      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <rect x="3" y="3" width="7" height="7"/>
-        <rect x="14" y="3" width="7" height="7"/>
-        <rect x="14" y="14" width="7" height="7"/>
-        <rect x="3" y="14" width="7" height="7"/>
-      </svg>`;
-  }
-}
+const categories = ['All', 'Social Media', 'Text & Titles', 'Data & Charts', 'SaaS & Product'];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function escHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function escAttr(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function renderTemplateCard(template) {
+function renderTemplateCard(t) {
   return `
-    <div class="motion-card" data-cat="${escAttr(template.category)}">
-      <div class="motion-card-icon">
-        ${getCategoryIcon(template.category)}
+    <div class="motion-card" data-cat="${escAttr(t.category)}">
+      <div class="motion-card-video">
+        <video
+          src="${API_BASE}/${escAttr(t.slug)}.mp4"
+          muted
+          playsinline
+          loop
+          preload="metadata"
+          aria-label="${escAttr(t.name)} preview"
+        ></video>
       </div>
-      <p class="motion-card-name">${escHtml(template.name)}</p>
-      <p class="motion-card-cat">${escHtml(template.category)}</p>
+      <div class="motion-card-info">
+        <span class="motion-card-name">${escHtml(t.name)}</span>
+        <span class="motion-card-cat">${escHtml(t.category)}</span>
+      </div>
     </div>
   `;
 }
@@ -160,26 +116,48 @@ export function render() {
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
+let videoObserver = null;
+
 export function init(container) {
   const pills = container.querySelectorAll('.motion-filter .pill');
   const grid = container.querySelector('#motion-grid');
 
-  // ── Filter logic ────────────────────────────────────────────────────────────
+  // ── Filter logic ──
   pills.forEach((pill) => {
     pill.addEventListener('click', () => {
       pills.forEach((p) => p.classList.remove('active'));
       pill.classList.add('active');
 
       const selected = pill.dataset.cat;
-
       grid.querySelectorAll('.motion-card').forEach((card) => {
         const show = selected === 'All' || card.dataset.cat === selected;
         card.hidden = !show;
       });
+
+      // Pause hidden videos
+      grid.querySelectorAll('.motion-card[hidden] video').forEach((v) => v.pause());
     });
   });
 
-  // ── Bottom CTA ────────────────────────────────────────────────────────────────
+  // ── Autoplay videos when visible ──
+  if (videoObserver) videoObserver.disconnect();
+
+  videoObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.play().catch(() => {});
+        } else {
+          entry.target.pause();
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+
+  grid.querySelectorAll('video').forEach((v) => videoObserver.observe(v));
+
+  // ── Bottom CTA ──
   const btnSignup = container.querySelector('#btn-motion-signup');
   btnSignup && btnSignup.addEventListener('click', () => navigate('#sign-up'));
 }
@@ -187,5 +165,8 @@ export function init(container) {
 // ─── Destroy ──────────────────────────────────────────────────────────────────
 
 export function destroy() {
-  // No persistent side effects to clean up
+  if (videoObserver) {
+    videoObserver.disconnect();
+    videoObserver = null;
+  }
 }

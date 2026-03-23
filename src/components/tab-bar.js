@@ -60,26 +60,22 @@ function buildHomeIconOutline() {
 }
 
 function buildEffectsIconActive() {
-    // Sparkles (3 stars): filled
-    const s = buildIcon(
-        // Large star
-        Object.assign(path('M12 2l1.5 4.5H18l-3.75 2.7 1.5 4.5L12 11.1l-3.75 2.6 1.5-4.5L6 6.5h4.5L12 2z'), { fill: 'currentColor' }),
-        // Small top-right star
-        Object.assign(path('M18 2l.75 2.25H21l-1.875 1.35.75 2.25L18 6.55l-1.875 1.3.75-2.25L15 4.25h2.25L18 2z'), { fill: 'currentColor', stroke: 'none' }),
-        // Small bottom-left star
-        Object.assign(path('M6 14l.75 2.25H9l-1.875 1.35.75 2.25L6 18.55l-1.875 1.3.75-2.25L3 16.25h2.25L6 14z'), { fill: 'currentColor', stroke: 'none' }),
+    return buildIcon(
+        Object.assign(path('m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z'), { fill: 'currentColor' }),
+        path('M5 3v4'),
+        path('M19 17v4'),
+        path('M3 5h4'),
+        path('M17 19h4'),
     );
-    return s;
 }
 
 function buildEffectsIconOutline() {
     return buildIcon(
-        // Large star outline
-        path('M12 2l1.5 4.5H18l-3.75 2.7 1.5 4.5L12 11.1l-3.75 2.6 1.5-4.5L6 6.5h4.5L12 2z'),
-        // Small top-right star
-        path('M18 2l.75 2.25H21l-1.875 1.35.75 2.25L18 6.55l-1.875 1.3.75-2.25L15 4.25h2.25L18 2z'),
-        // Small bottom-left star
-        path('M6 14l.75 2.25H9l-1.875 1.35.75 2.25L6 18.55l-1.875 1.3.75-2.25L3 16.25h2.25L6 14z'),
+        path('m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z'),
+        path('M5 3v4'),
+        path('M19 17v4'),
+        path('M3 5h4'),
+        path('M17 19h4'),
     );
 }
 

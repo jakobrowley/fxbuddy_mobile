@@ -1,20 +1,12 @@
 /* ─── Filter Pills Row ───────────────────────────────────────────────────── */
 
 .effects-filter {
-    position: sticky;
-    top: calc(56px + env(safe-area-inset-top, 0px));
-    z-index: 10;
     background-color: var(--bg-base);
-    padding: 12px 20px 14px;
+    padding: 12px 20px;
     display: flex;
     overflow-x: auto;
     gap: 8px;
     -webkit-overflow-scrolling: touch;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.dark .effects-filter {
-    border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 
 .effects-filter::-webkit-scrollbar {
@@ -24,13 +16,14 @@
 /* ─── Video Feed ─────────────────────────────────────────────────────────── */
 
 .effects-feed {
-    padding: 0 0 24px;
+    padding: 12px 20px 24px;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 16px;
 }
 
 .effect-card {
+    border-radius: var(--radius-lg);
     overflow: hidden;
 }
 

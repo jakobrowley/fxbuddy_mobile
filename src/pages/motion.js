@@ -1,31 +1,88 @@
 /**
  * Motion Graphics Tab — FXBuddy
- * Sections: Intro, Category Filter, Template Grid with video previews, Bottom CTA
+ * All 58 templates with video previews served locally
  */
 
 import '../styles/motion.css';
 import { navigate } from '../router.js';
 
-// ─── Template Data (matching the real plugin) ─────────────────────────────────
-
-const API_BASE = 'https://fxbuddy-production-eccd.up.railway.app/api/template-previews';
+// ─── All 58 Templates (matching the real plugin) ──────────────────────────────
 
 const templates = [
-  { name: 'Instagram Post',    category: 'Social Media',   slug: 'instagram-post' },
-  { name: 'TikTok Overlay',    category: 'Social Media',   slug: 'tiktok-overlay' },
-  { name: 'iMessage Chat',     category: 'Social Media',   slug: 'imessage-chat' },
-  { name: 'iOS Notification',  category: 'Social Media',   slug: 'ios-notification' },
-  { name: 'Twitter/X Post',    category: 'Social Media',   slug: 'twitter-post' },
-  { name: 'YouTube Subscribe', category: 'Social Media',   slug: 'youtube-subscribe' },
-  { name: 'Title Slam',        category: 'Text & Titles',  slug: 'title-slam' },
-  { name: 'Lower Third',       category: 'Text & Titles',  slug: 'lower-third' },
-  { name: 'Logo Reveal',       category: 'Text & Titles',  slug: 'logo-reveal' },
-  { name: 'Number Counter',    category: 'Data & Charts',  slug: 'number-counter' },
-  { name: 'Bar Chart',         category: 'Data & Charts',  slug: 'bar-chart' },
-  { name: 'Product Card',      category: 'SaaS & Product', slug: 'product-card' },
+  // Social Media
+  { name: 'Instagram Post',    category: 'Social Media',   file: 'InstagramPost' },
+  { name: 'TikTok Overlay',    category: 'Social Media',   file: 'TikTokOverlay' },
+  { name: 'iMessage Chat',     category: 'Social Media',   file: 'IMessageChat' },
+  { name: 'iMessage Close-Up', category: 'Social Media',   file: 'IMessageCloseUp' },
+  { name: 'iOS Notification',  category: 'Social Media',   file: 'IOSNotification' },
+  { name: 'Twitter/X Post',    category: 'Social Media',   file: 'TwitterXPost' },
+  { name: 'Twitter Follow',    category: 'Social Media',   file: 'TwitterFollow' },
+  { name: 'Instagram Follow',  category: 'Social Media',   file: 'InstagramFollow' },
+  { name: 'TikTok Follow',     category: 'Social Media',   file: 'TikTokFollow' },
+  { name: 'YouTube Subscribe', category: 'Social Media',   file: 'YouTubeSubscribe' },
+  { name: 'YouTube Comment',   category: 'Social Media',   file: 'YouTubeComment' },
+
+  // Text & Titles
+  { name: 'Title Slam',        category: 'Text & Titles',  file: 'TitleSlam' },
+  { name: 'Lower Third',       category: 'Text & Titles',  file: 'LowerThird' },
+  { name: 'Kinetic Type',      category: 'Text & Titles',  file: 'KineticType' },
+  { name: 'Logo Reveal',       category: 'Text & Titles',  file: 'LogoReveal' },
+  { name: 'Word Reveal',       category: 'Text & Titles',  file: 'WordReveal' },
+
+  // Data & Charts
+  { name: 'Number Counter',    category: 'Data & Charts',  file: 'NumberCounter' },
+  { name: 'Bar Chart',         category: 'Data & Charts',  file: 'BarChartComparison' },
+  { name: 'Animated Line Chart', category: 'Data & Charts', file: 'AnimatedLineChart' },
+  { name: 'Stock Ticker',      category: 'Data & Charts',  file: 'StockTicker' },
+  { name: 'Cost Breakdown',    category: 'Data & Charts',  file: 'CostBreakdown' },
+  { name: 'Before & After',    category: 'Data & Charts',  file: 'BeforeAfterSplit' },
+  { name: 'Percentage Circle', category: 'Data & Charts',  file: 'PercentageCircle' },
+
+  // Documentary
+  { name: 'Doc Callout',       category: 'Documentary',    file: 'DocCallout' },
+  { name: 'Doc Lower Third',   category: 'Documentary',    file: 'DocLowerThird' },
+  { name: 'Fact Card',         category: 'Documentary',    file: 'FactCard' },
+  { name: 'Doc Timeline',      category: 'Documentary',    file: 'DocTimeline' },
+  { name: 'Quote Card',        category: 'Documentary',    file: 'QuoteCard' },
+  { name: 'Location Tag',      category: 'Documentary',    file: 'LocationTag' },
+  { name: 'Comparison Table',  category: 'Documentary',    file: 'ComparisonTable' },
+  { name: 'Newspaper',         category: 'Documentary',    file: 'NewspaperHeadline' },
+
+  // SaaS & Product
+  { name: 'Feature Card',      category: 'SaaS & Product', file: 'FeatureCard' },
+  { name: 'Pricing Tier',      category: 'SaaS & Product', file: 'PricingTier' },
+  { name: 'Testimonial',       category: 'SaaS & Product', file: 'TestimonialCard' },
+  { name: 'Metrics Dashboard', category: 'SaaS & Product', file: 'MetricsDashboard' },
+  { name: 'Command Palette',   category: 'SaaS & Product', file: 'CommandPalette' },
+  { name: 'Toast Notification', category: 'SaaS & Product', file: 'NotificationToast' },
+  { name: 'Workflow',          category: 'SaaS & Product', file: 'Workflow' },
+  { name: 'Dashboard Widget',  category: 'SaaS & Product', file: 'DashboardWidget' },
+  { name: 'Alert Banner',      category: 'SaaS & Product', file: 'AlertBanner' },
+  { name: 'Toggle Feature',    category: 'SaaS & Product', file: 'ToggleFeature' },
+
+  // Product / E-commerce
+  { name: 'Product Card',      category: 'Product',        file: 'ProductCard' },
+  { name: 'Review Stars',      category: 'Product',        file: 'ReviewStars' },
+  { name: 'Shipping Tracker',  category: 'Product',        file: 'ShippingTracker' },
+  { name: 'Coupon Code',       category: 'Product',        file: 'CouponCode' },
+  { name: 'Cart Summary',      category: 'Product',        file: 'CartSummary' },
+  { name: 'Flash Sale',        category: 'Product',        file: 'FlashSale' },
+  { name: 'Loyalty Card',      category: 'Product',        file: 'LoyaltyCard' },
+  { name: 'Size Guide',        category: 'Product',        file: 'SizeGuide' },
+  { name: 'Wishlist Heart',    category: 'Product',        file: 'WishlistHeart' },
+  { name: 'Promo Tag',         category: 'Product',        file: 'PromoTag' },
+
+  // Universal
+  { name: 'Progress Bar',      category: 'Universal',      file: 'ProgressBar' },
+  { name: 'Rating Display',    category: 'Universal',      file: 'RatingDisplay' },
+  { name: 'Split Screen',      category: 'Universal',      file: 'SplitScreen' },
+  { name: 'End Screen',        category: 'Universal',      file: 'EndScreen' },
+  { name: 'Countdown',         category: 'Universal',      file: 'CountdownTimer' },
+  { name: 'Loading Spinner',   category: 'Universal',      file: 'LoadingSpinner' },
+  { name: 'Simple Transition', category: 'Universal',      file: 'SimpleTransition' },
 ];
 
-const categories = ['All', 'Social Media', 'Text & Titles', 'Data & Charts', 'SaaS & Product'];
+const categories = ['All', 'Social Media', 'Text & Titles', 'Data & Charts', 'Documentary', 'SaaS & Product', 'Product', 'Universal'];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -42,7 +99,7 @@ function renderTemplateCard(t) {
     <div class="motion-card" data-cat="${escAttr(t.category)}">
       <div class="motion-card-video">
         <video
-          src="${API_BASE}/${escAttr(t.slug)}.mp4"
+          src="templates/${escAttr(t.file)}.mp4"
           muted
           playsinline
           loop
@@ -75,13 +132,13 @@ export function render() {
     <!-- ── Motion Intro ── -->
     <section class="motion-intro">
       <h1 class="section-title">Motion Graphics</h1>
-      <p class="section-subtitle">Ready-made templates for titles, social media, data viz, and more. Fill in the fields, hit generate.</p>
+      <p class="section-subtitle">57+ ready-made templates for titles, social media, data viz, and more. Fill in the fields, hit generate.</p>
 
       <div class="how-it-works-steps">
         <div class="step-card">
           <span class="step-number">1</span>
           <p class="step-title">Pick a template</p>
-          <p class="step-desc">Browse categories</p>
+          <p class="step-desc">Browse the categories below</p>
         </div>
         <div class="step-card">
           <span class="step-number">2</span>

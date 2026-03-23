@@ -5,7 +5,7 @@
     top: calc(56px + env(safe-area-inset-top, 0px));
     z-index: 10;
     background-color: var(--bg-base);
-    padding: 12px 20px;
+    padding: 12px 20px 16px;
     display: flex;
     overflow-x: auto;
     gap: 8px;
@@ -19,7 +19,7 @@
 /* ─── Video Feed ─────────────────────────────────────────────────────────── */
 
 .effects-feed {
-    padding: 12px 20px;
+    padding: 16px 20px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -28,8 +28,6 @@
 .effect-card {
     border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-raised);
-    transition: box-shadow 150ms ease;
 }
 
 .effect-video-wrapper {

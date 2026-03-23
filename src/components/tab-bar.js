@@ -84,26 +84,17 @@ function buildEffectsIconOutline() {
 }
 
 function buildMotionIconActive() {
-    // Clapperboard/film icon — filled top bar
     return buildIcon(
         Object.assign(
-            path('M4 2v4h16V2'),
-            { fill: 'currentColor', stroke: 'currentColor' }
+            path('M5 3l14 9-14 9V3z'),
+            { fill: 'currentColor' }
         ),
-        path('M2 6h20v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z'),
-        line('8', '6', '8', '12'),
-        line('12', '6', '12', '12'),
-        line('16', '6', '16', '12'),
     );
 }
 
 function buildMotionIconOutline() {
     return buildIcon(
-        path('M4 2v4h16V2'),
-        path('M2 6h20v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z'),
-        line('8', '6', '8', '12'),
-        line('12', '6', '12', '12'),
-        line('16', '6', '16', '12'),
+        path('M5 3l14 9-14 9V3z'),
     );
 }
 

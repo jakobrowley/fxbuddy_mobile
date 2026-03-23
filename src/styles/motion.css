@@ -1,6 +1,57 @@
+/* ─── Motion Intro ─────────────────────────────────────────────────────── */
+
 .motion-intro {
     padding: 24px 20px 8px;
 }
+
+/* ── Shared step cards (also in vfx.css — duplicated for code-split) ── */
+
+.motion-intro .how-it-works-steps {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.motion-intro .step-card {
+    flex: 1;
+    background: var(--bg-base);
+    box-shadow: var(--shadow-raised);
+    border-radius: var(--radius-md);
+    padding: 14px 10px;
+    text-align: center;
+}
+
+.motion-intro .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg-base);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.motion-intro .step-title {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    font-family: var(--font-body);
+}
+
+.motion-intro .step-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    font-family: var(--font-body);
+}
+
+/* ─── Category Filter ──────────────────────────────────────────────────── */
 
 .motion-filter {
     padding: 12px 20px;
@@ -13,6 +64,8 @@
 .motion-filter::-webkit-scrollbar {
     display: none;
 }
+
+/* ─── Template Grid ────────────────────────────────────────────────────── */
 
 .motion-grid {
     padding: 16px 20px;
@@ -63,6 +116,8 @@
     color: var(--text-secondary);
     font-family: var(--font-body);
 }
+
+/* ─── Bottom CTA ───────────────────────────────────────────────────────── */
 
 .motion-cta-section {
     padding: 24px 20px 32px;

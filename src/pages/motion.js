@@ -75,13 +75,13 @@ export function render() {
     <!-- ── Motion Intro ── -->
     <section class="motion-intro">
       <h1 class="section-title">Motion Graphics</h1>
-      <p class="section-subtitle">57+ ready-made templates for titles, social media, data viz, and more. Fill in the fields, hit generate.</p>
+      <p class="section-subtitle">Ready-made templates for titles, social media, data viz, and more. Fill in the fields, hit generate.</p>
 
       <div class="how-it-works-steps">
         <div class="step-card">
           <span class="step-number">1</span>
           <p class="step-title">Pick a template</p>
-          <p class="step-desc">Browse 57+ categories</p>
+          <p class="step-desc">Browse categories</p>
         </div>
         <div class="step-card">
           <span class="step-number">2</span>

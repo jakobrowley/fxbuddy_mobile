@@ -109,7 +109,7 @@ export function render() {
 
         <!-- Textarea with dropdown presets -->
         <div class="pr-input-area">
-          <textarea class="pr-textarea" id="pr-prompt-input" placeholder="Tap to choose a preset..." rows="1" readonly></textarea>
+          <textarea class="pr-textarea" id="pr-prompt-input" placeholder="Describe the VFX you want..." rows="3" readonly></textarea>
           <div class="pr-dropdown" id="pr-dropdown">
             <button type="button" class="pr-dropdown-item" data-prompt="Set on fire">Set on fire</button>
             <button type="button" class="pr-dropdown-item" data-prompt="Make the car explode">Make the car explode</button>

@@ -17,7 +17,7 @@ export function initStickyCta(pageContainer) {
   document.body.appendChild(ctaEl);
 
   ctaEl.addEventListener('click', () => {
-    window.location.hash = '#get-started';
+    window.location.hash = '#sign-up';
   });
 
   // Watch the hero section — show CTA when hero leaves viewport

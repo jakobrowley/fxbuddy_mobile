@@ -1,9 +1,9 @@
 /**
- * Effects Tab — FXBuddy
- * Sections: Filter Pills, Video Feed, Bottom CTA
+ * VFX Tab — FXBuddy
+ * Sections: How It Works Intro, Filter Pills, Video Feed, Bottom CTA
  */
 
-import '../styles/effects.css';
+import '../styles/vfx.css';
 import { navigate } from '../router.js';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -16,7 +16,7 @@ const effects = [
   { name: 'iMessage Bubble', src: 'effects/imessage.mp4',          category: 'Social Media' },
 ];
 
-const categories = ['All', 'Fire & Explosions', 'Lightning', 'Social Media', 'Motion Graphics'];
+const categories = ['All', 'Fire & Explosions', 'Lightning', 'Social Media'];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -70,6 +70,30 @@ export function render() {
   const feedHtml = effects.map(renderEffectCard).join('');
 
   return `
+    <!-- ── VFX Intro ── -->
+    <section class="vfx-intro">
+      <h1 class="section-title">AI-Powered VFX</h1>
+      <p class="section-subtitle">Describe any visual effect and FXbuddy creates it from your footage in 30 seconds. No VFX skills needed.</p>
+
+      <div class="how-it-works-steps">
+        <div class="step-card">
+          <span class="step-number">1</span>
+          <p class="step-title">Select your clip</p>
+          <p class="step-desc">Pick any video from your timeline</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">2</span>
+          <p class="step-title">Describe the effect</p>
+          <p class="step-desc">Type "set on fire" or "add lightning"</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">3</span>
+          <p class="step-title">It appears on your timeline</p>
+          <p class="step-desc">Your effect renders in 30 seconds</p>
+        </div>
+      </div>
+    </section>
+
     <!-- ── Filter Pills ── -->
     <div class="effects-filter" role="group" aria-label="Filter effects by category">
       ${pillsHtml}
@@ -78,27 +102,12 @@ export function render() {
     <!-- ── Video Feed ── -->
     <div class="effects-feed" id="effects-feed">
       ${feedHtml}
-
-      <!-- Motion Graphics placeholder (hidden until that pill is active) -->
-      <div class="effects-placeholder" id="motion-placeholder" hidden>
-        <p class="section-title" style="margin-bottom:12px">57+ Motion Templates</p>
-        <p class="section-subtitle" style="margin-bottom:24px">
-          57+ motion templates available.<br>Sign up to explore them all.
-        </p>
-        <button type="button" class="btn-primary" id="btn-motion-cta">
-          Get Started
-        </button>
-      </div>
     </div>
 
     <!-- ── Bottom CTA ── -->
-    <div class="effects-more">
-      <p class="section-subtitle" style="margin-bottom:16px">
-        FXbuddy has hundreds of effects and 57+ motion templates.<br>Start creating today.
-      </p>
-      <button type="button" class="btn-primary" id="btn-effects-get-started">
-        Get Started
-      </button>
+    <div class="vfx-cta-section">
+      <p class="section-subtitle">Ready to add VFX to your edits?</p>
+      <button type="button" class="btn-primary" id="btn-vfx-signup">Sign Up</button>
     </div>
   `;
 }
@@ -110,7 +119,6 @@ let videoObserver = null;
 export function init(container) {
   const pills = container.querySelectorAll('.effects-filter .pill');
   const feed = container.querySelector('#effects-feed');
-  const motionPlaceholder = container.querySelector('#motion-placeholder');
 
   // ── Filter logic ────────────────────────────────────────────────────────────
   pills.forEach((pill) => {
@@ -119,17 +127,11 @@ export function init(container) {
       pill.classList.add('active');
 
       const selected = pill.dataset.category;
-      const isMotion = selected === 'Motion Graphics';
-
-      // Show/hide motion placeholder
-      if (motionPlaceholder) {
-        motionPlaceholder.hidden = !isMotion;
-      }
 
       // Show/hide effect cards
       feed.querySelectorAll('.effect-card').forEach((card) => {
         const show = selected === 'All' || card.dataset.category === selected;
-        card.hidden = !show || isMotion;
+        card.hidden = !show;
       });
 
       // Pause all videos that are now hidden
@@ -165,16 +167,12 @@ export function init(container) {
   // ── "Try this effect" CTAs ───────────────────────────────────────────────────
   feed.addEventListener('click', (e) => {
     const cta = e.target.closest('.effect-cta');
-    if (cta) navigate('#get-started');
+    if (cta) navigate('#sign-up');
   });
 
-  // ── Motion placeholder CTA ───────────────────────────────────────────────────
-  const btnMotionCta = container.querySelector('#btn-motion-cta');
-  btnMotionCta && btnMotionCta.addEventListener('click', () => navigate('#get-started'));
-
   // ── Bottom CTA ────────────────────────────────────────────────────────────────
-  const btnGetStarted = container.querySelector('#btn-effects-get-started');
-  btnGetStarted && btnGetStarted.addEventListener('click', () => navigate('#get-started'));
+  const btnSignup = container.querySelector('#btn-vfx-signup');
+  btnSignup && btnSignup.addEventListener('click', () => navigate('#sign-up'));
 }
 
 // ─── Destroy ──────────────────────────────────────────────────────────────────

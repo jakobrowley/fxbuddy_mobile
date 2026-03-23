@@ -276,12 +276,12 @@ export function init(container) {
   const gateSignup = container.querySelector('#btn-gate-signup');
   const gateLogin = container.querySelector('#link-gate-login');
   if (gateSignup) {
-    gateSignup.addEventListener('click', () => navigate('#get-started'));
+    gateSignup.addEventListener('click', () => navigate('#sign-up'));
   }
   if (gateLogin) {
     gateLogin.addEventListener('click', (e) => {
       e.preventDefault();
-      navigate('#get-started');
+      navigate('#sign-up');
     });
   }
 
@@ -329,11 +329,11 @@ export function init(container) {
 
   // ── CTA Buttons ──
   container.querySelectorAll('.pricing-cta').forEach(btn => {
-    btn.addEventListener('click', () => navigate('#get-started'));
+    btn.addEventListener('click', () => navigate('#sign-up'));
   });
 
   const claimBtn = container.querySelector('#btn-claim-spot');
-  claimBtn && claimBtn.addEventListener('click', () => navigate('#get-started'));
+  claimBtn && claimBtn.addEventListener('click', () => navigate('#sign-up'));
 
   // ── Value Stack Accordion ──
   const valueHeader = container.querySelector('#value-stack-header');

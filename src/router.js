@@ -11,9 +11,10 @@ let currentHash = null;
 
 const ROUTES = {
     '#home': () => import('./pages/home.js'),
-    '#effects': () => import('./pages/effects.js'),
+    '#vfx': () => import('./pages/vfx.js'),
+    '#motion': () => import('./pages/motion.js'),
+    '#sign-up': () => import('./pages/sign-up.js'),
     '#pricing': () => import('./pages/pricing.js'),
-    '#get-started': () => import('./pages/get-started.js'),
 };
 
 const DEFAULT_ROUTE = '#home';

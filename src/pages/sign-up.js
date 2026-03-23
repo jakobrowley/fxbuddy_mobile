@@ -1,5 +1,5 @@
 /**
- * Get Started / Account Tab — FXBuddy
+ * Sign Up / Account Tab — FXBuddy
  * Logged-out: registration form with Google OAuth button + name/email/password fields
  * Logged-in: account dashboard (enabled when fxbuddy-access-token is present in localStorage)
  */
@@ -296,7 +296,7 @@ export function init(container) {
       }
 
       // TODO: wire up real auth API call here
-      // On success: store token, navigate('#get-started') to show logged-in view
+      // On success: store token, navigate('#sign-up') to show logged-in view
       setTimeout(() => {
         if (btnSignup) {
           btnSignup.disabled = false;
@@ -348,7 +348,7 @@ export function init(container) {
     btnLogout.addEventListener('click', () => {
       localStorage.removeItem('fxbuddy-access-token');
       localStorage.removeItem('fxbuddy-user');
-      navigate('#get-started');
+      navigate('#sign-up');
     });
   }
 }

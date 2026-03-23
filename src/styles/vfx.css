@@ -1,3 +1,54 @@
+/* ─── VFX Intro ───────────────────────────────────────────────────────────── */
+
+.vfx-intro {
+    padding: 24px 20px 8px;
+}
+
+.how-it-works-steps {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.step-card {
+    flex: 1;
+    background: var(--bg-base);
+    box-shadow: var(--shadow-raised);
+    border-radius: var(--radius-md);
+    padding: 14px 10px;
+    text-align: center;
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg-base);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.step-title {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    font-family: var(--font-body);
+}
+
+.step-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    font-family: var(--font-body);
+}
+
 /* ─── Filter Pills Row ───────────────────────────────────────────────────── */
 
 .effects-filter {
@@ -77,30 +128,14 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* ─── Motion Graphics Placeholder ───────────────────────────────────────── */
+/* ─── VFX Bottom CTA ─────────────────────────────────────────────────────── */
 
-.effects-placeholder {
-    padding: 40px 20px;
-    text-align: center;
-    color: var(--text-secondary);
-}
-
-.effects-placeholder .section-title {
-    margin-bottom: 12px;
-}
-
-.effects-placeholder .section-subtitle {
-    margin-bottom: 24px;
-}
-
-/* ─── Bottom "Want more?" CTA ────────────────────────────────────────────── */
-
-.effects-more {
-    padding: 32px 20px;
+.vfx-cta-section {
+    padding: 24px 20px 32px;
     text-align: center;
 }
 
-.effects-more .btn-primary {
+.vfx-cta-section .btn-primary {
     max-width: 280px;
     margin: 0 auto;
 }

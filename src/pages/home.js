@@ -300,7 +300,7 @@ export function init(container) {
   const btnWatchDemo = container.querySelector('#btn-watch-demo');
   const btnSeeEffects = container.querySelector('#btn-see-effects');
 
-  btnSeeEffects && btnSeeEffects.addEventListener('click', () => navigate('#effects'));
+  btnSeeEffects && btnSeeEffects.addEventListener('click', () => navigate('#vfx'));
 
   // ── Demo video carousel — autoplay visible, dot indicators ─────────────────
   const demoCarousel = container.querySelector('#demo-carousel');
@@ -387,7 +387,7 @@ export function init(container) {
 
   // ── Get Started button ──────────────────────────────────────────────────────
   const btnGetStarted = container.querySelector('#btn-get-started-cost');
-  btnGetStarted && btnGetStarted.addEventListener('click', () => navigate('#get-started'));
+  btnGetStarted && btnGetStarted.addEventListener('click', () => navigate('#sign-up'));
 
   // ── Testimonial scroll dot indicators ──────────────────────────────────────
   const scrollEl = container.querySelector('#testimonial-scroll');

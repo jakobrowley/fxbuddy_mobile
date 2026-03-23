@@ -83,38 +83,46 @@ function buildEffectsIconOutline() {
     );
 }
 
-function buildPricingIconActive() {
-    // Tag icon — filled
+function buildMotionIconActive() {
+    // Clapperboard/film icon — filled top bar
     return buildIcon(
         Object.assign(
-            path('M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z'),
-            { fill: 'currentColor' }
+            path('M4 2v4h16V2'),
+            { fill: 'currentColor', stroke: 'currentColor' }
         ),
-        Object.assign(svgEl('line', { x1: '7', y1: '7', x2: '7.01', y2: '7', 'stroke-width': '3', 'stroke-linecap': 'round' })),
+        path('M2 6h20v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z'),
+        line('8', '6', '8', '12'),
+        line('12', '6', '12', '12'),
+        line('16', '6', '16', '12'),
     );
 }
 
-function buildPricingIconOutline() {
+function buildMotionIconOutline() {
     return buildIcon(
-        path('M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z'),
-        svgEl('line', { x1: '7', y1: '7', x2: '7.01', y2: '7', 'stroke-width': '3', 'stroke-linecap': 'round' }),
+        path('M4 2v4h16V2'),
+        path('M2 6h20v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z'),
+        line('8', '6', '8', '12'),
+        line('12', '6', '12', '12'),
+        line('16', '6', '16', '12'),
     );
 }
 
-function buildGetStartedIconActive() {
-    // Arrow-right circle — filled
+function buildSignUpIconActive() {
+    // User-plus icon — filled body circle
     return buildIcon(
-        Object.assign(svgEl('circle', { cx: '12', cy: '12', r: '10' }), { fill: 'currentColor' }),
-        Object.assign(polyline('12 8 16 12 12 16'), { stroke: 'var(--bg-base)', 'stroke-width': '2' }),
-        Object.assign(line('8', '12', '16', '12'), { stroke: 'var(--bg-base)', 'stroke-width': '2' }),
+        Object.assign(path('M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'), {}),
+        Object.assign(svgEl('circle', { cx: '9', cy: '7', r: '4', fill: 'currentColor' }), {}),
+        line('19', '8', '19', '14'),
+        line('22', '11', '16', '11'),
     );
 }
 
-function buildGetStartedIconOutline() {
+function buildSignUpIconOutline() {
     return buildIcon(
-        svgEl('circle', { cx: '12', cy: '12', r: '10' }),
-        polyline('12 8 16 12 12 16'),
-        line('8', '12', '16', '12'),
+        path('M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'),
+        svgEl('circle', { cx: '9', cy: '7', r: '4' }),
+        line('19', '8', '19', '14'),
+        line('22', '11', '16', '11'),
     );
 }
 
@@ -126,22 +134,22 @@ const TABS = [
         iconOutline: buildHomeIconOutline,
     },
     {
-        hash: '#effects',
-        label: 'Effects',
+        hash: '#vfx',
+        label: 'VFX',
         iconActive: buildEffectsIconActive,
         iconOutline: buildEffectsIconOutline,
     },
     {
-        hash: '#pricing',
-        label: 'Pricing',
-        iconActive: buildPricingIconActive,
-        iconOutline: buildPricingIconOutline,
+        hash: '#motion',
+        label: 'Motion',
+        iconActive: buildMotionIconActive,
+        iconOutline: buildMotionIconOutline,
     },
     {
-        hash: '#get-started',
-        label: 'Get Started',
-        iconActive: buildGetStartedIconActive,
-        iconOutline: buildGetStartedIconOutline,
+        hash: '#sign-up',
+        label: 'Sign Up',
+        iconActive: buildSignUpIconActive,
+        iconOutline: buildSignUpIconOutline,
     },
 ];
 

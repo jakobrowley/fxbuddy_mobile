@@ -1,0 +1,69 @@
+.motion-intro {
+    padding: 24px 20px 8px;
+}
+
+.motion-filter {
+    padding: 12px 20px;
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.motion-filter::-webkit-scrollbar {
+    display: none;
+}
+
+.motion-grid {
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.motion-card {
+    background: var(--bg-base);
+    box-shadow: var(--shadow-raised);
+    border-radius: var(--radius-md);
+    padding: 20px 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.motion-card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-base);
+    box-shadow: var(--shadow-pressed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+}
+
+.motion-card-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+}
+
+.motion-card-cat {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+}
+
+.motion-cta-section {
+    padding: 24px 20px 32px;
+    text-align: center;
+}
+
+.motion-cta-section .btn-primary {
+    max-width: 280px;
+    margin: 0 auto;
+}

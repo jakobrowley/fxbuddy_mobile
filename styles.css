@@ -4390,23 +4390,27 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .hero .fg3.dispersed {
         animation: none !important;
     }
+    /* Tucked into the empty pockets of the hero layout — next to the
+       top corners and in the gap above the plugin frame — so they
+       don't overlap the headline or subtitle text. */
     .hero .fg1 {
-        top: 78px !important;
+        top: 64px !important;
         right: -14px !important;
         left: auto !important;
         transform: rotate(4deg);
     }
     .hero .fg2 {
-        top: 240px !important;
-        left: -14px !important;
+        top: 470px !important;
+        left: -16px !important;
         right: auto !important;
         transform: rotate(-3deg);
     }
     .hero .fg3 {
-        top: 430px !important;
+        top: 562px !important;
         right: -18px !important;
         left: auto !important;
         transform: rotate(5deg);
+        z-index: 1;
     }
     .hero .fg1 video,
     .hero .fg2 video,

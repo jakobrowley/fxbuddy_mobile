@@ -4302,17 +4302,17 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     /* Stop .nav-scrolled from restyling bottom pill differently */
     .nav-scrolled .nav-pill { bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important; }
 
-    /* ---- HERO: tight vertical rhythm so the tutorial section peeks in ---- */
+    /* ---- HERO: breathing-room vertical rhythm ---- */
     .hero {
-        padding: 58px 0 8px !important;
+        padding: 72px 0 14px !important;
         min-height: auto !important;
     }
     .hero-content { padding: 0 20px; }
     .hero-app-badges {
         display: flex;
         justify-content: center;
-        gap: 8px;
-        margin-bottom: 6px;
+        gap: 10px;
+        margin-bottom: 14px;
     }
     .app-badge { width: 22px !important; height: 22px !important; }
     /* Social proof on mobile: stars only — hide avatars + tagline. */
@@ -4321,18 +4321,18 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         flex-direction: column;
         align-items: center;
         gap: 0;
-        margin-bottom: 12px;
+        margin-bottom: 22px;
     }
     .hero-sp-avatars,
     .hero-sp-text {
         display: none !important;
     }
-    .hero-sp-stars { font-size: 0.9rem; letter-spacing: 2px; }
+    .hero-sp-stars { font-size: 0.95rem; letter-spacing: 2px; }
     .hero-headline {
         font-size: 2.6rem !important;
         line-height: 0.95 !important;
         text-align: center;
-        margin-bottom: 10px;
+        margin-bottom: 24px;
         letter-spacing: -0.03em;
         text-wrap: balance;
     }
@@ -4371,11 +4371,11 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         display: none !important;
     }
 
-    /* ---- PLUGIN SHOWCASE: show on mobile, sunk behind the wave ---- */
+    /* ---- PLUGIN SHOWCASE: sunk ~20% deeper behind the wave ---- */
     .plugin-showcase {
         display: flex !important;
-        margin-top: 10px !important;
-        margin-bottom: -170px !important;
+        margin-top: 18px !important;
+        margin-bottom: -220px !important;
         padding: 0 20px;
     }
     .plugin-frame {
@@ -4415,11 +4415,10 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
         will-change: auto !important;
     }
-    /* Position these identically before AND after .dispersed is toggled,
-       so they don't jump when the inline script adds the class at t=1100. */
+    /* Position identically before/after .dispersed so they don't jump. */
     .hero .fg1,
     .hero .fg1.dispersed {
-        top: 64px !important;
+        top: 78px !important;
         right: -14px !important;
         left: auto !important;
         transform: rotate(4deg) !important;
@@ -4427,7 +4426,7 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     }
     .hero .fg2,
     .hero .fg2.dispersed {
-        top: 470px !important;
+        top: 525px !important;
         left: -16px !important;
         right: auto !important;
         transform: rotate(-3deg) !important;
@@ -4435,7 +4434,7 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     }
     .hero .fg3,
     .hero .fg3.dispersed {
-        top: 562px !important;
+        top: 620px !important;
         right: -18px !important;
         left: auto !important;
         transform: rotate(5deg) !important;

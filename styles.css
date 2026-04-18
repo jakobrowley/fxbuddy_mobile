@@ -4302,39 +4302,37 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     /* Stop .nav-scrolled from restyling bottom pill differently */
     .nav-scrolled .nav-pill { bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important; }
 
-    /* ---- HERO ---- */
+    /* ---- HERO: tight vertical rhythm so the tutorial section peeks in ---- */
     .hero {
-        padding: 80px 0 20px !important;
+        padding: 58px 0 8px !important;
         min-height: auto !important;
     }
     .hero-content { padding: 0 20px; }
     .hero-app-badges {
         display: flex;
         justify-content: center;
-        gap: 10px;
-        margin-bottom: 14px;
+        gap: 8px;
+        margin-bottom: 6px;
     }
-    .app-badge { width: 32px !important; height: 32px !important; }
+    .app-badge { width: 22px !important; height: 22px !important; }
     /* Social proof on mobile: stars only — hide avatars + tagline. */
     .hero-social-proof {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 0;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
     }
     .hero-sp-avatars,
     .hero-sp-text {
         display: none !important;
     }
-    .hero-sp-stars { font-size: 1rem; letter-spacing: 2px; }
+    .hero-sp-stars { font-size: 0.9rem; letter-spacing: 2px; }
     .hero-headline {
-        /* Match the pxlsafe hero scale: ~48px, very tight line-height,
-           heavy negative letter-spacing so it fills the width. */
-        font-size: 3rem !important;
+        font-size: 2.6rem !important;
         line-height: 0.95 !important;
         text-align: center;
-        margin-bottom: 16px;
+        margin-bottom: 10px;
         letter-spacing: -0.03em;
         text-wrap: balance;
     }
@@ -4373,15 +4371,15 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         display: none !important;
     }
 
-    /* ---- PLUGIN SHOWCASE: show on mobile, sunk deeper behind the wave ---- */
+    /* ---- PLUGIN SHOWCASE: show on mobile, sunk behind the wave ---- */
     .plugin-showcase {
         display: flex !important;
-        margin-top: 28px !important;
-        margin-bottom: -190px !important;
+        margin-top: 10px !important;
+        margin-bottom: -170px !important;
         padding: 0 20px;
     }
     .plugin-frame {
-        max-width: 340px !important;
+        max-width: 300px !important;
         width: 100% !important;
     }
 
@@ -4467,13 +4465,13 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         opacity: 1 !important;
     }
 
-    /* ---- WAVES: keep mobile tall enough that the curve is visible.
-       Desktop uses 100-110px; we trim a bit to ~90px on mobile so the
-       curve still reads clearly. */
+    /* ---- WAVES: use full desktop-height on mobile so the curves
+       are visible (the SVG viewBox is tall — at 90px the curves
+       flattened out and barely read). */
     .wave-top svg,
     .wave-bottom svg,
-    .wave-divider svg { height: 90px !important; }
-    .wave-bottom--big svg { height: 90px !important; }
+    .wave-divider svg { height: 120px !important; }
+    .wave-bottom--big svg { height: 130px !important; }
 
     /* ---- BEFORE/AFTER SLIDERS ----
        Leave .ba-handle alone (it's the full-height vertical split bar,
@@ -4520,14 +4518,13 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .faq-answer p { padding: 0 16px 18px !important; font-size: 0.88rem; line-height: 1.6; }
 
     /* ---- TUTORIAL / "See how it works" section ----
-       Desktop has near-zero top padding here because the hero plugin
-       overlaps into it. On mobile we sink the plugin much deeper, so
-       the heading needs breathing room between wave and text. */
+       Pull the heading up close so users see the tutorial CTA
+       right after scrolling past the hero plugin. */
     #tutorial {
-        padding-top: 40px !important;
+        padding-top: 24px !important;
     }
     #tutorial .section-header {
-        margin-top: 10px;
+        margin-top: 6px;
     }
     .hiw-video-wrapper { border-radius: 12px; }
 

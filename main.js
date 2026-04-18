@@ -121,9 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── 9. Hero headline word-by-word reveal (pxlsafe-style) ─────
-    //    Each word starts blurred + translated down + transparent,
-    //    then animates to sharp/0/1 with a per-word stagger.
+    // ── 9. Hero headline reveal — word-mask slide-up ─────────────
+    //    Each word is wrapped in an overflow-hidden mask and its
+    //    inner span slides up from below the baseline into position.
+    //    Distinct from the blur-up word reveal on pxlsafe.
     const headline = document.querySelector('.hero-headline');
     if (headline && !headline.dataset.wordSplit) {
         const text = headline.textContent.trim();
@@ -131,17 +132,19 @@ document.addEventListener('DOMContentLoaded', () => {
         headline.dataset.wordSplit = '1';
         headline.textContent = '';
         words.forEach((word, i) => {
-            const span = document.createElement('span');
-            span.className = 'reveal-word';
-            span.textContent = word;
-            headline.appendChild(span);
+            const mask = document.createElement('span');
+            mask.className = 'reveal-mask';
+            const inner = document.createElement('span');
+            inner.className = 'reveal-inner';
+            inner.textContent = word;
+            mask.appendChild(inner);
+            headline.appendChild(mask);
             if (i < words.length - 1) headline.appendChild(document.createTextNode(' '));
         });
-        // Trigger animations with staggered delay.
         requestAnimationFrame(() => {
-            headline.querySelectorAll('.reveal-word').forEach((span, i) => {
-                span.style.transitionDelay = (i * 90) + 'ms';
-                span.classList.add('is-in');
+            headline.querySelectorAll('.reveal-mask').forEach((mask, i) => {
+                mask.querySelector('.reveal-inner').style.transitionDelay = (i * 75) + 'ms';
+                mask.classList.add('is-in');
             });
         });
     }

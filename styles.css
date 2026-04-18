@@ -4342,23 +4342,25 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         text-wrap: balance;
     }
 
-    /* Word-by-word reveal: each word starts blurred + shifted down +
-       transparent, then animates in with a 100 ms stagger like pxlsafe. */
-    .hero-headline .reveal-word {
+    /* Headline reveal — each word sits inside an overflow-hidden mask
+       and slides up from BELOW its own baseline into position. No blur,
+       no fade — purely kinetic type reveal, distinct from the generic
+       blur-up pattern. */
+    .hero-headline .reveal-mask {
         display: inline-block;
-        opacity: 0;
-        filter: blur(8px);
-        transform: translateY(16px);
-        transition:
-            opacity 0.7s ease-out,
-            filter 0.7s ease-out,
-            transform 0.7s ease-out;
-        will-change: opacity, filter, transform;
+        overflow: hidden;
+        vertical-align: bottom;
+        padding: 0.1em 0 0.18em;
+        line-height: inherit;
     }
-    .hero-headline .reveal-word.is-in {
-        opacity: 1;
-        filter: blur(0);
-        transform: translateY(0);
+    .hero-headline .reveal-inner {
+        display: inline-block;
+        transform: translate3d(0, 110%, 0);
+        transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: transform;
+    }
+    .hero-headline .reveal-mask.is-in .reveal-inner {
+        transform: translate3d(0, 0, 0);
     }
     .hero-subtitle {
         font-size: 0.82rem !important;
@@ -4414,6 +4416,9 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
         will-change: auto !important;
     }
+    /* Position these identically before AND after .dispersed is toggled,
+       so they don't jump when the inline script adds the class at t=1100. */
+    .hero .fg1,
     .hero .fg1.dispersed {
         top: 64px !important;
         right: -14px !important;
@@ -4421,6 +4426,7 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         transform: rotate(4deg) !important;
         z-index: 2 !important;
     }
+    .hero .fg2,
     .hero .fg2.dispersed {
         top: 470px !important;
         left: -16px !important;
@@ -4428,6 +4434,7 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         transform: rotate(-3deg) !important;
         z-index: 2 !important;
     }
+    .hero .fg3,
     .hero .fg3.dispersed {
         top: 562px !important;
         right: -18px !important;

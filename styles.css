@@ -4284,27 +4284,27 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         gap: 0;
     }
     .nav-pill {
-        padding: 8px 12px !important;
+        padding: 4px 14px !important;
         overflow: visible !important;
     }
     .nav-pill .nav-links a:not(.nav-cta) {
-        padding: 13px 10px !important;
-        font-size: 0.9rem !important;
+        padding: 8px 10px !important;
+        font-size: 0.88rem !important;
         letter-spacing: -0.01em;
         white-space: nowrap;
     }
-    /* CTA is larger than the pill — vertical padding exceeds the pill
-       so it hangs above and below, with negative margin keeping the
-       pill's layout height unchanged. */
+    /* The outer pill is purposely short. The CTA is much taller and
+       uses negative margin so its top/bottom edges clearly spill past
+       the pill's top and bottom. */
     .nav-pill .nav-cta {
-        padding: 17px 22px !important;
+        padding: 18px 22px !important;
         font-size: 0.95rem !important;
-        margin: -12px 4px !important;
+        margin: -16px 4px !important;
         flex-shrink: 0;
         border: 1.5px solid rgba(255, 255, 255, 0.7);
         box-shadow:
             0 1px 0 rgba(255, 255, 255, 0.45) inset,
-            0 12px 28px rgba(0, 0, 0, 0.55),
+            0 14px 32px rgba(0, 0, 0, 0.6),
             0 2px 8px rgba(0, 0, 0, 0.3);
     }
     .nav-pill .nav-cta-arrow { width: 12px; height: 12px; }
@@ -4572,8 +4572,8 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
 }
 
 @media (max-width: 400px) {
-    .nav-pill .nav-links a:not(.nav-cta) { font-size: 0.82rem !important; padding: 12px 6px !important; }
-    .nav-pill .nav-cta { font-size: 0.88rem !important; padding: 15px 18px !important; margin: -10px 3px !important; }
+    .nav-pill .nav-links a:not(.nav-cta) { font-size: 0.8rem !important; padding: 7px 6px !important; }
+    .nav-pill .nav-cta { font-size: 0.88rem !important; padding: 16px 18px !important; margin: -14px 3px !important; }
     .nav-pill .nav-cta-arrow { width: 11px; height: 11px; }
     .hero-headline { font-size: 2.8rem !important; }
     .section-heading { font-size: 1.55rem; }

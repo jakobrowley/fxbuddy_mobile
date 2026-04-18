@@ -4366,11 +4366,13 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         display: none !important;
     }
 
-    /* ---- WAVES: shorter on mobile so they don't swallow text ---- */
+    /* ---- WAVES: keep mobile tall enough that the curve is visible.
+       Desktop uses 100-110px; we trim a bit to ~90px on mobile so the
+       curve still reads clearly. */
     .wave-top svg,
     .wave-bottom svg,
-    .wave-divider svg { height: 64px !important; }
-    .wave-bottom--big svg { height: 74px !important; }
+    .wave-divider svg { height: 90px !important; }
+    .wave-bottom--big svg { height: 90px !important; }
 
     /* ---- BEFORE/AFTER SLIDERS ----
        Leave .ba-handle alone (it's the full-height vertical split bar,
@@ -4432,9 +4434,22 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .final-cta-heading { font-size: 1.75rem !important; text-align: center; }
     .final-cta-subtitle { font-size: 0.95rem !important; text-align: center; padding: 0 12px; }
 
-    /* ---- FOOTER ---- */
-    .footer-inner { grid-template-columns: 1fr !important; gap: 28px; }
-    .footer-brand { text-align: center; align-items: center; }
+    /* ---- FOOTER: every block centered in its column ---- */
+    .footer-inner { grid-template-columns: 1fr !important; gap: 28px; text-align: center; }
+    .footer-brand {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .footer-brand-name,
+    .footer-by { text-align: center; }
+    .footer-tagline {
+        max-width: 300px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-align: center;
+    }
     .footer-social { justify-content: center; }
     .footer-col { text-align: center; }
     .footer-links { align-items: center; }

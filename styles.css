@@ -4183,6 +4183,11 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
     }
 
+    /* When the user clicks a nav link, land with 66px clearance below the
+       top bar instead of slamming the heading against it. */
+    html { scroll-padding-top: 66px; }
+    section[id] { scroll-margin-top: 66px; }
+
     /* ---- TOP BAR: brand + theme + profile only ----
        NOTE: backdrop-filter + transform are intentionally absent here.
        Either of those on a parent would make it a containing block for
@@ -4386,6 +4391,8 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
 
     /* ---- FOOTER ---- */
     .footer-inner { grid-template-columns: 1fr !important; gap: 28px; }
+    .footer-brand { text-align: center; align-items: center; }
+    .footer-social { justify-content: center; }
     .footer-col { text-align: center; }
     .footer-links { align-items: center; }
     .site-footer { padding-bottom: 28px; }

@@ -1,5 +1,5 @@
-# Frontend Agent Memory — FXBuddy Mobile
+# Frontend Agent Memory
 
-## Project files
+## Project: FXBuddy
 
-- [project_stack.md](project_stack.md) — framework, conventions, key patterns
+- [Prototype notes and stack details](project_prototypes.md) — vanilla HTML/CSS/JS prototypes in `/prototypes/`

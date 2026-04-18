@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Active - FXbuddy</title>
+    <meta name="description" content="Your FXbuddy subscription is now active.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Prevent flash of wrong theme -->
+    <script>
+        (function() {
+            var oldKey = localStorage.getItem('fxbuddy-dark-mode');
+            var newKey = localStorage.getItem('fxbuddy-v2-theme');
+            if (!newKey && oldKey !== null) {
+                localStorage.setItem('fxbuddy-v2-theme', oldKey === 'true' ? 'dark' : 'light');
+            }
+            var s = localStorage.getItem('fxbuddy-v2-theme');
+            if (s === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (!s) {
+                var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (dark) document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .billing-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .billing-card {
+            background: var(--bg-base);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-raised);
+            padding: 3rem 2.5rem;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .billing-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: #22c55e;
+            font-size: 2rem;
+        }
+
+        .billing-heading {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 0.75rem;
+        }
+
+        .billing-message {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 0 0 1rem;
+            line-height: 1.5;
+        }
+
+        .billing-instruction {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            margin: 0 0 0.75rem;
+            line-height: 1.5;
+        }
+
+        .billing-subtext {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin: 0 0 2rem;
+            line-height: 1.5;
+        }
+
+        .billing-home-link {
+            display: inline-block;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            border-radius: 9999px;
+            padding: 0.75rem 2rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+
+        .billing-home-link:hover {
+            box-shadow: 4px 4px 8px rgba(163,177,198,0.5), -4px -4px 8px rgba(255,255,255,0.7);
+        }
+
+        .dark .billing-home-link:hover {
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.4), -4px -4px 8px rgba(60,60,60,0.3);
+        }
+
+        /* Post-purchase steps */
+        .billing-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .billing-step {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .billing-step-num {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.8125rem;
+            color: var(--text-primary);
+            margin-top: 0.125rem;
+        }
+
+        .billing-step-body {
+            flex: 1;
+        }
+
+        .billing-step-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 0.5rem;
+        }
+
+        .billing-step-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin: 0 0 0.75rem;
+            line-height: 1.5;
+        }
+
+        /* Download buttons */
+        .billing-download-btns {
+            display: flex;
+            gap: 0.625rem;
+            flex-wrap: wrap;
+        }
+
+        .billing-dl-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            border-radius: 9999px;
+            padding: 0.5rem 1.125rem;
+            font-weight: 700;
+            font-size: 0.8125rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: box-shadow 0.2s;
+            white-space: nowrap;
+        }
+
+        .billing-dl-btn:hover {
+            box-shadow: 4px 4px 8px rgba(163,177,198,0.5), -4px -4px 8px rgba(255,255,255,0.7);
+        }
+
+        .dark .billing-dl-btn:hover {
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.4), -4px -4px 8px rgba(60,60,60,0.3);
+        }
+
+        /* License key block */
+        .billing-license-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-base);
+            box-shadow: inset 2px 2px 5px rgba(163,177,198,0.45), inset -2px -2px 5px rgba(255,255,255,0.7);
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .dark .billing-license-wrap {
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.35), inset -2px -2px 5px rgba(50,50,50,0.25);
+        }
+
+        .billing-license-key {
+            flex: 1;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 0.05em;
+            word-break: break-all;
+            min-width: 0;
+        }
+
+        .billing-license-copy {
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0.25rem;
+            display: flex;
+            align-items: center;
+            transition: color 0.15s;
+        }
+
+        .billing-license-copy:hover {
+            color: var(--text-primary);
+        }
+
+        .billing-license-no-auth {
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        .billing-divider {
+            width: 100%;
+            height: 1px;
+            background: var(--bg-base);
+            box-shadow: inset 1px 1px 2px rgba(163,177,198,0.3), inset -1px -1px 2px rgba(255,255,255,0.6);
+            margin: 0.25rem 0;
+        }
+
+        .dark .billing-divider {
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.3), inset -1px -1px 2px rgba(50,50,50,0.2);
+        }
+
+        /* Bonus cards */
+        .billing-bonus-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+        }
+
+        .billing-bonus-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: inherit;
+            transition: box-shadow 0.2s;
+        }
+
+        a.billing-bonus-card:hover {
+            box-shadow: 4px 4px 8px rgba(163,177,198,0.5), -4px -4px 8px rgba(255,255,255,0.7);
+        }
+
+        .dark a.billing-bonus-card:hover {
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.4), -4px -4px 8px rgba(60,60,60,0.3);
+        }
+
+        .billing-bonus-card--disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .billing-bonus-icon {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .billing-bonus-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .billing-bonus-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 0.125rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .billing-bonus-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .billing-bonus-coming-soon {
+            flex-shrink: 0;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-tertiary);
+            background: var(--bg-base);
+            box-shadow: inset 2px 2px 4px rgba(163,177,198,0.3), inset -2px -2px 4px rgba(255,255,255,0.6);
+            border-radius: 9999px;
+            padding: 0.2em 0.6em;
+        }
+
+        .dark .billing-bonus-coming-soon {
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.3), inset -2px -2px 4px rgba(50,50,50,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="billing-page">
+        <div class="billing-card">
+            <div class="billing-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h1 class="billing-heading">Welcome to FXBuddy!</h1>
+            <p class="billing-message">Your subscription is now active. Here's how to get started.</p>
+
+            <div class="billing-steps">
+
+                <!-- Step 1: Download -->
+                <div class="billing-step">
+                    <div class="billing-step-num">1</div>
+                    <div class="billing-step-body">
+                        <p class="billing-step-title">Download FXBuddy</p>
+                        <p class="billing-step-desc">Install the plugin for your operating system.</p>
+                        <div class="billing-download-btns">
+                            <a href="https://fxbuddy-production-eccd.up.railway.app/api/download/plugin/mac" class="billing-dl-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                Download for Mac
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="billing-divider"></div>
+
+                <!-- Step 2: License Key -->
+                <div class="billing-step">
+                    <div class="billing-step-num">2</div>
+                    <div class="billing-step-body">
+                        <p class="billing-step-title">Your License Key</p>
+                        <p class="billing-step-desc">Copy this key — you'll use it to log in inside the plugin.</p>
+                        <div id="billing-license-container">
+                            <span class="billing-license-no-auth">Loading your license key...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="billing-divider"></div>
+
+                <!-- Step 3: Open & Log In -->
+                <div class="billing-step">
+                    <div class="billing-step-num">3</div>
+                    <div class="billing-step-body">
+                        <p class="billing-step-title">Open &amp; Log In</p>
+                        <p class="billing-step-desc">After installing, open Premiere Pro or After Effects &rarr; go to <strong>Window &rarr; Extensions &rarr; FXBuddy</strong> &rarr; log in with your license key.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4: Bonuses (rendered by JS if plan has bonuses) -->
+                <div class="billing-divider" id="billing-bonuses-divider" style="display:none;"></div>
+                <div class="billing-step" id="billing-bonuses-step" style="display:none;">
+                    <div class="billing-step-num">4</div>
+                    <div class="billing-step-body">
+                        <p class="billing-step-title">Your Bonuses</p>
+                        <p class="billing-step-desc">These extras are included with your plan.</p>
+                        <div class="billing-bonus-list" id="billing-bonus-list"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <a href="index.html" class="billing-home-link">Back to Home</a>
+        </div>
+    </div>
+    <script>
+        if (typeof gtag === 'function') gtag('event', 'purchase', { currency: 'USD' });
+
+        (function() {
+            var API_BASE = 'https://fxbuddy-production-eccd.up.railway.app';
+            var token = localStorage.getItem('fxbuddy-access-token');
+            var container = document.getElementById('billing-license-container');
+
+            function setMsg(msg) {
+                if (!container) return;
+                container.textContent = '';
+                var span = document.createElement('span');
+                span.className = 'billing-license-no-auth';
+                span.textContent = msg;
+                container.appendChild(span);
+            }
+
+            if (!token) {
+                setMsg('Log in to your account to see your license key');
+                return;
+            }
+
+            fetch(API_BASE + '/api/auth/me', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(function(res) { return res.ok ? res.json() : null; })
+            .then(function(data) {
+                if (!data || !data.licenseKey) {
+                    setMsg('License key not found. Please contact support.');
+                    return;
+                }
+
+                // Build the license key row using safe DOM construction only
+                var wrap = document.createElement('div');
+                wrap.className = 'billing-license-wrap';
+
+                var keyEl = document.createElement('span');
+                keyEl.className = 'billing-license-key';
+                keyEl.textContent = data.licenseKey; // textContent — never innerHTML
+
+                var copyBtn = document.createElement('button');
+                copyBtn.className = 'billing-license-copy';
+                copyBtn.title = 'Copy license key';
+                copyBtn.setAttribute('aria-label', 'Copy license key');
+
+                // Build copy icon using SVG DOM API
+                function makeCopyIcon() {
+                    var ns = 'http://www.w3.org/2000/svg';
+                    var svg = document.createElementNS(ns, 'svg');
+                    svg.setAttribute('width', '16'); svg.setAttribute('height', '16');
+                    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none');
+                    svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '2');
+                    svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+                    var r = document.createElementNS(ns, 'rect');
+                    r.setAttribute('x', '9'); r.setAttribute('y', '9');
+                    r.setAttribute('width', '13'); r.setAttribute('height', '13');
+                    r.setAttribute('rx', '2'); r.setAttribute('ry', '2');
+                    var p = document.createElementNS(ns, 'path');
+                    p.setAttribute('d', 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1');
+                    svg.appendChild(r); svg.appendChild(p);
+                    return svg;
+                }
+
+                function makeCheckIcon() {
+                    var ns = 'http://www.w3.org/2000/svg';
+                    var svg = document.createElementNS(ns, 'svg');
+                    svg.setAttribute('width', '16'); svg.setAttribute('height', '16');
+                    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none');
+                    svg.setAttribute('stroke', '#22c55e'); svg.setAttribute('stroke-width', '2.5');
+                    svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+                    var poly = document.createElementNS(ns, 'polyline');
+                    poly.setAttribute('points', '20 6 9 17 4 12');
+                    svg.appendChild(poly);
+                    return svg;
+                }
+
+                copyBtn.appendChild(makeCopyIcon());
+
+                copyBtn.addEventListener('click', function() {
+                    navigator.clipboard.writeText(keyEl.textContent).then(function() {
+                        copyBtn.textContent = '';
+                        copyBtn.appendChild(makeCheckIcon());
+                        setTimeout(function() {
+                            copyBtn.textContent = '';
+                            copyBtn.appendChild(makeCopyIcon());
+                        }, 1500);
+                    });
+                });
+
+                wrap.appendChild(keyEl);
+                wrap.appendChild(copyBtn);
+                container.textContent = '';
+                container.appendChild(wrap);
+
+                // Render bonuses (Step 4) if the /me response includes them
+                var bonuses = data.bonuses;
+                if (bonuses && bonuses.length > 0) {
+                    renderBonuses(bonuses);
+                }
+            })
+            .catch(function() {
+                setMsg('Could not load license key. Please refresh or contact support.');
+            });
+
+            function getBonusIcon(type) {
+                var ns = 'http://www.w3.org/2000/svg';
+                var svg = document.createElementNS(ns, 'svg');
+                svg.setAttribute('width', '16'); svg.setAttribute('height', '16');
+                svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none');
+                svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '2');
+                svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+
+                function addEl(tag, attrs) {
+                    var el = document.createElementNS(ns, tag);
+                    Object.keys(attrs).forEach(function(k) { el.setAttribute(k, attrs[k]); });
+                    svg.appendChild(el);
+                }
+
+                if (type === 'discord') {
+                    // Chat bubble icon
+                    addEl('path', { d: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z' });
+                } else if (type === 'pdf') {
+                    // Document icon
+                    addEl('path', { d: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z' });
+                    addEl('polyline', { points: '14 2 14 8 20 8' });
+                    addEl('line', { x1: '16', y1: '13', x2: '8', y2: '13' });
+                    addEl('line', { x1: '16', y1: '17', x2: '8', y2: '17' });
+                    addEl('polyline', { points: '10 9 9 9 8 9' });
+                } else if (type === 'course') {
+                    // Play circle
+                    addEl('circle', { cx: '12', cy: '12', r: '10' });
+                    addEl('polygon', { points: '10 8 16 12 10 16 10 8' });
+                } else if (type === 'booking') {
+                    // Calendar icon
+                    addEl('rect', { x: '3', y: '4', width: '18', height: '18', rx: '2', ry: '2' });
+                    addEl('line', { x1: '16', y1: '2', x2: '16', y2: '6' });
+                    addEl('line', { x1: '8', y1: '2', x2: '8', y2: '6' });
+                    addEl('line', { x1: '3', y1: '10', x2: '21', y2: '10' });
+                } else {
+                    // Star/badge (default for 'feature' and unknown)
+                    addEl('polygon', { points: '12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2' });
+                }
+                return svg;
+            }
+
+            function renderBonuses(bonuses) {
+                var divider = document.getElementById('billing-bonuses-divider');
+                var step = document.getElementById('billing-bonuses-step');
+                var list = document.getElementById('billing-bonus-list');
+                if (!divider || !step || !list) return;
+
+                bonuses.forEach(function(bonus) {
+                    var isPlaceholder = bonus.url && bonus.url.charAt(0) === '#';
+                    var hasLink = bonus.url && !isPlaceholder;
+
+                    var card = document.createElement(hasLink ? 'a' : 'div');
+                    card.className = 'billing-bonus-card' + (isPlaceholder ? ' billing-bonus-card--disabled' : '');
+                    if (hasLink) {
+                        card.href = bonus.url;
+                        card.target = '_blank';
+                        card.rel = 'noopener noreferrer';
+                    }
+
+                    var iconWrap = document.createElement('div');
+                    iconWrap.className = 'billing-bonus-icon';
+                    iconWrap.appendChild(getBonusIcon(bonus.type || 'feature'));
+
+                    var body = document.createElement('div');
+                    body.className = 'billing-bonus-body';
+
+                    var titleEl = document.createElement('p');
+                    titleEl.className = 'billing-bonus-title';
+                    titleEl.textContent = bonus.title || '';
+
+                    var descEl = document.createElement('p');
+                    descEl.className = 'billing-bonus-desc';
+                    descEl.textContent = bonus.description || '';
+
+                    body.appendChild(titleEl);
+                    body.appendChild(descEl);
+                    card.appendChild(iconWrap);
+                    card.appendChild(body);
+
+                    if (isPlaceholder) {
+                        var badge = document.createElement('span');
+                        badge.className = 'billing-bonus-coming-soon';
+                        badge.textContent = 'Coming Soon';
+                        card.appendChild(badge);
+                    }
+
+                    list.appendChild(card);
+                });
+
+                divider.style.display = '';
+                step.style.display = 'flex';
+            }
+        })();
+    </script>
+</body>
+</html>

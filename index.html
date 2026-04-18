@@ -1,60 +1,1397 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>FXbuddy - AI VFX for Video Editors</title>
-    <meta name="description" content="FXbuddy brings AI-powered visual effects to video editors. Apply studio-quality VFX in seconds." />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- OG / Social -->
-    <meta property="og:title" content="FXbuddy - AI VFX for Video Editors" />
-    <meta property="og:description" content="FXbuddy brings AI-powered visual effects to video editors. Apply studio-quality VFX in seconds." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://fxbuddy.app" />
-    <meta property="og:image" content="https://fxbuddy.app/og-image.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="FXbuddy - AI VFX for Video Editors" />
-    <meta name="twitter:description" content="FXbuddy brings AI-powered visual effects to video editors. Apply studio-quality VFX in seconds." />
+    <!-- Mobile clone of the desktop site at m.fxbuddy.app.
+         The UA redirect intentionally lives only on fxbuddy.app/index.html
+         and is NOT duplicated here, to avoid an infinite redirect loop. -->
 
-    <!-- Theme color -->
-    <meta name="theme-color" content="#eef0f5" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#232323" media="(prefers-color-scheme: dark)" />
+    <title>FXbuddy &mdash; AI-powered VFX for your timeline</title>
+    <meta name="description" content="Describe any effect. FXbuddy generates it and drops it straight onto your Premiere Pro or After Effects timeline.">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fxbuddy.app/">
+    <meta property="og:title" content="FXbuddy &mdash; AI-powered VFX for your timeline">
+    <meta property="og:description" content="Describe any effect. FXbuddy generates it and drops it straight onto your Premiere Pro or After Effects timeline.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://fxbuddy.app/">
+    <meta property="twitter:title" content="FXbuddy &mdash; AI-powered VFX for your timeline">
+    <meta property="twitter:description" content="Describe any effect. FXbuddy generates it and drops it straight onto your Premiere Pro or After Effects timeline.">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-    <!-- Google Fonts preload -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;500;600&display=swap"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Dark mode flash prevention — must run before paint -->
     <script>
-      (function () {
-        try {
-          var saved = localStorage.getItem('fxbuddy-dark-mode');
-          if (saved === 'true') {
-            document.documentElement.classList.add('dark');
-          } else if (saved === null) {
-            // Respect OS preference on first visit
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              document.documentElement.classList.add('dark');
+    (function() {
+        var hash = window.location.hash;
+        if (hash && hash.length > 1) {
+            var params = new URLSearchParams(hash.substring(1));
+            if (params.get('access_token')) {
+                localStorage.setItem('fxbuddy-access-token', params.get('access_token'));
+                if (params.get('refresh_token')) localStorage.setItem('fxbuddy-refresh-token', params.get('refresh_token'));
+                if (params.get('email')) localStorage.setItem('fxbuddy-user-email', params.get('email'));
+                window.history.replaceState({}, '', window.location.pathname);
             }
-          }
-        } catch (e) {}
-      })();
+        }
+    })();
+</script>
+
+    <!-- Theme: dark by default, light only if explicitly saved -->
+    <script>
+        (function() {
+            var oldKey = localStorage.getItem('fxbuddy-dark-mode');
+            var newKey = localStorage.getItem('fxbuddy-v2-theme');
+            if (!newKey && oldKey !== null) {
+                localStorage.setItem('fxbuddy-v2-theme', oldKey === 'true' ? 'dark' : 'light');
+            }
+            var s = localStorage.getItem('fxbuddy-v2-theme');
+            if (s !== 'light') document.documentElement.classList.add('dark');
+            // Always scroll to top on load
+            if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+            window.scrollTo(0, 0);
+        })();
     </script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W4CX6Q6K75"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-W4CX6Q6K75');
+    </script>
+</head>
+<body>
+
+<!-- ================================================================
+     NAVIGATION
+     ================================================================ -->
+<nav class="nav" id="nav">
+    <a href="#" class="nav-brand">FXbuddy <span class="nav-brand-sub">by Tiny Tapes</span></a>
+    <div class="nav-pill">
+        <div class="nav-links nav-links-left">
+            <a href="#tutorial">Tutorial</a>
+            <a href="#demo">Demo</a>
+        </div>
+        <a href="#pricing" class="nav-cta open-signup" id="nav-cta-btn">
+            <span class="nav-cta-label">Get Started</span>
+            <svg class="nav-cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+        <div class="nav-links nav-links-right">
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+        </div>
+    </div>
+    <div class="nav-actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+            <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="profile-icon" id="profile-icon" title="Account" aria-label="Account">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <div class="profile-dropdown" id="profile-dropdown" style="display:none;">
+    <div class="profile-dropdown-header">
+        <span class="profile-email" id="profile-email"></span>
+        <span class="profile-plan-badge" id="profile-plan-badge" style="display:none;"></span>
+    </div>
+    <div class="profile-license-bar profile-paid-only" id="profile-license-bar" style="display:none;">
+        <div class="profile-license-label">License Key</div>
+        <div class="profile-license-row">
+            <code class="profile-license-key" id="profile-license-key"></code>
+            <button class="profile-license-copy" id="profile-license-copy" title="Copy to clipboard">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+        </div>
+        <div class="profile-license-hint">Paste this in the plugin to activate</div>
+    </div>
+    <div class="profile-divider profile-paid-only" style="display:none;"></div>
+    <div class="profile-credits-bar profile-paid-only" style="display:none;">
+        <div class="profile-credits-label">Credits</div>
+        <div class="profile-credits-row">
+            <span class="profile-credits-total" id="profile-credits-total">--</span>
+            <span class="profile-credits-detail" id="profile-credits-detail"></span>
+        </div>
+    </div>
+    <div class="profile-divider profile-paid-only" style="display:none;"></div>
+    <div class="profile-section profile-paid-only" style="display:none;">
+        <div class="profile-section-title">Credit Packs</div>
+        <div class="profile-packs">
+            <button class="profile-pack" data-pack="small">
+                <span class="profile-pack-credits">50</span>
+                <span class="profile-pack-label">credits</span>
+                <span class="profile-pack-price">$12</span>
+            </button>
+            <button class="profile-pack" data-pack="medium">
+                <span class="profile-pack-credits">150</span>
+                <span class="profile-pack-label">credits</span>
+                <span class="profile-pack-price">$30</span>
+            </button>
+            <button class="profile-pack" data-pack="large">
+                <span class="profile-pack-credits">300</span>
+                <span class="profile-pack-label">credits</span>
+                <span class="profile-pack-price">$50</span>
+            </button>
+        </div>
+        <div class="profile-pack-note">Extra credits never expire</div>
+    </div>
+    <div class="profile-divider profile-paid-only" style="display:none;"></div>
+    <div class="profile-section profile-paid-only" style="display:none;">
+        <div class="profile-autobuy-row">
+            <div class="profile-autobuy-info">
+                <div class="profile-autobuy-title">Auto-charge</div>
+                <div class="profile-autobuy-desc">Auto-buy credits when you run out</div>
+            </div>
+            <button class="profile-toggle" id="profile-autobuy-toggle" aria-label="Toggle auto-charge">
+                <span class="profile-toggle-knob"></span>
+            </button>
+        </div>
+    </div>
+    <div class="profile-divider"></div>
+    <div class="profile-actions">
+        <button class="profile-action-btn" id="profile-upgrade-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span class="profile-action-label">Upgrade Plan</span>
+        </button>
+        <button class="profile-action-btn profile-paid-only" id="profile-manage-btn" style="display:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Manage Subscription
+        </button>
+        <a class="profile-action-btn" id="profile-admin-btn" href="/admin.html" style="display:none; text-decoration:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Admin Dashboard
+        </a>
+        <button class="profile-action-btn profile-action-btn--danger" id="profile-logout-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Log Out
+        </button>
+    </div>
+</div>
+    </div>
+</nav>
+
+<script>
+    (function() {
+        if (localStorage.getItem('fxbuddy-access-token')) {
+            var btn = document.getElementById('nav-cta-btn');
+            if (btn) {
+                var label = btn.querySelector('.nav-cta-label');
+                if (label) { label.textContent = 'View Plans'; }
+                else { btn.textContent = 'View Plans'; }
+                btn.href = '#pricing';
+                btn.classList.remove('open-signup');
+            }
+        }
+    })();
+</script>
+
+<!-- ================================================================
+     HERO SECTION
+     ================================================================ -->
+<section class="hero" id="hero">
+    <!-- Row 1: pill left, video right -->
+    <div class="float-pill fp1">Set on fire</div>
+    <div class="float-gif fg1"><video src="Effects/videoexamples/set-on-fire-after.mp4" loop muted playsinline preload="none"></video></div>
+
+    <!-- Row 2: video left, pill right -->
+    <div class="float-gif fg2"><video src="Effects/videoexamples/lighting-after.mp4" loop muted playsinline preload="none"></video></div>
+    <div class="float-pill fp2">Explode it</div>
+
+    <!-- Row 3: pill left, video right -->
+    <div class="float-pill fp3">Lightning</div>
+    <div class="float-gif fg3"><video src="Effects/videoexamples/car-explode-after.mp4" loop muted playsinline preload="none"></video></div>
+
+    <!-- Row 4: video left, pill right -->
+    <div class="float-gif fg4"><video src="Effects/videoexamples/imessage.mp4" loop muted playsinline preload="none"></video></div>
+    <div class="float-pill fp4">iMessage</div>
+
+    <!-- Row 5: pill left, video right -->
+    <div class="float-pill fp5">Add smoke</div>
+    <div class="float-gif fg5"><video src="Effects/videoexamples/twitter.mp4" loop muted playsinline preload="none"></video></div>
+
+    <div class="container">
+        <div class="hero-content reveal">
+            <div class="hero-app-badges">
+                <img src="assets/premiere-pro-logo.png" alt="Adobe Premiere Pro" class="app-badge">
+                <img src="assets/after-effects-logo.png" alt="Adobe After Effects" class="app-badge">
+            </div>
+
+            <div class="hero-social-proof">
+                <div class="hero-sp-avatars">
+                    <img src="assets/avatars/avatar1.svg" alt="" class="hero-sp-avatar">
+                    <img src="assets/avatars/avatar2.svg" alt="" class="hero-sp-avatar">
+                    <img src="assets/avatars/avatar3.svg" alt="" class="hero-sp-avatar">
+                    <img src="assets/avatars/avatar4.svg" alt="" class="hero-sp-avatar">
+                    <img src="assets/avatars/avatar5.svg" alt="" class="hero-sp-avatar">
+                </div>
+                <div class="hero-sp-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <span class="hero-sp-text">By Tiny Tapes, trusted by 20,000+ editors</span>
+            </div>
+
+            <h1 class="hero-headline">
+                Turn words into VFX.<br>Instantly in your timeline.
+            </h1>
+
+            <p class="hero-subtitle">
+                Describe any effect. FXbuddy generates it and drops it straight onto your Premiere Pro or After Effects timeline.
+            </p>
+
+        </div>
+    </div>
+
+    <!-- Plugin UI — centered, overlaps into the wave below -->
+    <div class="plugin-showcase">
+    <div class="plugin-frame">
+        <style>
+            /* Override hero for plugin layout */
+            .hero {
+                overflow: visible !important;
+                flex-direction: column !important;
+                padding-bottom: 20px !important;
+            }
+
+            /* ── Initial state: hidden behind the plugin at its center ── */
+            .hero .float-pill,
+            .hero .float-gif {
+                opacity: 0;
+                pointer-events: none;
+                will-change: transform;
+                z-index: 1;
+            }
+
+            /* When dispersed, fully visible */
+            .hero .float-pill.dispersed,
+            .hero .float-gif.dispersed {
+                opacity: 1;
+            }
+
+            /* Hero text stays above everything */
+            .hero .container {
+                position: relative;
+                z-index: 2;
+            }
+
+            /* Plugin above floating items but below wave + demo section */
+            .plugin-showcase {
+                z-index: 3 !important;
+            }
+            .wave-top {
+                z-index: 5 !important;
+                position: relative !important;
+            }
+            .demo-section {
+                position: relative;
+                z-index: 5;
+            }
+
+            /* Kill base stylesheet animations */
+            .hero .fp1, .hero .fp2, .hero .fp3, .hero .fp4, .hero .fp5,
+            .hero .fg1, .hero .fg2, .hero .fg3, .hero .fg4, .hero .fg5 {
+                animation: none;
+            }
+
+            /* Left-side items tilt slightly left, right-side tilt slightly right */
+            .hero .fp1 { rotate: -3deg; }
+            .hero .fg2 { rotate: -2deg; }
+            .hero .fp3 { rotate: -4deg; }
+            .hero .fg4 { rotate: -2.5deg; }
+            .hero .fp5 { rotate: -3deg; }
+            .hero .fg1 { rotate: 3deg; }
+            .hero .fp2 { rotate: 2.5deg; }
+            .hero .fg3 { rotate: 4deg; }
+            .hero .fp4 { rotate: 2deg; }
+            .hero .fg5 { rotate: 3.5deg; }
+
+            /* Video sizes */
+            .fg1 { width: 120px; height: 68px; }
+            .fg2 { width: 115px; height: 65px; }
+            .fg3 { width: 120px; height: 68px; }
+            .fg4 { width: 115px; height: 65px; }
+            .fg5 { width: 110px; height: 62px; }
+
+            /* ── Each item gets its own unique burst keyframe ── */
+
+            /* ── Final positions ── */
+            .fp1.dispersed { top: 8% !important;  left: 6% !important;  right: auto !important; }
+            .fg1.dispersed { top: 6% !important;  left: auto !important; right: 14% !important; width: 120px; height: 68px; }
+            .fg2.dispersed { top: 24% !important; left: 12% !important; right: auto !important; width: 115px; height: 65px; }
+            .fp2.dispersed { top: 22% !important; left: auto !important; right: 6% !important; }
+            .fp3.dispersed { top: 42% !important; left: 3% !important;  right: auto !important; }
+            .fg3.dispersed { top: 38% !important; left: auto !important; right: 8% !important; width: 120px; height: 68px; }
+            .fg4.dispersed { top: 56% !important; left: 14% !important; right: auto !important; width: 115px; height: 65px; }
+            .fp4.dispersed { top: 58% !important; left: auto !important; right: 12% !important; }
+            .fp5.dispersed { top: 76% !important; left: 8% !important;  right: auto !important; }
+            .fg5.dispersed { top: 74% !important; left: auto !important; right: 4% !important; width: 110px; height: 62px; }
+
+            /* ── Cannon burst: each item shoots from plugin center to its spot ── */
+            /* Items start at the plugin position (center ~50%, ~68%) and fly to their final CSS position */
+
+            .fp1.dispersed { animation: cannon-fp1 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0s both, pill-float-1 7s ease-in-out 1.2s infinite !important; }
+            .fg1.dispersed { animation: cannon-fg1 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both, gif-float-1 8s ease-in-out 1.3s infinite !important; }
+            .fg2.dispersed { animation: cannon-fg2 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both, gif-float-2 9s ease-in-out 1.4s infinite !important; }
+            .fp2.dispersed { animation: cannon-fp2 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both, pill-float-2 8s ease-in-out 1.4s infinite !important; }
+            .fp3.dispersed { animation: cannon-fp3 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both, pill-float-3 6.5s ease-in-out 1.5s infinite !important; }
+            .fg3.dispersed { animation: cannon-fg3 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both, gif-float-3 7s ease-in-out 1.5s infinite !important; }
+            .fg4.dispersed { animation: cannon-fg4 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both, gif-float-4 10s ease-in-out 1.6s infinite !important; }
+            .fp4.dispersed { animation: cannon-fp4 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both, pill-float-4 7.5s ease-in-out 1.6s infinite !important; }
+            .fp5.dispersed { animation: cannon-fp5 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both, pill-float-5 9s ease-in-out 1.7s infinite !important; }
+            .fg5.dispersed { animation: cannon-fg5 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both, gif-float-5 8.5s ease-in-out 1.7s infinite !important; }
+
+            /* Each keyframe: 0% is AT the plugin center (using fixed positioning offset from final spot) */
+            /* fp1 final: top 8%, left 6% → plugin at ~50%,68% → offset: right 44vw, down 60vh */
+            @keyframes cannon-fp1 {
+                0%   { opacity: 0; transform: translate(44vw, 60vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+            /* fg1 final: top 6%, right 14% → plugin center is to the left and below */
+            @keyframes cannon-fg1 {
+                0%   { opacity: 0; transform: translate(-36vw, 62vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+            /* fg2 final: top 24%, left 12% */
+            @keyframes cannon-fg2 {
+                0%   { opacity: 0; transform: translate(38vw, 44vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+            /* fp2 final: top 22%, right 6% */
+            @keyframes cannon-fp2 {
+                0%   { opacity: 0; transform: translate(-44vw, 46vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+            /* fp3 final: top 42%, left 3% */
+            @keyframes cannon-fp3 {
+                0%   { opacity: 0; transform: translate(47vw, 26vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+            /* fg3 final: top 38%, right 8% */
+            @keyframes cannon-fg3 {
+                0%   { opacity: 0; transform: translate(-42vw, 30vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+            /* fg4 final: top 56%, left 14% */
+            @keyframes cannon-fg4 {
+                0%   { opacity: 0; transform: translate(36vw, 12vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+            /* fp4 final: top 58%, right 12% */
+            @keyframes cannon-fp4 {
+                0%   { opacity: 0; transform: translate(-38vw, 10vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+            /* fp5 final: top 76%, left 8% */
+            @keyframes cannon-fp5 {
+                0%   { opacity: 0; transform: translate(42vw, -8vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+            /* fg5 final: top 74%, right 4% */
+            @keyframes cannon-fg5 {
+                0%   { opacity: 0; transform: translate(-46vw, -6vh) scale(0.4); }
+                15%  { opacity: 1; }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+
+            /* Float keyframes */
+            @keyframes pill-float-2 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+            @keyframes pill-float-4 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+            @keyframes gif-float-2 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+            @keyframes gif-float-3 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+            @keyframes gif-float-5 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+            .plugin-showcase {
+                position: relative;
+                z-index: 2;
+                display: flex;
+                justify-content: center;
+                margin-top: 10px;
+                margin-bottom: -185px;
+                pointer-events: auto;
+                cursor: pointer;
+            }
+            .plugin-frame {
+                width: 100%;
+                max-width: 420px;
+                background: var(--bg-card);
+                border-radius: 20px;
+                box-shadow: var(--shadow-raised);
+                overflow: hidden;
+                font-family: 'Inter', sans-serif;
+                font-size: 13px;
+                color: var(--text-primary);
+                opacity: 0;
+                transform: translateY(80px);
+                transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                will-change: transform, opacity;
+                backface-visibility: hidden;
+            }
+            .plugin-frame.visible {
+                opacity: 1;
+                transform: translateY(0);
+                animation: plugin-slide-up 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            }
+            .plugin-frame.landed {
+                animation: none;
+                opacity: 1;
+                transform: translateY(0);
+                transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .plugin-frame.landed:hover {
+                transform: translateY(-12px);
+            }
+            @keyframes plugin-slide-up {
+                0%   { opacity: 0; transform: translateY(80px) scale(0.95); }
+                100% { opacity: 1; transform: translateY(0) scale(1); }
+            }
+            .pf-main { padding: 16px 24px 20px; display: flex; flex-direction: column; gap: 14px; }
+            .pf-header { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+            .pf-icon-btn {
+                width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+                border-radius: 50%; background: var(--bg-base); box-shadow: var(--shadow-raised);
+                border: none; color: var(--text-secondary);
+            }
+            .pf-credit {
+                display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+                border-radius: 9999px; background: var(--bg-base); box-shadow: var(--shadow-pressed);
+                font-size: 12px; font-weight: 600; color: var(--text-primary);
+            }
+            .pf-tabs { display: flex; justify-content: center; gap: 10px; }
+            .pf-tab {
+                padding: 8px 16px; border-radius: 9999px; font-size: 14px; font-weight: 500;
+                background: transparent; color: var(--text-secondary); border: none;
+            }
+            .pf-tab.active {
+                background: var(--bg-base); box-shadow: var(--shadow-pressed);
+                color: var(--text-primary);
+            }
+            .pf-mascot-wrap { display: flex; justify-content: center; }
+            .pf-mascot-container {
+                width: 100px !important;
+                height: 58px !important;
+                margin-bottom: 0 !important;
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            .pf-mascot-container .mascot-body {
+                width: 100%;
+                height: 100%;
+                border-radius: 14px;
+            }
+            .pf-mascot-container .mascot-glare {
+                top: 5px;
+                right: 10px;
+                width: 18px;
+                height: 6px;
+            }
+            .pf-mascot-container .eyes {
+                gap: 10px;
+            }
+            .pf-heading { text-align: center; font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+            .pf-textarea {
+                width: 100%; height: 80px; background: var(--bg-base); color: var(--text-primary);
+                border-radius: 8px; padding: 12px 16px; border: none; font-size: 13px; font-family: inherit;
+                resize: none; box-shadow: var(--shadow-pressed);
+            }
+            .pf-textarea::placeholder { color: var(--text-tertiary); }
+            .pf-dur-row { display: flex; align-items: center; justify-content: center; gap: 6px; }
+            .pf-dur-label { font-size: 10px; color: var(--text-secondary); }
+            .pf-dur-group {
+                display: flex; border-radius: 9999px; padding: 2px;
+                background: var(--bg-base); box-shadow: var(--shadow-pressed);
+            }
+            .pf-dur-btn { padding: 5px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; border: none; background: transparent; color: var(--text-secondary); }
+            .pf-dur-btn.active { background: var(--bg-base); box-shadow: var(--shadow-raised); color: var(--text-primary); }
+            .pf-dur-cost { font-size: 10px; color: var(--text-secondary); }
+            .pf-actions { display: flex; align-items: center; gap: 10px; }
+            .pf-action-btn {
+                width: 36px; height: 36px; border-radius: 50%; background: var(--bg-base);
+                box-shadow: var(--shadow-raised); border: none; display: flex; align-items: center; justify-content: center;
+                color: var(--text-secondary);
+            }
+            .pf-gen-btn {
+                flex: 1; padding: 12px; border-radius: 9999px; background: var(--bg-base);
+                box-shadow: var(--shadow-raised); border: none; color: var(--text-primary);
+                font-weight: 700; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase;
+                display: flex; align-items: center; justify-content: center; gap: 6px;
+            }
+            .pf-gen-suffix { color: var(--text-secondary); font-weight: 400; font-size: 10px; text-transform: none; letter-spacing: 0; }
+            .pf-version { text-align: center; font-size: 10px; color: var(--text-tertiary); padding: 8px 0; }
+
+            /* Wave and how-it-works section overlap the plugin bottom */
+            .wave-top {
+                z-index: 5 !important;
+                position: relative !important;
+                background: transparent !important;
+                margin-top: -100px !important;
+            }
+            .how-it-works-section { position: relative; z-index: 5; }
+
+            @media (max-width: 900px) {
+                .plugin-showcase { max-width: 320px; margin-left: auto; margin-right: auto; margin-bottom: -140px; }
+            }
+            @media (max-width: 640px) {
+                .plugin-showcase { display: none; }
+            }
+        </style>
+
+        <div class="pf-main">
+            <!-- Header -->
+            <div class="pf-header">
+                <div class="pf-icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="11" x2="10" y2="11"/><line x1="8" y1="9" x2="8" y2="13"/><line x1="15" y1="12" x2="15.01" y2="12"/><line x1="18" y1="10" x2="18.01" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></svg></div>
+                <div class="pf-icon-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></div>
+                <div class="pf-credit">500 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" style="opacity:0.5"><path d="M8 0C8.9 3.3 12.7 7.1 16 8C12.7 8.9 8.9 12.7 8 16C7.1 12.7 3.3 8.9 0 8C3.3 7.1 7.1 3.3 8 0Z"/></svg></div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="pf-tabs">
+                <div class="pf-tab">Motion</div>
+                <div class="pf-tab active">Home</div>
+                <div class="pf-tab">Effects</div>
+            </div>
+
+            <!-- Mascot (animated — uses Mascot class) -->
+            <div class="pf-mascot-wrap">
+                <div class="mascot-container pf-mascot-container" id="plugin-mascot">
+                    <div class="mascot-body pf-mascot">
+                        <div class="mascot-glare pf-mascot-glare-real"></div>
+                        <div class="mascot-face">
+                            <div class="eyes">
+                                <svg class="eye left-eye" width="18" height="24" viewBox="0 0 18 24">
+                                    <path class="eye-path" d="M 2 12 Q 9 12 16 12" stroke="var(--bg-base)" stroke-width="3" fill="none" stroke-linecap="round" style="opacity: 0;" />
+                                    <ellipse class="eye-oval" cx="9" cy="12" rx="7" ry="9" fill="var(--bg-base)" />
+                                </svg>
+                                <svg class="eye right-eye" width="18" height="24" viewBox="0 0 18 24">
+                                    <path class="eye-path" d="M 2 12 Q 9 12 16 12" stroke="var(--bg-base)" stroke-width="3" fill="none" stroke-linecap="round" style="opacity: 0;" />
+                                    <ellipse class="eye-oval" cx="9" cy="12" rx="7" ry="9" fill="var(--bg-base)" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heading -->
+            <div class="pf-heading">What do you want to create?</div>
+
+            <!-- Textarea -->
+            <textarea class="pf-textarea" placeholder="Describe the VFX you want..." readonly>Set on fire...</textarea>
+
+            <!-- Duration -->
+            <div class="pf-dur-row">
+                <span class="pf-dur-label">Duration</span>
+                <div class="pf-dur-group">
+                    <div class="pf-dur-btn">3s</div>
+                    <div class="pf-dur-btn active">5s</div>
+                </div>
+                <span class="pf-dur-cost">10 cr</span>
+            </div>
+
+            <!-- Actions -->
+            <div class="pf-actions">
+                <div class="pf-action-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
+                <div class="pf-gen-btn">GENERATE <span class="pf-gen-suffix">20 cr</span></div>
+                <div class="pf-action-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg></div>
+            </div>
+        </div>
+        <div class="pf-version">v1.0</div>
+    </div>
+</div>
+</section>
+
+<!-- ================================================================
+     SEE HOW IT WORKS SECTION
+     ================================================================ -->
+<div class="wave-top">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,220 C160,280 320,300 500,260 C680,220 760,120 920,100 C1080,80 1200,140 1440,90 L1440,320 L0,320 Z" fill="rgba(255,255,255,0.08)"/>
+        <path d="M0,192 C120,260 240,320 420,280 C540,252 580,160 720,120 C860,80 960,140 1080,100 C1200,60 1320,20 1440,64 L1440,320 L0,320 Z" fill="var(--bg-surface)"/>
+    </svg>
+</div>
+<section class="how-it-works-section" id="tutorial">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-heading">See how it works</h2>
+        </div>
+        <div class="how-it-works-video reveal">
+            <div class="hiw-video-wrapper">
+                <video id="hiwVideo" src="assets/demo.mp4?v=2" muted playsinline preload="metadata"></video>
+                <button class="hiw-play-btn" id="hiwPlayBtn" aria-label="Play tutorial video">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><polygon points="6,3 20,12 6,21" fill="white"/></svg>
+                </button>
+                <div class="hiw-controls" id="hiwControls">
+                    <div class="hiw-progress-bar" id="hiwProgressBar">
+                        <div class="hiw-progress-track">
+                            <div class="hiw-progress-filled" id="hiwProgressFilled"></div>
+                        </div>
+                        <div class="hiw-progress-thumb" id="hiwProgressThumb"></div>
+                    </div>
+                    <div class="hiw-bottom-bar">
+                        <div class="hiw-volume-wrap">
+                            <button class="hiw-vol-btn" id="hiwVolBtn" aria-label="Toggle mute">
+                                <svg class="hiw-icon-vol" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11 5L6 9H2v6h4l5 4V5z" fill="white"/>
+                                    <path class="hiw-vol-wave1" d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                    <path class="hiw-vol-wave2" d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                    <line class="hiw-vol-mute-x" x1="4" y1="4" x2="20" y2="20" stroke="white" stroke-width="2" stroke-linecap="round" style="display:none"/>
+                                </svg>
+                            </button>
+                            <div class="hiw-vol-slider-wrap">
+                                <input class="hiw-vol-slider" id="hiwVolSlider" type="range" min="0" max="1" step="0.02" value="1" aria-label="Volume"/>
+                            </div>
+                        </div>
+                        <div class="hiw-speed-wrap">
+                            <button class="hiw-speed-btn" id="hiwSpeedBtn" aria-label="Playback speed">1x</button>
+                            <div class="hiw-speed-popup" id="hiwSpeedPopup">
+                                <button class="hiw-speed-opt" data-speed="0.5">0.5x</button>
+                                <button class="hiw-speed-opt active" data-speed="1">1x</button>
+                                <button class="hiw-speed-opt" data-speed="1.5">1.5x</button>
+                                <button class="hiw-speed-opt" data-speed="2">2x</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:32px;">
+            <a href="#pricing" class="btn-primary">Get Started &rarr;</a>
+        </div>
+    </div>
+</section>
+<div class="wave-bottom wave-bottom--big" style="background:var(--bg-base)">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,230 C180,180 360,140 540,160 C720,180 860,260 1020,280 C1180,300 1320,240 1440,200 L1440,0 L0,0 Z" fill="rgba(255,255,255,0.08)"/>
+        <path d="M0,200 C160,140 320,100 500,120 C680,140 780,240 920,260 C1080,280 1200,220 1440,170 L1440,0 L0,0 Z" fill="var(--bg-surface)"/>
+    </svg>
+</div>
+
+<!-- ================================================================
+     DEMO SECTION
+     ================================================================ -->
+<section class="demo-section" id="demo">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2 class="section-heading">See it in action</h2>
+            <p class="section-subheading">Real footage. Real results. Slide to see what one sentence creates.</p>
+        </div>
+
+        <div class="ba-grid reveal reveal-stagger">
+            <div class="ba-card">
+                <div class="ba-slider">
+                    <div class="ba-before">
+                        <video src="assets/ba/set on fire before.mp4" autoplay loop muted playsinline></video>
+                        <span class="ba-label">Before</span>
+                    </div>
+                    <div class="ba-after">
+                        <video src="assets/ba/set on fire after.mp4" autoplay loop muted playsinline></video>
+                        <span class="ba-label">After</span>
+                    </div>
+                    <input type="range" class="ba-range" min="0" max="100" value="50">
+                    <div class="ba-handle"></div>
+                </div>
+                <div class="ba-prompt-pill">Set on fire</div>
+            </div>
+            <div class="ba-card">
+                <div class="ba-slider">
+                    <div class="ba-before">
+                        <video src="assets/ba/lightning before.mp4" autoplay loop muted playsinline></video>
+                        <span class="ba-label">Before</span>
+                    </div>
+                    <div class="ba-after">
+                        <video src="assets/ba/lighting after.mp4" autoplay loop muted playsinline></video>
+                        <span class="ba-label">After</span>
+                    </div>
+                    <input type="range" class="ba-range" min="0" max="100" value="50">
+                    <div class="ba-handle"></div>
+                </div>
+                <div class="ba-prompt-pill">Add lightning</div>
+            </div>
+            <div class="ba-card">
+                <div class="ba-slider">
+                    <div class="ba-before">
+                        <video src="assets/ba/car explode before.mp4" autoplay loop muted playsinline></video>
+                        <span class="ba-label">Before</span>
+                    </div>
+                    <div class="ba-after">
+                        <video src="assets/ba/car explode after.mp4" autoplay loop muted playsinline></video>
+                        <span class="ba-label">After</span>
+                    </div>
+                    <input type="range" class="ba-range" min="0" max="100" value="50">
+                    <div class="ba-handle"></div>
+                </div>
+                <div class="ba-prompt-pill">Explode the car</div>
+            </div>
+            <div class="ba-card">
+                <div class="ba-slider">
+                    <div class="ba-before">
+                        <video src="assets/ba/before sand.mp4" autoplay loop muted playsinline></video>
+                        <span class="ba-label">Before</span>
+                    </div>
+                    <div class="ba-after">
+                        <video src="assets/ba/after sand.mp4" autoplay loop muted playsinline></video>
+                        <span class="ba-label">After</span>
+                    </div>
+                    <input type="range" class="ba-range" min="0" max="100" value="50">
+                    <div class="ba-handle"></div>
+                </div>
+                <div class="ba-prompt-pill">Add a sandstorm</div>
+            </div>
+        </div>
+
+        <div class="demo-reviews reveal reveal-stagger">
+            <div class="demo-review">
+                <div class="demo-review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="demo-review-quote">&ldquo;I raised my rate from $2K to $5K per music video&mdash;and nobody flinched.&rdquo;</p>
+                <div class="demo-review-author">
+                    <span class="demo-review-name">Alex R.</span>
+                    <span class="demo-review-role">Editor, LA</span>
+                </div>
+            </div>
+            <div class="demo-review">
+                <div class="demo-review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="demo-review-quote">&ldquo;One fire effect took me 30 seconds. I got 14 DMs that week from artists wanting to book me.&rdquo;</p>
+                <div class="demo-review-author">
+                    <span class="demo-review-name">Marcus T.</span>
+                    <span class="demo-review-role">Editor, Atlanta</span>
+                </div>
+            </div>
+            <div class="demo-review">
+                <div class="demo-review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="demo-review-quote">&ldquo;FXbuddy is my unfair advantage and I&rsquo;m not sharing it.&rdquo;</p>
+                <div class="demo-review-author">
+                    <span class="demo-review-name">Priya K.</span>
+                    <span class="demo-review-role">Editor, London</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="wave-divider" style="background:var(--bg-base)"><svg viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,160 C200,220 420,260 640,200 C860,140 1020,40 1200,20 C1320,8 1400,64 1440,104 L1440,320 L0,320 Z" fill="rgba(255,255,255,0.08)"/><path d="M0,200 C200,260 420,300 640,240 C860,180 1020,80 1200,60 C1320,48 1400,100 1440,140 L1440,320 L0,320 Z" fill="var(--bg-surface)"/></svg></div>
+
+<!-- ================================================================
+     HOW IT WORKS (3 STEPS) SECTION
+     ================================================================ -->
+<section class="how-section" id="how-it-works">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2 class="section-heading">How It Works</h2>
+            <p class="section-subheading">From signup to stunning VFX in three steps.</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card reveal">
+                <span class="step-number">01</span>
+                <h3 class="step-title">Sign Up</h3>
+                <p class="step-desc">Create your account and choose a plan that fits your workflow. Cancel anytime, no questions asked.</p>
+            </div>
+            <div class="step-card reveal">
+                <span class="step-number">02</span>
+                <h3 class="step-title">Install</h3>
+                <p class="step-desc">Add FXbuddy to Premiere Pro or After Effects in one click. It installs as a native CEP extension panel inside your editing app.</p>
+            </div>
+            <div class="step-card reveal">
+                <span class="step-number">03</span>
+                <h3 class="step-title">Create</h3>
+                <p class="step-desc">Describe any VFX effect. Buddy generates it and drops it on your timeline in about 30 seconds. Tweak until it's perfect.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="wave-divider" style="background:var(--bg-surface)"><svg viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0,160 C200,220 420,260 640,200 C860,140 1020,40 1200,20 C1320,8 1400,64 1440,104 L1440,320 L0,320 Z" fill="rgba(255,255,255,0.08)"/><path d="M0,200 C200,260 420,300 640,240 C860,180 1020,80 1200,60 C1320,48 1400,100 1440,140 L1440,320 L0,320 Z" fill="var(--bg-base)"/></svg></div>
+
+<!-- ================================================================
+     PRICING SECTION
+     ================================================================ -->
+<section class="pricing-section" id="pricing">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2 class="section-heading">Pick your plan, let's create!</h2>
+            <p class="section-subheading">Every plan unlocks FXbuddy. The only difference is how much you want to create and the bonuses.</p>
+        </div>
+
+        <div class="pricing-toggle" id="pricing-toggle">
+            <span class="pricing-toggle-label active" data-period="monthly">Monthly</span>
+            <button class="pricing-toggle-switch" id="pricing-toggle-switch" aria-label="Toggle yearly pricing">
+                <span class="pricing-toggle-knob"></span>
+            </button>
+            <span class="pricing-toggle-label" data-period="yearly">Yearly</span>
+            <span class="pricing-toggle-save">Save 20%</span>
+        </div>
+
+        <div class="pricing-grid" id="pricing-grid">
+
+            <!-- STARTER -->
+            <div class="pricing-card" data-tier="starter" data-monthly="29" data-yearly="23" data-daily-monthly="0.97" data-daily-yearly="0.77">
+                <div class="pricing-card-header">
+                    <span class="pricing-tier-name">Starter</span>
+                    <span class="pricing-tagline">Perfect for trying FXbuddy</span>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$29</span>
+                        <span class="pricing-period">/mo</span>
+                    </div>
+                    <span class="pricing-daily">That's just $0.97/day</span>
+                </div>
+                <ul class="pricing-feature-list">
+                    <li class="pricing-feature pricing-feature--credits">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span class="pricing-feature-text">100 credits/month<br><span class="pricing-gen-note">(10 generations)</span></span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Access to all standard effects
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Premiere Pro &amp; After Effects
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Timeline integration
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Latest AI generation models
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        AI-powered prompt enhancement
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        HD output quality
+                    </li>
+                </ul>
+                <a href="#" class="pricing-cta-btn" data-tier="starter">Get Started</a>
+                <span class="pricing-cancel-note">Cancel anytime, no questions asked</span>
+            </div>
+
+            <!-- PRO -->
+            <div class="pricing-card featured" data-tier="pro" data-monthly="59" data-yearly="47" data-daily-monthly="1.97" data-daily-yearly="1.57">
+                <span class="pricing-badge">Most Popular</span>
+                <div class="pricing-card-header">
+                    <span class="pricing-tier-name">Pro</span>
+                    <span class="pricing-tagline">For serious editors</span>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$59</span>
+                        <span class="pricing-period">/mo</span>
+                    </div>
+                    <span class="pricing-daily">That's just $1.97/day</span>
+                </div>
+
+                <div class="pricing-includes">Everything in Starter, plus:</div>
+
+                <ul class="pricing-feature-list">
+                    <li class="pricing-feature pricing-feature--credits">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span class="pricing-feature-text">750 credits/month<br><span class="pricing-gen-note">(75 generations)</span></span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Early access to new effects &amp; models
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        1080p &amp; 4K upscaling
+                    </li>
+                    <li class="pricing-feature pricing-feature--bonus">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        AI Compositing Masterclass <span class="pricing-original-price">$299</span>
+                    </li>
+                    <li class="pricing-feature pricing-feature--bonus">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Music Video Prompt Bible <span class="pricing-original-price">$99</span>
+                    </li>
+                    <li class="pricing-feature pricing-feature--bonus">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        &ldquo;Sell Your AI VFX&rdquo; Guide <span class="pricing-original-price">$97</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Exclusive Pro Discord community
+                    </li>
+                </ul>
+                <a href="#" class="pricing-cta-btn" data-tier="pro">Get Started</a>
+                <span class="pricing-cancel-note">Cancel anytime, no questions asked</span>
+            </div>
+
+        </div><!-- /pricing-grid -->
+
+        <p class="pricing-custom-link">Need more? <a href="mailto:tinytapeshelp@gmail.com?subject=Custom%20FXBuddy%20Plan">Contact us for a custom plan</a></p>
+
+        <!-- Trust bar -->
+        <div class="pricing-trust reveal">
+            <span class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                256-bit encrypted
+            </span>
+            <span class="trust-divider">&middot;</span>
+            <span class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Powered by Stripe
+            </span>
+            <span class="trust-divider">&middot;</span>
+            <span class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Cancel anytime
+            </span>
+            <span class="trust-divider">&middot;</span>
+            <span class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                7-Day Guarantee
+            </span>
+        </div>
+    </div>
+</section>
+
+<div class="wave-divider" style="background:var(--bg-base)"><svg viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0,144 C180,228 380,268 600,204 C820,140 960,20 1140,0 C1280,-16 1390,44 1440,84 L1440,320 L0,320 Z" fill="rgba(255,255,255,0.08)"/><path d="M0,180 C200,260 400,300 620,240 C840,180 980,60 1160,40 C1300,24 1400,80 1440,120 L1440,320 L0,320 Z" fill="var(--bg-surface)"/></svg></div>
+
+<!-- ================================================================
+     FAQ SECTION
+     ================================================================ -->
+<section class="faq-section" id="faq">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2 class="section-heading">Frequently Asked Questions</h2>
+        </div>
+
+        <div class="faq-list reveal">
+            <div class="faq-item faq-open">
+                <button class="faq-question">
+                    <span>Can I cancel anytime?</span>
+                    <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes. One click in your Stripe dashboard. No questions asked, no hoops to jump through. Your access continues until the end of your billing period.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Which Adobe apps are supported?</span>
+                    <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>FXbuddy works with Adobe Premiere Pro and After Effects (CC 2022 and later). It installs as a native CEP extension panel inside your editing app.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Is my footage uploaded anywhere?</span>
+                    <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Your footage is sent securely to our generation servers for processing, then the result is delivered back to your timeline. We don't store or use your footage for training.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>What if I need help?</span>
+                    <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>Pro members get access to the exclusive Discord community and priority support.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>What's the 7-Day Guarantee?</span>
+                    <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <p>If you don't generate a production-ready VFX shot within your first 7 days, we'll hop on a 1-on-1 call to engineer the prompts with you until you do. No forms, no hoops.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="wave-divider" style="background:var(--bg-base)"><svg viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0,100 C160,56 340,100 540,160 C740,220 900,300 1100,276 C1260,260 1400,176 1440,136 L1440,0 L0,0 Z" fill="rgba(255,255,255,0.08)"/><path d="M0,60 C140,20 320,60 520,120 C720,180 880,260 1080,240 C1240,224 1380,140 1440,100 L1440,0 L0,0 Z" fill="var(--bg-surface)"/></svg></div>
+
+<!-- ================================================================
+     FINAL CTA SECTION
+     ================================================================ -->
+<section class="final-cta-section" id="final-cta">
+    <div class="container">
+        <div class="cta-mascot-wrap reveal">
+            <div class="mascot-container mascot-small" id="cta-mascot">
+                <div class="cta-mascot-body">
+                    <div class="mascot-glare cta-mascot-glare"></div>
+                    <div class="mascot-face">
+                        <div class="cta-eyes">
+                            <svg class="eye" width="20" height="26" viewBox="0 0 18 24">
+                                <path class="cta-eye-path" d="M 3 12 Q 9 0 15 12" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <ellipse class="cta-eye-oval" cx="9" cy="12" rx="7" ry="9" fill="white" style="opacity:0"/>
+                            </svg>
+                            <svg class="eye" width="20" height="26" viewBox="0 0 18 24">
+                                <path class="cta-eye-path" d="M 3 12 Q 9 0 15 12" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <ellipse class="cta-eye-oval" cx="9" cy="12" rx="7" ry="9" fill="white" style="opacity:0"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="mascot-shadow"></div>
+            </div>
+        </div>
+
+        <h2 class="final-cta-heading reveal">Ready to become a VFX director?</h2>
+        <p class="final-cta-subtitle reveal">A month from now, you'll have a reel full of VFX shots that didn't exist before. Clients will see you differently. Artists will tag you. And you'll wonder why you ever edited without this.</p>
+
+        <div class="final-cta-actions reveal">
+            <a href="#pricing" class="btn-primary" style="font-size:1.1rem; padding:16px 40px;">Get Started &rarr;</a>
+            <p class="cta-fine-print">Starting at $29/mo. Cancel anytime.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ================================================================
+     FOOTER
+     ================================================================ -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-inner">
+            <!-- Brand column -->
+            <div class="footer-brand">
+                <div class="footer-brand-name">FXbuddy</div>
+                <div class="footer-by">by TINY TAPES</div>
+                <p class="footer-tagline">AI-powered VFX for editors. Describe it, apply it, impress them.</p>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/tinytapes/" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Follow on Instagram">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.youtube.com/@tinytapes2" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Subscribe on YouTube">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Product links -->
+            <div class="footer-col">
+                <div class="footer-col-heading">Product</div>
+                <nav class="footer-links">
+                    <a href="#demo">Demo</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#faq">FAQ</a>
+                </nav>
+            </div>
+
+            <!-- Company links -->
+            <div class="footer-col">
+                <div class="footer-col-heading">Company</div>
+                <nav class="footer-links">
+                    <a href="about.html">About</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="report-bug.html">Report a Bug</a>
+                </nav>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2026 TINY TAPES. Made for editors, by an editor.
+        </div>
+    </div>
+</footer>
+
+<!-- Signup Modal -->
+<div class="signup-modal-overlay" id="signup-modal" style="display:none;">
+    <div class="signup-modal-inner">
+        <div class="signup-modal signup-step" id="signup-step-1">
+            <button class="signup-modal-close" id="signup-modal-close">&times;</button>
+            <div class="signup-mascot-wrap">
+                <div class="mascot-container signup-mascot" id="signup-mascot">
+                    <div class="mascot-body signup-mascot-body">
+                        <div class="mascot-glare signup-mascot-glare"></div>
+                        <div class="mascot-face">
+                            <div class="eyes">
+                                <svg class="eye" width="18" height="24" viewBox="0 0 18 24">
+                                    <ellipse class="eye-open" cx="9" cy="12" rx="7" ry="9" fill="white"/>
+                                </svg>
+                                <svg class="eye" width="18" height="24" viewBox="0 0 18 24">
+                                    <ellipse class="eye-open" cx="9" cy="12" rx="7" ry="9" fill="white"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="signup-modal-title">Create your account</h2>
+            <p class="signup-modal-subtitle">Get started with FXbuddy in seconds</p>
+            <button class="signup-google-btn" id="signup-google-btn">
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Continue with Google
+            </button>
+            <div class="signup-divider"><span>or</span></div>
+            <form id="signup-form" class="signup-modal-form">
+                <input type="email" id="signup-email" class="signup-input" placeholder="Email address" required autocomplete="email">
+                <input type="password" id="signup-password" class="signup-input" placeholder="Password" required autocomplete="new-password" minlength="6">
+                <div class="signup-error" id="signup-error" style="display:none;"></div>
+                <button type="submit" class="signup-submit-btn" id="signup-submit-btn">Create Account</button>
+            </form>
+            <p class="signup-login-link">Already have an account? <a href="#" id="signup-login-link">Log in</a></p>
+        </div>
+        <div class="signup-modal signup-modal--wide signup-step" id="signup-step-2" style="display:none;">
+            <button class="signup-modal-close signup-close-step2">&times;</button>
+            <h2 class="signup-modal-title">Choose your plan</h2>
+            <p class="signup-modal-subtitle">We've sent your license key to <strong id="signup-user-email"></strong></p>
+            <div class="modal-pricing-toggle">
+                <span class="modal-toggle-label modal-toggle-active" data-period="monthly">Monthly</span>
+                <button class="modal-toggle-switch" id="modal-pricing-toggle-switch"><span class="modal-toggle-knob"></span></button>
+                <span class="modal-toggle-label" data-period="yearly">Yearly <span class="modal-toggle-save">Save 20%</span></span>
+            </div>
+            <div class="modal-pricing-grid" id="modal-pricing-grid">
+                <div class="modal-plan-card" data-plan="starter">
+                    <span class="modal-plan-name">Starter</span>
+                    <div class="modal-plan-price"><span class="modal-plan-amount" data-monthly="29" data-yearly="23">$29</span><span class="modal-plan-period">/mo</span></div>
+                    <ul class="modal-plan-features"><li>150 credits/month<br><span class="pricing-gen-note">(15 generations)</span></li><li>HD output</li><li>Standard queue</li></ul>
+                    <button class="modal-plan-btn" data-plan="starter">Select</button>
+                </div>
+                <div class="modal-plan-card modal-plan-featured" data-plan="pro">
+                    <span class="modal-plan-badge">Most Popular</span>
+                    <span class="modal-plan-name">Pro</span>
+                    <div class="modal-plan-price"><span class="modal-plan-amount" data-monthly="59" data-yearly="47">$59</span><span class="modal-plan-period">/mo</span></div>
+                    <ul class="modal-plan-features"><li>500 credits/month<br><span class="pricing-gen-note">(50 generations)</span></li><li>HD output</li><li>Priority queue</li><li>Prompt Enhancer</li></ul>
+                    <button class="modal-plan-btn" data-plan="pro">Select</button>
+                </div>
+            </div>
+            <p class="modal-plan-note">All plans include a 7-day money-back guarantee</p>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
+<script src="mascot.js"></script>
+<script src="auth.js"></script>
+<script src="main.js"></script>
+<script src="animations.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Init plugin mascot
+        window.pluginMascot = new Mascot({
+            container: document.getElementById('plugin-mascot'),
+            hasZzz: false,
+            hasPhysicsBody: true,
+        });
+
+        var allItems = document.querySelectorAll('.hero .float-pill, .hero .float-gif');
+
+        // t=800ms — Plugin slides up
+        var pluginFrame = document.querySelector('.plugin-frame');
+        setTimeout(function() {
+            pluginFrame.classList.add('visible');
+        }, 800);
+
+        // After slide-up animation ends, enable hover
+        setTimeout(function() {
+            pluginFrame.classList.add('landed');
+        }, 1700);
+
+        // t=1100ms — Items fly out from plugin center
+        setTimeout(function() {
+            allItems.forEach(function(el) {
+                el.classList.add('dispersed');
+            });
+            // Start videos after burst
+            document.querySelectorAll('.hero .float-gif video').forEach(function(v) {
+                v.play().catch(function(){});
+            });
+        }, 1100);
+        // Before/after sliders
+        document.querySelectorAll('.ba-range').forEach(function(range) {
+            var slider = range.closest('.ba-slider');
+            var before = slider.querySelector('.ba-before');
+            var handle = slider.querySelector('.ba-handle');
+
+            range.addEventListener('input', function() {
+                var val = range.value;
+                before.style.clipPath = 'inset(0 ' + (100 - val) + '% 0 0)';
+                handle.style.left = val + '%';
+            });
+        });
+
+        // How It Works video — play/pause, progress bar, volume, speed
+        (function() {
+            var hiwVideo       = document.getElementById('hiwVideo');
+            var hiwPlayBtn     = document.getElementById('hiwPlayBtn');
+            var hiwControls    = document.getElementById('hiwControls');
+            var hiwProgressBar = document.getElementById('hiwProgressBar');
+            var hiwProgressFilled = document.getElementById('hiwProgressFilled');
+            var hiwProgressThumb  = document.getElementById('hiwProgressThumb');
+            var hiwVolBtn      = document.getElementById('hiwVolBtn');
+            var hiwVolSlider   = document.getElementById('hiwVolSlider');
+            var hiwSpeedBtn    = document.getElementById('hiwSpeedBtn');
+            var hiwSpeedPopup  = document.getElementById('hiwSpeedPopup');
+            if (!hiwVideo || !hiwPlayBtn || !hiwProgressBar) return;
+
+            // ── Play / Pause ──────────────────────────────────────────
+            hiwPlayBtn.addEventListener('click', function() {
+                if (hiwVideo.paused) {
+                    hiwVideo.play();
+                    hiwVideo.muted = false;
+                    hiwVolSlider.value = hiwVideo.volume;
+                    updateVolIcon();
+                    hiwPlayBtn.classList.add('hidden');
+                } else {
+                    hiwVideo.pause();
+                    hiwPlayBtn.classList.remove('hidden');
+                }
+            });
+            hiwVideo.addEventListener('click', function() {
+                hiwVideo.pause();
+                hiwPlayBtn.classList.remove('hidden');
+            });
+            hiwVideo.addEventListener('ended', function() {
+                hiwPlayBtn.classList.remove('hidden');
+            });
+
+            // ── Progress bar ──────────────────────────────────────────
+            hiwVideo.addEventListener('timeupdate', function() {
+                if (!hiwVideo.duration) return;
+                var pct = (hiwVideo.currentTime / hiwVideo.duration) * 100;
+                hiwProgressFilled.style.width = pct + '%';
+                var barRect = hiwProgressBar.getBoundingClientRect();
+                var padLeft = 8;
+                var trackWidth = barRect.width - 16;
+                hiwProgressThumb.style.left = (padLeft + trackWidth * pct / 100) + 'px';
+            });
+
+            // Scrubbing / seeking
+            var isDragging = false;
+            function seekTo(e) {
+                var barRect = hiwProgressBar.getBoundingClientRect();
+                var padLeft = 8;
+                var trackWidth = barRect.width - 16;
+                var x = Math.max(0, Math.min(e.clientX - barRect.left - padLeft, trackWidth));
+                var pct = x / trackWidth;
+                hiwVideo.currentTime = pct * hiwVideo.duration;
+            }
+            hiwProgressBar.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                hiwControls.classList.add('dragging');
+                seekTo(e);
+            });
+            document.addEventListener('mousemove', function(e) {
+                if (isDragging) seekTo(e);
+            });
+            document.addEventListener('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    hiwControls.classList.remove('dragging');
+                }
+            });
+            hiwProgressBar.addEventListener('touchstart', function(e) {
+                isDragging = true;
+                hiwControls.classList.add('dragging');
+                seekTo(e.touches[0]);
+            }, {passive: true});
+            document.addEventListener('touchmove', function(e) {
+                if (isDragging) seekTo(e.touches[0]);
+            }, {passive: true});
+            document.addEventListener('touchend', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    hiwControls.classList.remove('dragging');
+                }
+            });
+
+            // ── Volume ────────────────────────────────────────────────
+            function updateVolIcon() {
+                var wave1 = hiwVolBtn.querySelector('.hiw-vol-wave1');
+                var wave2 = hiwVolBtn.querySelector('.hiw-vol-wave2');
+                var muteX = hiwVolBtn.querySelector('.hiw-vol-mute-x');
+                var muted = hiwVideo.muted || hiwVideo.volume === 0;
+                if (muted) {
+                    wave1.style.display = 'none';
+                    wave2.style.display = 'none';
+                    muteX.style.display = '';
+                } else if (hiwVideo.volume < 0.5) {
+                    wave1.style.display = '';
+                    wave2.style.display = 'none';
+                    muteX.style.display = 'none';
+                } else {
+                    wave1.style.display = '';
+                    wave2.style.display = '';
+                    muteX.style.display = 'none';
+                }
+            }
+            hiwVolBtn.addEventListener('click', function() {
+                hiwVideo.muted = !hiwVideo.muted;
+                if (!hiwVideo.muted && hiwVideo.volume === 0) {
+                    hiwVideo.volume = 1;
+                    hiwVolSlider.value = 1;
+                }
+                updateVolIcon();
+            });
+            hiwVolSlider.addEventListener('input', function() {
+                hiwVideo.volume = parseFloat(hiwVolSlider.value);
+                hiwVideo.muted = (hiwVideo.volume === 0);
+                updateVolIcon();
+            });
+            hiwVideo.addEventListener('volumechange', function() {
+                hiwVolSlider.value = hiwVideo.muted ? 0 : hiwVideo.volume;
+                updateVolIcon();
+            });
+
+            // ── Speed ─────────────────────────────────────────────────
+            hiwSpeedBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                hiwSpeedPopup.classList.toggle('open');
+            });
+            hiwSpeedPopup.querySelectorAll('.hiw-speed-opt').forEach(function(opt) {
+                opt.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var speed = parseFloat(opt.dataset.speed);
+                    hiwVideo.playbackRate = speed;
+                    hiwSpeedBtn.textContent = speed + 'x';
+                    hiwSpeedPopup.querySelectorAll('.hiw-speed-opt').forEach(function(o) {
+                        o.classList.remove('active');
+                    });
+                    opt.classList.add('active');
+                    hiwSpeedPopup.classList.remove('open');
+                });
+            });
+            document.addEventListener('click', function() {
+                hiwSpeedPopup.classList.remove('open');
+            });
+            hiwSpeedPopup.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        })();
+
+    });
+</script>
+</body>
 </html>

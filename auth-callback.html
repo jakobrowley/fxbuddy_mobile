@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signing in — FXbuddy</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            height: 100%;
+            background: #1a1a2e;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            max-width: 360px;
+            width: 100%;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+            color: #fff;
+        }
+        .logo span { color: #7c6af7; }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(124,106,247,0.25);
+            border-top-color: #7c6af7;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+            margin: 0 auto 1.25rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .message {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.5;
+        }
+        .error-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .error-text {
+            font-size: 1rem;
+            color: #ff6b6b;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            display: none;
+        }
+        .retry-link {
+            display: none;
+            color: #7c6af7;
+            text-decoration: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            border: 1px solid rgba(124,106,247,0.4);
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            transition: background 0.15s;
+        }
+        .retry-link:hover { background: rgba(124,106,247,0.12); }
+        .state-error .spinner { display: none; }
+        .state-error .message { display: none; }
+        .state-error .error-icon { display: block; }
+        .state-error .error-text { display: block; }
+        .state-error .retry-link { display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="card" id="card">
+        <div class="logo">FX<span>buddy</span></div>
+        <div class="spinner"></div>
+        <p class="message">Signing you in&hellip;</p>
+        <div class="error-icon">&#x26A0;&#xFE0F;</div>
+        <p class="error-text" id="errorText">Something went wrong. Please try again.</p>
+        <a href="/" class="retry-link">Back to home</a>
+    </div>
+
+    <script>
+    (function () {
+        var API_BASE = 'https://fxbuddy-production-eccd.up.railway.app';
+
+        function showError(msg) {
+            document.getElementById('errorText').textContent = msg || 'Something went wrong. Please try again.';
+            document.getElementById('card').classList.add('state-error');
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var authCode = params.get('auth_code');
+
+        if (!authCode) {
+            showError('No authentication code found. Please try signing in again.');
+            return;
+        }
+
+        fetch(API_BASE + '/api/auth/exchange', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: authCode })
+        })
+        .then(function (res) {
+            if (!res.ok) {
+                return res.json().catch(function () { return {}; }).then(function (data) {
+                    throw new Error(data.message || 'Authentication failed. Please try again.');
+                });
+            }
+            return res.json();
+        })
+        .then(function (data) {
+            if (data.accessToken) {
+                localStorage.setItem('fxbuddy-access-token', data.accessToken);
+            }
+            if (data.refreshToken) {
+                localStorage.setItem('fxbuddy-refresh-token', data.refreshToken);
+            }
+            if (data.email) {
+                localStorage.setItem('fxbuddy-user-email', data.email);
+            }
+            if (data.isNew) {
+                window.location.href = '/onboarding.html';
+            } else {
+                window.location.href = '/';
+            }
+        })
+        .catch(function (err) {
+            showError(err && err.message ? err.message : 'Something went wrong. Please try again.');
+        });
+    })();
+    </script>
+</body>
+</html>

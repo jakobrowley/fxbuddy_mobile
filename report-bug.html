@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report a Bug — FXbuddy</title>
+    <meta name="description" content="Report a bug or issue with FXbuddy.">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <script>
+        (function() {
+            var s = localStorage.getItem('fxbuddy-v2-theme');
+            if (s !== 'light') document.documentElement.classList.add('dark');
+        })();
+    </script>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .bug-page {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 140px 24px 80px;
+        }
+        .bug-page h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin: 0 0 12px;
+        }
+        .bug-page .intro {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin: 0 0 32px;
+        }
+        .bug-form {
+            background: var(--bg-surface);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: var(--shadow-raised);
+        }
+        .bug-form label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            margin-top: 18px;
+        }
+        .bug-form label:first-of-type { margin-top: 0; }
+        .bug-form input,
+        .bug-form select,
+        .bug-form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background: var(--bg-base);
+            border: 1px solid rgba(128, 128, 128, 0.12);
+            border-radius: 12px;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .bug-form textarea {
+            min-height: 140px;
+            resize: vertical;
+            font-family: 'Inter', sans-serif;
+        }
+        .bug-form select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+        .bug-form input:focus,
+        .bug-form select:focus,
+        .bug-form textarea:focus {
+            outline: none;
+            border-color: var(--accent, #ffd700);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
+        }
+        .bug-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .bug-row > div { min-width: 0; }
+        @media (max-width: 540px) {
+            .bug-row { grid-template-columns: 1fr; }
+        }
+        .bug-hint {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .bug-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 24px;
+            padding: 12px 24px;
+            background: var(--accent, #ffd700);
+            color: var(--bg-base);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s;
+            box-shadow:
+                0 1px 0 rgba(255, 255, 255, 0.4) inset,
+                0 4px 14px rgba(0, 0, 0, 0.18);
+        }
+        .bug-submit:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 1px 0 rgba(255, 255, 255, 0.5) inset,
+                0 6px 18px rgba(0, 0, 0, 0.22);
+        }
+        .bug-fallback {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(128, 128, 128, 0.15);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .bug-fallback code {
+            background: var(--bg-base);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: 'Inter', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+        .legal-back {
+            display: inline-block;
+            margin-top: 32px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .legal-back:hover { color: var(--text-primary); }
+
+        /* ── In-plugin hint ── */
+        .plugin-hint {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            background: var(--bg-surface);
+            border: 1px solid rgba(128, 128, 128, 0.15);
+            border-radius: 14px;
+            font-size: 0.875rem;
+            line-height: 1.55;
+            color: var(--text-secondary);
+        }
+        .plugin-hint-icon {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent, #ffd700);
+        }
+        .plugin-hint strong {
+            color: var(--text-primary);
+        }
+
+        /* ── Success state ── */
+        .bug-success {
+            text-align: center;
+            padding: 40px 28px;
+            background: var(--bg-surface);
+            border-radius: 20px;
+            box-shadow: var(--shadow-raised);
+        }
+        .bug-success-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #3aa869;
+            margin-bottom: 18px;
+        }
+        .bug-success h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 8px;
+        }
+        .bug-success p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin: 0 0 12px;
+        }
+        .bug-success-id {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 12px;
+            background: var(--bg-base);
+            border-radius: 8px;
+            font-family: 'Inter', monospace;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        /* ── Sending state ── */
+        .bug-submit[disabled] {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        /* ── Info tip (?) buttons ── */
+        .info-tip {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            padding: 0;
+            border: 1px solid var(--text-secondary);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 50%;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1;
+            cursor: help;
+            opacity: 0.7;
+            transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .info-tip:hover,
+        .info-tip:focus-visible,
+        .info-tip.is-open {
+            opacity: 1;
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+            outline: none;
+        }
+        .info-tip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background: #1f1f22;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1.5;
+            width: max-content;
+            max-width: 280px;
+            white-space: normal;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s, transform 0.15s;
+            z-index: 10;
+        }
+        .info-tip::before {
+            content: "";
+            position: absolute;
+            bottom: calc(100% + 2px);
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #1f1f22;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+            z-index: 10;
+        }
+        .info-tip:hover::after,
+        .info-tip:focus-visible::after,
+        .info-tip.is-open::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .info-tip:hover::before,
+        .info-tip:focus-visible::before,
+        .info-tip.is-open::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <main class="bug-page">
+        <h1>Report a Bug</h1>
+        <p class="intro">Sorry something's broken. The more of this you fill in, the faster I can fix it.</p>
+
+        <div class="plugin-hint" id="plugin-hint">
+            <div class="plugin-hint-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+            <div>
+                <strong>Using FXbuddy inside Premiere Pro or After Effects?</strong><br>
+                The plugin has its own <strong>Report a Bug</strong> button (Settings panel &rarr; Report a Bug). It automatically captures logs, your current prompt, plugin version, and Adobe environment &mdash; no need to fill most of this in. Use this web form for website issues, account questions, or if you can't open the plugin panel.
+            </div>
+        </div>
+
+        <div class="bug-success" id="bug-success" style="display:none;">
+            <div class="bug-success-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h2>Report sent</h2>
+            <p>Thanks — I'll look into it and follow up at the email you provided.</p>
+            <div class="bug-success-id" id="bug-success-id" style="display:none;"></div>
+        </div>
+
+        <form class="bug-form" id="bug-form">
+            <label for="bug-email">
+                Your email
+                <span style="opacity:0.6; font-weight:400; margin-left:2px;">(so I can follow up)</span>
+            </label>
+            <input type="email" id="bug-email" name="email" placeholder="you@example.com">
+
+            <div class="bug-row">
+                <div>
+                    <label for="bug-app">Which app?</label>
+                    <select id="bug-app" name="app">
+                        <option value="">Choose one…</option>
+                        <option>Premiere Pro</option>
+                        <option>After Effects</option>
+                        <option>Website (fxbuddy.app)</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="bug-app-version">
+                        App version
+                        <button type="button" class="info-tip" data-tip="Premiere Pro or After Effects → top menu bar → click the app name → 'About Premiere Pro' / 'About After Effects'. The version number appears in the dialog (e.g. 24.5.0)." aria-label="How to find your app version">?</button>
+                    </label>
+                    <input type="text" id="bug-app-version" name="appVersion" placeholder="e.g., 24.5.0">
+                </div>
+            </div>
+
+            <div class="bug-row">
+                <div>
+                    <label for="bug-os">Operating system</label>
+                    <select id="bug-os" name="os">
+                        <option>macOS</option>
+                        <option>Windows</option>
+                        <option>Linux</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="bug-os-version">
+                        OS version
+                        <button type="button" class="info-tip" data-tip="macOS: Apple menu → About This Mac (e.g. Sonoma 14.5). Windows: Start → Settings → System → About (e.g. Windows 11 23H2)." aria-label="How to find your OS version">?</button>
+                    </label>
+                    <input type="text" id="bug-os-version" name="osVersion" placeholder="e.g., macOS 14.5">
+                </div>
+            </div>
+
+            <label for="bug-plugin-version">
+                FXbuddy plugin version
+                <button type="button" class="info-tip" data-tip="Open the FXbuddy panel inside Premiere Pro or After Effects → click the gear / settings icon → the version number is shown at the bottom of the settings panel." aria-label="How to find the plugin version">?</button>
+                <span style="opacity:0.6; font-weight:400; margin-left:2px;">(if you know it)</span>
+            </label>
+            <input type="text" id="bug-plugin-version" name="pluginVersion" placeholder="e.g., 1.2.3">
+
+            <label for="bug-prompt">
+                Effect / prompt you were using
+                <span style="opacity:0.6; font-weight:400; margin-left:2px;">(optional)</span>
+            </label>
+            <input type="text" id="bug-prompt" name="prompt" placeholder='e.g., "Set the car on fire"'>
+
+            <label for="bug-steps">What happened?</label>
+            <textarea id="bug-steps" name="steps" placeholder="Describe the bug, what you were trying to do, and the steps to reproduce it. Paste any error messages here." required></textarea>
+            <div class="bug-hint">Tip: after your email client opens, attach any screenshots or screen recordings to the email before sending.</div>
+
+            <button type="submit" class="bug-submit">
+                <span class="bug-submit-label">Send Report</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </button>
+
+            <div class="bug-fallback">
+                If your email client doesn't open, email directly at <code>tinytapeshelp@gmail.com</code>.
+            </div>
+        </form>
+
+        <a href="index.html" class="legal-back">&larr; Back to FXbuddy</a>
+    </main>
+
+    <script>
+        (function() {
+            // Auto-detect OS so the user doesn't have to pick it
+            var ua = navigator.userAgent || '';
+            var osSelect = document.getElementById('bug-os');
+            if (osSelect) {
+                if (/Mac/.test(ua))        osSelect.value = 'macOS';
+                else if (/Windows/.test(ua)) osSelect.value = 'Windows';
+                else if (/Linux/.test(ua))   osSelect.value = 'Linux';
+            }
+
+            // Info tip: toggle on click for touch devices (hover handles desktop)
+            document.querySelectorAll('.info-tip').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var wasOpen = btn.classList.contains('is-open');
+                    document.querySelectorAll('.info-tip.is-open').forEach(function(b) {
+                        b.classList.remove('is-open');
+                    });
+                    if (!wasOpen) btn.classList.add('is-open');
+                });
+            });
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.info-tip')) {
+                    document.querySelectorAll('.info-tip.is-open').forEach(function(b) {
+                        b.classList.remove('is-open');
+                    });
+                }
+            });
+
+            // Form submit → POST to the same /api/bug-report endpoint the plugin uses
+            // so web + plugin reports land in the same system. Falls back to mailto if
+            // the POST fails (network error, CORS, backend down).
+            var API_BASE = 'https://fxbuddy-production-eccd.up.railway.app';
+
+            var form        = document.getElementById('bug-form');
+            var submitBtn   = form.querySelector('.bug-submit');
+            var submitLabel = submitBtn.querySelector('.bug-submit-label');
+            var successBox  = document.getElementById('bug-success');
+            var successId   = document.getElementById('bug-success-id');
+            var pluginHint  = document.getElementById('plugin-hint');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var get = function(id) {
+                    var el = document.getElementById(id);
+                    return el ? el.value.trim() : '';
+                };
+
+                var email         = get('bug-email');
+                var app           = get('bug-app');
+                var appVersion    = get('bug-app-version');
+                var os            = get('bug-os');
+                var osVersion     = get('bug-os-version');
+                var pluginVersion = get('bug-plugin-version');
+                var prompt        = get('bug-prompt');
+                var steps         = get('bug-steps');
+
+                var lines = [];
+                if (email)           lines.push('From: ' + email);
+                if (app)             lines.push('App: ' + app);
+                if (appVersion)      lines.push('App version: ' + appVersion);
+                if (os || osVersion) lines.push('OS: ' + [os, osVersion].filter(Boolean).join(' '));
+                if (pluginVersion)   lines.push('FXbuddy version: ' + pluginVersion);
+                if (prompt)          lines.push('Prompt: ' + prompt);
+                lines.push('Browser UA: ' + ua);
+
+                var description = lines.join('\n') + '\n\n--- What happened ---\n\n' + steps + '\n';
+
+                // Mailto fallback URL
+                var subjectParts = ['FXbuddy Bug Report'];
+                if (app) subjectParts.push(app);
+                var mailto = 'mailto:tinytapeshelp@gmail.com'
+                    + '?subject=' + encodeURIComponent(subjectParts.join(' — '))
+                    + '&body=' + encodeURIComponent(description);
+
+                // Payload mirrors the shape the plugin sends so both go into the
+                // same table / handler on the backend.
+                var payload = {
+                    description: description,
+                    context: {
+                        source:          'web',
+                        userEmail:       email || null,
+                        app:             app || null,
+                        appVersion:      appVersion || null,
+                        os:              os || null,
+                        osVersion:       osVersion || null,
+                        pluginVersion:   pluginVersion || null,
+                        prompt:          prompt || null,
+                        userAgent:       navigator.userAgent,
+                        platform:        navigator.platform,
+                        pageUrl:         window.location.href,
+                        timestamp:       new Date().toISOString(),
+                        logBuffer:       [],
+                        generationState: null,
+                        creditState:     null,
+                        adobeState:      null,
+                        socketConnected: null,
+                        apiBase:         null,
+                        sessionDuration: null,
+                        hostApp:         null
+                    }
+                };
+
+                var token = localStorage.getItem('fxbuddy-access-token');
+
+                // /api/bug-report requires auth. Logged-out users skip the POST
+                // and go straight to mailto so we don't flash "Sending…" and
+                // log a 401 into the console.
+                if (!token) {
+                    window.location.href = mailto;
+                    return;
+                }
+
+                var headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                };
+
+                submitBtn.disabled = true;
+                submitLabel.textContent = 'Sending…';
+
+                fetch(API_BASE + '/api/bug-report', {
+                    method:  'POST',
+                    headers: headers,
+                    body:    JSON.stringify(payload)
+                }).then(function(res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json().catch(function() { return {}; });
+                }).then(function(data) {
+                    form.style.display = 'none';
+                    if (pluginHint) pluginHint.style.display = 'none';
+                    successBox.style.display = '';
+                    if (data && data.id) {
+                        successId.textContent = 'Report ID: ' + data.id;
+                        successId.style.display = '';
+                    }
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }).catch(function(err) {
+                    console.warn('[FXbuddy] Bug report POST failed, using mailto fallback:', err);
+                    submitBtn.disabled = false;
+                    submitLabel.textContent = 'Send Report';
+                    window.location.href = mailto;
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to FXbuddy</title>
+    <meta name="description" content="You're in! Grab your plan and Buddy will meet you inside your timeline. AI-powered VFX in Premiere Pro and After Effects.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Prevent flash of wrong theme -->
+    <script>
+        (function() {
+            var oldKey = localStorage.getItem('fxbuddy-dark-mode');
+            var newKey = localStorage.getItem('fxbuddy-v2-theme');
+            if (!newKey && oldKey !== null) {
+                localStorage.setItem('fxbuddy-v2-theme', oldKey === 'true' ? 'dark' : 'light');
+            }
+            var s = localStorage.getItem('fxbuddy-v2-theme');
+            if (s === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (!s) {
+                var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (dark) document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+
+    <!-- Main stylesheet (same as landing page) -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* ── Onboarding hero (page-specific) ── */
+        .ob-hero {
+            text-align: center;
+            padding: 4.5rem 2rem 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .ob-buddy-welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .ob-speech-bubble {
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            border-radius: var(--radius-lg);
+            padding: 0.5rem 1rem;
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 2;
+            margin-bottom: 0.25rem;
+            animation: obBubblePop 0.5s ease-out 0.3s both;
+        }
+
+        .ob-speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 10px;
+            height: 10px;
+            background: var(--bg-base);
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.08);
+        }
+
+        /* Mascot happy entrance: bounce in, then settle into a wiggle-bob */
+        .ob-buddy-welcome .signup-mascot {
+            animation: obMascotEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+                       obMascotHappy 2s ease-in-out 1.2s infinite;
+        }
+
+        @keyframes obMascotEntrance {
+            0%   { opacity: 0; transform: scale(1.3) translateY(20px); }
+            100% { opacity: 1; transform: scale(1.3) translateY(0); }
+        }
+
+        @keyframes obMascotHappy {
+            0%, 100% { transform: scale(1.3) translateY(0) rotate(0deg); }
+            25%      { transform: scale(1.3) translateY(-8px) rotate(-3deg); }
+            50%      { transform: scale(1.3) translateY(0) rotate(0deg); }
+            75%      { transform: scale(1.3) translateY(-5px) rotate(3deg); }
+        }
+
+        @keyframes obBubblePop {
+            0%   { opacity: 0; transform: scale(0.6); }
+            70%  { transform: scale(1.08); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .ob-badge {
+            display: inline-block;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #28c840;
+            background: rgba(40,200,64,0.08);
+            border-radius: 9999px;
+            padding: 6px 16px;
+            margin-bottom: 0.5rem;
+            box-shadow: var(--shadow-raised);
+        }
+
+        .ob-greeting {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .ob-sub {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 560px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* ── Demo video ── */
+        .ob-video-wrap {
+            max-width: 640px;
+            margin: 0 auto;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ob-video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ob-video-placeholder {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .ob-video-placeholder svg {
+            display: block;
+            margin: 0 auto 0.5rem;
+            opacity: 0.3;
+        }
+
+        /* ── Value strip ── */
+        .ob-value-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 2rem 1.5rem;
+        }
+
+        .ob-value-item {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: var(--bg-base);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-raised);
+        }
+
+        .ob-value-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: var(--bg-base);
+            box-shadow: var(--shadow-pressed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .ob-value-title {
+            font-family: var(--font-display);
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .ob-value-desc {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ── Divider ── */
+        .ob-divider {
+            width: 100%;
+            max-width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--text-secondary), transparent);
+            margin: 0 auto;
+            opacity: 0.2;
+        }
+
+        /* ── Override: make pricing visible on this page
+             (styles.css defaults them to opacity:0 for scroll-in animations) ── */
+        .pricing-section {
+            display: flex !important;
+        }
+
+        .pricing-header,
+        .pricing-card,
+        .trust-bar {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+
+        /* Keep featured card scaled up */
+        .pricing-card.featured {
+            transform: scale(1.05) !important;
+        }
+
+        /* ── Footer ── */
+        .ob-footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .ob-footer a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .ob-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Fade-in animation (hero elements) ── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: obFadeUp 0.6s ease forwards;
+        }
+        .fade-up-d1 { animation-delay: 0.1s; }
+        .fade-up-d2 { animation-delay: 0.2s; }
+        .fade-up-d3 { animation-delay: 0.3s; }
+        .fade-up-d4 { animation-delay: 0.4s; }
+
+        @keyframes obFadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .ob-hero { padding: 3rem 1.25rem 1.5rem; }
+            .ob-value-strip {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                padding: 1.5rem 1.25rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════ NAV BAR ════════════ -->
+    <nav class="sticky-nav" id="sticky-nav">
+        <a href="index.html" class="sticky-nav-brand" style="text-decoration:none;color:inherit;cursor:pointer;">FXbuddy <span class="sticky-nav-beta">beta</span></a>
+        <div class="sticky-nav-actions">
+            <button class="dark-mode-toggle" id="dark-mode-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
+            <a href="#pricing" class="sticky-nav-cta">See Plans</a>
+        </div>
+    </nav>
+
+    <!-- ════════════ WELCOME HERO ════════════ -->
+    <section class="ob-hero">
+        <div class="ob-buddy-welcome fade-up">
+            <div class="ob-speech-bubble">Let's gooo!</div>
+            <div class="signup-mascot" style="transform:scale(1.3);transform-origin:center bottom;">
+                <div class="signup-mascot-body">
+                    <div class="signup-mascot-glare"></div>
+                    <div class="signup-mascot-face">
+                        <div class="signup-mascot-eyes">
+                            <svg width="16" height="12" viewBox="0 0 16 12" style="overflow:visible;">
+                                <path d="M2 10 Q8 -2 14 10" fill="none" stroke="var(--mascot-face)" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                            <svg width="16" height="12" viewBox="0 0 16 12" style="overflow:visible;">
+                                <path d="M2 10 Q8 -2 14 10" fill="none" stroke="var(--mascot-face)" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h1 class="ob-greeting fade-up fade-up-d1"><span id="user-name">there</span>!<br>Let's make magic.</h1>
+        <p class="ob-sub fade-up fade-up-d2">Grab a plan below and I'll meet you in Premiere Pro and After Effects. Ready when you are.</p>
+
+        <div class="ob-video-wrap fade-up fade-up-d3">
+            <iframe src="https://www.youtube-nocookie.com/embed/61-6aqr-N3U?autoplay=1&mute=1&modestbranding=1&rel=0&showinfo=0&disablekb=1" title="FXbuddy Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;"></iframe>
+        </div>
+    </section>
+
+    <div class="ob-divider"></div>
+
+    <!-- ════════════ VALUE STRIP ════════════ -->
+    <section class="ob-value-strip">
+        <div class="ob-value-item fade-up fade-up-d1">
+            <div class="ob-value-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <div class="ob-value-title">VFX in 30 Seconds</div>
+            <div class="ob-value-desc">Describe what you want, get broadcast-quality VFX on your timeline instantly.</div>
+        </div>
+        <div class="ob-value-item fade-up fade-up-d2">
+            <div class="ob-value-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="ob-value-title">Lives Inside Your Editor</div>
+            <div class="ob-value-desc">A docked panel in Premiere Pro and After Effects. No exports, no round-trips.</div>
+        </div>
+        <div class="ob-value-item fade-up fade-up-d3">
+            <div class="ob-value-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+            <div class="ob-value-title">Trusted by Top Editors</div>
+            <div class="ob-value-desc">Used by editors working on major music videos, brand campaigns, and viral content.</div>
+        </div>
+    </section>
+
+    <div class="ob-divider"></div>
+
+    <!-- ════════════ PRICING (exact same as landing page) ════════════ -->
+    <section class="pricing-section" id="pricing">
+        <div class="pricing-header">
+            <div class="signup-mascot" style="display:flex;justify-content:center;margin-bottom:0.75rem;transform:scale(0.7);transform-origin:center bottom;">
+                <div class="signup-mascot-body">
+                    <div class="signup-mascot-glare"></div>
+                    <div class="signup-mascot-face">
+                        <div class="signup-mascot-eyes">
+                            <svg width="16" height="12" viewBox="0 0 16 12" style="overflow:visible;">
+                                <path d="M2 10 Q8 -2 14 10" fill="none" stroke="var(--mascot-face)" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                            <svg width="16" height="12" viewBox="0 0 16 12" style="overflow:visible;">
+                                <path d="M2 10 Q8 -2 14 10" fill="none" stroke="var(--mascot-face)" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="pricing-heading">Pick your plan, let's create!</h2>
+            <p class="pricing-subtext">Every plan unlocks FXbuddy. The only difference is how much you want to create and the bonuses.</p>
+        </div>
+
+        <div class="pricing-toggle" id="pricing-toggle">
+            <span class="pricing-toggle-label" data-period="monthly">Monthly</span>
+            <button class="pricing-toggle-switch" id="pricing-toggle-switch" aria-label="Toggle yearly pricing">
+                <span class="pricing-toggle-knob"></span>
+            </button>
+            <span class="pricing-toggle-label" data-period="yearly">Yearly</span>
+            <span class="pricing-toggle-save">Save 20%</span>
+        </div>
+
+        <div class="pricing-grid">
+
+            <!-- ─── STARTER ─── -->
+            <div class="pricing-card" data-tier="starter" data-monthly="29" data-yearly="23" data-daily-monthly="0.97" data-daily-yearly="0.77">
+                <div class="pricing-card-header">
+                    <span class="pricing-tier-name">Starter</span>
+                    <span class="pricing-tagline">Perfect for trying FXbuddy</span>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$29</span>
+                        <span class="pricing-period">/mo</span>
+                    </div>
+                    <span class="pricing-daily">That's just $0.97/day</span>
+                </div>
+                <ul class="pricing-feature-list">
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        100 credits/month
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Access to all standard effects
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Premiere Pro &amp; After Effects support
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Timeline integration (Instantly appears after generation)
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Latest AI video generation models
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        AI-powered prompt enhancement
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        HD output quality
+                    </li>
+                </ul>
+                <a href="#" class="pricing-cta-btn" data-tier="starter">Get Started</a>
+                <span class="pricing-cancel-note">Cancel anytime, no questions asked</span>
+            </div>
+
+            <!-- ─── PRO ─── -->
+            <div class="pricing-card featured" data-tier="pro" data-monthly="59" data-yearly="47" data-daily-monthly="1.97" data-daily-yearly="1.57">
+                <span class="pricing-badge">Most Popular</span>
+                <div class="pricing-card-header">
+                    <span class="pricing-tier-name">Pro</span>
+                    <span class="pricing-tagline">For serious editors</span>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$59</span>
+                        <span class="pricing-period">/mo</span>
+                    </div>
+                    <span class="pricing-daily">That's just $1.97/day</span>
+                    <span class="pricing-multiplier">7.5x more credits than Starter</span>
+                </div>
+
+                <div class="pricing-includes">Everything in Starter, plus:</div>
+
+                <ul class="pricing-feature-list">
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        750 credits/month
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Early access to new effects &amp; models
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        1080p &amp; 4K upscaling
+                    </li>
+                    <li class="pricing-feature pricing-feature--bonus">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        AI Compositing Masterclass (video course) <span class="pricing-original-price">$299</span>
+                    </li>
+                    <li class="pricing-feature pricing-feature--bonus">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Music Video Prompt Bible (100+ prompts) <span class="pricing-original-price">$99</span>
+                    </li>
+                    <li class="pricing-feature pricing-feature--bonus">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        &ldquo;Sell Your AI VFX&rdquo; Guide <span class="pricing-original-price">$97</span>
+                    </li>
+                    <li class="pricing-feature">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Exclusive Pro Discord community
+                    </li>
+                </ul>
+                <a href="#" class="pricing-cta-btn" data-tier="pro">Get Started</a>
+                <span class="pricing-cancel-note">Cancel anytime, no questions asked</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Trust Signals -->
+    <div class="trust-bar">
+        <span class="trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            256-bit encrypted
+        </span>
+        <span class="trust-divider">&middot;</span>
+        <span class="trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Powered by Stripe
+        </span>
+        <span class="trust-divider">&middot;</span>
+        <span class="trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Cancel anytime
+        </span>
+        <span class="trust-divider">&middot;</span>
+        <span class="trust-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            7-Day Guarantee
+        </span>
+    </div>
+
+    <footer class="ob-footer">
+        <p>FXbuddy &middot; <a href="index.html">Back to homepage</a></p>
+    </footer>
+
+<script>
+    // Pull user's first name from localStorage
+    var name = localStorage.getItem('fxbuddy-signup-name') || 'there';
+    document.getElementById('user-name').textContent = name;
+
+    /* ── Dark mode toggle ── */
+    var darkToggle = document.getElementById('dark-mode-toggle');
+    var darkMode = document.documentElement.classList.contains('dark');
+
+    if (darkToggle) {
+        darkToggle.addEventListener('click', function() {
+            darkMode = !darkMode;
+            document.documentElement.classList.toggle('dark', darkMode);
+            localStorage.setItem('fxbuddy-dark-mode', String(darkMode));
+        });
+    }
+
+    /* ── Pricing toggle (Monthly / Yearly) ── */
+    var pricingToggle = document.getElementById('pricing-toggle-switch');
+    if (pricingToggle) {
+        var toggleLabels = document.querySelectorAll('.pricing-toggle-label');
+        var isYearly = false;
+
+        toggleLabels.forEach(function(label) {
+            if (label.dataset.period === 'monthly') label.classList.add('active');
+        });
+
+        pricingToggle.addEventListener('click', function() {
+            isYearly = !isYearly;
+            pricingToggle.classList.toggle('yearly', isYearly);
+
+            toggleLabels.forEach(function(label) {
+                label.classList.toggle('active', label.dataset.period === (isYearly ? 'yearly' : 'monthly'));
+            });
+
+            document.querySelectorAll('.pricing-card[data-monthly]').forEach(function(card) {
+                var amount = card.querySelector('.pricing-amount');
+                var period = card.querySelector('.pricing-period');
+                var daily = card.querySelector('.pricing-daily');
+
+                if (isYearly) {
+                    amount.textContent = '$' + card.dataset.yearly;
+                    period.textContent = '/mo';
+                    daily.textContent = "That's just $" + card.dataset.dailyYearly + '/day';
+                } else {
+                    amount.textContent = '$' + card.dataset.monthly;
+                    period.textContent = '/mo';
+                    daily.textContent = "That's just $" + card.dataset.dailyMonthly + '/day';
+                }
+            });
+        });
+
+        toggleLabels.forEach(function(label) {
+            label.addEventListener('click', function() {
+                var wantsYearly = label.dataset.period === 'yearly';
+                if (wantsYearly !== isYearly) {
+                    pricingToggle.click();
+                }
+            });
+        });
+    }
+
+    /* ── Plan selection → Stripe checkout ── */
+    var API_BASE = 'https://fxbuddy-production-eccd.up.railway.app';
+    var accessToken = localStorage.getItem('fxbuddy-access-token');
+
+    document.querySelectorAll('.pricing-cta-btn').forEach(function(btn) {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            var tier = btn.closest('.pricing-card').dataset.tier;
+            btn.style.pointerEvents = 'none';
+            btn.textContent = 'Loading...';
+
+            try {
+                if (accessToken) {
+                    var res = await fetch(API_BASE + '/api/billing/create-checkout-session', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + accessToken
+                        },
+                        body: JSON.stringify({ type: 'subscription', plan: tier })
+                    });
+                    var data = await res.json();
+                    if (res.ok && data.url) {
+                        window.location.href = data.url;
+                        return;
+                    }
+                }
+                // Test mode fallback
+                alert('Test mode: You selected the ' + tier.charAt(0).toUpperCase() + tier.slice(1) + ' plan. In production this redirects to Stripe checkout.');
+            } catch (err) {
+                alert('Test mode: You selected the ' + tier.charAt(0).toUpperCase() + tier.slice(1) + ' plan. In production this redirects to Stripe checkout.');
+            } finally {
+                btn.style.pointerEvents = '';
+                btn.textContent = 'Get Started';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

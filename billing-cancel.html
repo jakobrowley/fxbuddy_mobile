@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled - FXbuddy</title>
+    <meta name="description" content="Your payment was cancelled. No charges were made.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Prevent flash of wrong theme -->
+    <script>
+        (function() {
+            var oldKey = localStorage.getItem('fxbuddy-dark-mode');
+            var newKey = localStorage.getItem('fxbuddy-v2-theme');
+            if (!newKey && oldKey !== null) {
+                localStorage.setItem('fxbuddy-v2-theme', oldKey === 'true' ? 'dark' : 'light');
+            }
+            var s = localStorage.getItem('fxbuddy-v2-theme');
+            if (s === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (!s) {
+                var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (dark) document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .billing-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .billing-card {
+            background: var(--bg-base);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-raised);
+            padding: 3rem 2.5rem;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .billing-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--text-secondary);
+            font-size: 2rem;
+        }
+
+        .billing-heading {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 0.5rem;
+        }
+
+        .billing-subtext {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            margin: 0 0 2rem;
+            line-height: 1.5;
+        }
+
+        .billing-home-link {
+            display: inline-block;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            border-radius: 9999px;
+            padding: 0.75rem 2rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+
+        .billing-home-link:hover {
+            box-shadow: 4px 4px 8px rgba(163,177,198,0.5), -4px -4px 8px rgba(255,255,255,0.7);
+        }
+
+        .dark .billing-home-link:hover {
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.4), -4px -4px 8px rgba(60,60,60,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="billing-page">
+        <div class="billing-card">
+            <div class="billing-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            <h1 class="billing-heading">Payment Cancelled</h1>
+            <p class="billing-subtext">No charges were made. You can try again whenever you're ready.</p>
+            <a href="index.html#pricing" class="billing-home-link">Back to Pricing</a>
+        </div>
+    </div>
+</body>
+</html>

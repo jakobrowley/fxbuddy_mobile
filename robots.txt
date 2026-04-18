@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /billing-success.html
+Disallow: /billing-cancel.html
+Disallow: /topup-success.html
+Disallow: /auth-callback.html
+Allow: /

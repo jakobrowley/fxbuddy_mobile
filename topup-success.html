@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credits Added - FXbuddy</title>
+    <meta name="description" content="Your extra credits have been added to your FXbuddy account.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Prevent flash of wrong theme -->
+    <script>
+        (function() {
+            var oldKey = localStorage.getItem('fxbuddy-dark-mode');
+            var newKey = localStorage.getItem('fxbuddy-v2-theme');
+            if (!newKey && oldKey !== null) {
+                localStorage.setItem('fxbuddy-v2-theme', oldKey === 'true' ? 'dark' : 'light');
+            }
+            var s = localStorage.getItem('fxbuddy-v2-theme');
+            if (s === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (!s) {
+                var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (dark) document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .billing-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .billing-card {
+            background: var(--bg-base);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-raised);
+            padding: 3rem 2.5rem;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .billing-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: #22c55e;
+            font-size: 2rem;
+        }
+
+        .billing-heading {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 0.75rem;
+        }
+
+        .billing-message {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 0 0 1rem;
+            line-height: 1.5;
+        }
+
+        .billing-instruction {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            margin: 0 0 0.75rem;
+            line-height: 1.5;
+        }
+
+        .billing-subtext {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin: 0 0 2rem;
+            line-height: 1.5;
+        }
+
+        .billing-home-link {
+            display: inline-block;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            border-radius: 9999px;
+            padding: 0.75rem 2rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+
+        .billing-home-link:hover {
+            box-shadow: 4px 4px 8px rgba(163,177,198,0.5), -4px -4px 8px rgba(255,255,255,0.7);
+        }
+
+        .dark .billing-home-link:hover {
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.4), -4px -4px 8px rgba(60,60,60,0.3);
+        }
+
+        .restart-label {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 0.75rem;
+            line-height: 1.5;
+        }
+
+        .restart-steps {
+            list-style: none;
+            margin: 0 0 1.25rem;
+            padding: 0;
+            text-align: left;
+            background: var(--bg-base);
+            box-shadow: inset 3px 3px 7px rgba(163,177,198,0.45), inset -3px -3px 7px rgba(255,255,255,0.7);
+            border-radius: var(--radius-md, 12px);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .dark .restart-steps {
+            box-shadow: inset 3px 3px 7px rgba(0,0,0,0.35), inset -3px -3px 7px rgba(60,60,60,0.25);
+        }
+
+        .restart-steps li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: baseline;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            padding: 0.35rem 0;
+        }
+
+        .restart-steps li + li {
+            border-top: 1px solid rgba(163,177,198,0.2);
+        }
+
+        .dark .restart-steps li + li {
+            border-top-color: rgba(255,255,255,0.06);
+        }
+
+        .restart-steps .step-num {
+            flex-shrink: 0;
+            width: 1.375rem;
+            height: 1.375rem;
+            border-radius: 50%;
+            background: var(--bg-base);
+            box-shadow: var(--shadow-raised);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            margin-top: 0.1rem;
+        }
+
+        .restart-steps strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="billing-page">
+        <div class="billing-card">
+            <div class="billing-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h1 class="billing-heading">Credits Added!</h1>
+            <p class="billing-message">Your 50 extra credits have been added to your account.</p>
+            <p class="restart-label">To see your updated credits, restart the FXBuddy plugin:</p>
+            <ol class="restart-steps">
+                <li>
+                    <span class="step-num">1</span>
+                    <span>In Premiere Pro or After Effects, go to <strong>Window &rarr; Extensions &rarr; FXBuddy</strong></span>
+                </li>
+                <li>
+                    <span class="step-num">2</span>
+                    <span>Close the FXBuddy panel</span>
+                </li>
+                <li>
+                    <span class="step-num">3</span>
+                    <span>Reopen it from <strong>Window &rarr; Extensions &rarr; FXBuddy</strong></span>
+                </li>
+                <li>
+                    <span class="step-num">4</span>
+                    <span>Your new credit balance will appear automatically</span>
+                </li>
+            </ol>
+            <p class="billing-subtext">You can close this tab now.</p>
+            <a href="index.html" class="billing-home-link">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

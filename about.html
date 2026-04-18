@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — FXbuddy</title>
+    <meta name="description" content="FXbuddy is built by Tiny Tapes, a small team of editors making VFX effortless.">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <script>
+        (function() {
+            var s = localStorage.getItem('fxbuddy-v2-theme');
+            if (s !== 'light') document.documentElement.classList.add('dark');
+        })();
+    </script>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .legal-page {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 140px 24px 80px;
+        }
+        .legal-page h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin: 0 0 24px;
+        }
+        .legal-page h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 40px 0 12px;
+        }
+        .legal-page p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin: 0 0 14px;
+        }
+        .legal-page a {
+            color: var(--text-primary);
+            text-decoration: underline;
+        }
+        .legal-back {
+            display: inline-block;
+            margin-top: 48px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .legal-back:hover { color: var(--text-primary); }
+    </style>
+</head>
+<body>
+    <main class="legal-page">
+        <h1>About FXbuddy</h1>
+
+        <p>FXbuddy is built by <strong>Tiny Tapes</strong>, a one-person studio run by an editor who got tired of spending more time hunting for the right plugin than actually cutting. I built the tool I wanted: describe an effect in plain English, and it drops onto your timeline seconds later.</p>
+
+        <h2>Why I built this</h2>
+        <p>Modern editors are expected to deliver cinematic VFX shots on turn-arounds that didn't exist a decade ago. Traditional VFX pipelines weren't designed for that pace. Generative AI is &mdash; but only if it meets editors where they already work.</p>
+        <p>So I built FXbuddy as a native CEP extension inside Premiere Pro and After Effects. No browser round-trips, no file exports, no context-switching. You type, the shot lands.</p>
+
+        <h2>What I believe</h2>
+        <p>Editors should spend their time on taste, pacing, and story &mdash; not on wrangling nodes. Every shortcut I build is meant to get you back to the edit faster.</p>
+
+        <h2>Get in touch</h2>
+        <p>Feedback, feature requests, or partnership ideas &rarr; <a href="mailto:tinytapeshelp@gmail.com">tinytapeshelp@gmail.com</a>.</p>
+
+        <a href="index.html" class="legal-back">&larr; Back to FXbuddy</a>
+    </main>
+</body>
+</html>

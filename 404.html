@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found — FXbuddy</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            height: 100%;
+            background: #1a1a2e;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+        }
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 3rem;
+            color: #fff;
+        }
+        .logo span { color: #7c6af7; }
+        .code {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(6rem, 20vw, 10rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            color: rgba(124,106,247,0.18);
+            user-select: none;
+            margin-bottom: 1.5rem;
+        }
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+        }
+        p {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.55);
+            max-width: 340px;
+            line-height: 1.6;
+            margin-bottom: 2.25rem;
+        }
+        a.home-btn {
+            display: inline-block;
+            background: #7c6af7;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            padding: 0.75rem 1.75rem;
+            border-radius: 10px;
+            transition: opacity 0.15s;
+        }
+        a.home-btn:hover { opacity: 0.85; }
+    </style>
+</head>
+<body>
+    <div class="logo">FX<span>buddy</span></div>
+    <div class="code">404</div>
+    <h1>Page not found</h1>
+    <p>The page you're looking for doesn't exist or may have moved.</p>
+    <a href="/" class="home-btn">Back to home</a>
+</body>
+</html>

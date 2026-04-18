@@ -1199,12 +1199,15 @@
 <script src="animations.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Init plugin mascot
-        window.pluginMascot = new Mascot({
-            container: document.getElementById('plugin-mascot'),
-            hasZzz: false,
-            hasPhysicsBody: true,
-        });
+        // Init plugin mascot. Skip on mobile — no mouse to track there,
+        // so a pure-CSS "dancing sway" animation takes over via styles.css.
+        if (window.matchMedia('(min-width: 769px)').matches) {
+            window.pluginMascot = new Mascot({
+                container: document.getElementById('plugin-mascot'),
+                hasZzz: false,
+                hasPhysicsBody: true,
+            });
+        }
 
         var allItems = document.querySelectorAll('.hero .float-pill, .hero .float-gif');
 

@@ -4317,12 +4317,22 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         padding: 72px 0 14px !important;
         min-height: auto !important;
     }
-    .hero-content { padding: 0 20px; }
+    .hero-content {
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+    }
+    /* Re-order so the badges sit BELOW the headline on mobile:
+       stars -> headline -> Pr/Ae badges */
+    .hero-social-proof { order: 1; }
+    .hero-headline    { order: 2; }
+    .hero-app-badges  { order: 3; }
     .hero-app-badges {
         display: flex;
         justify-content: center;
         gap: 10px;
-        margin-bottom: 14px;
+        margin-top: 18px;
+        margin-bottom: 0;
     }
     .app-badge { width: 22px !important; height: 22px !important; }
     /* Social proof on mobile: stars only — hide avatars + tagline. */
@@ -4391,6 +4401,29 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .plugin-frame {
         max-width: 300px !important;
         width: 100% !important;
+    }
+
+    /* ---- Plugin mascot: Dancing Sway loop (Variation D) ----
+       The Mascot JS class is skipped on mobile (index.html inline
+       script bails under 769px), so these CSS keyframes own the
+       mascot body and eye motion. Rhythmic left/right tilt with
+       eyes darting in sync. */
+    #plugin-mascot .mascot-body {
+        transform-origin: center bottom;
+        animation: mobile-mascot-dance 2.2s ease-in-out infinite;
+    }
+    #plugin-mascot .eyes {
+        animation: mobile-mascot-eye-dart 2.2s ease-in-out infinite;
+    }
+    @keyframes mobile-mascot-dance {
+        0%, 100% { transform: rotate(-8deg) translateY(0); }
+        25%      { transform: rotate(-4deg) translateY(-6px); }
+        50%      { transform: rotate( 8deg) translateY(0); }
+        75%      { transform: rotate( 4deg) translateY(-6px); }
+    }
+    @keyframes mobile-mascot-eye-dart {
+        0%, 100% { transform: translate(-7px, 0); }
+        50%      { transform: translate( 7px, 0); }
     }
 
     /* All text pills off on mobile (too tight). Show three video tiles

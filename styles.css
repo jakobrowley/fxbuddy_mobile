@@ -4332,13 +4332,11 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         line-height: 1.4;
     }
     .hero-headline {
-        font-size: 2rem !important;
-        line-height: 1.08 !important;
+        font-size: 1.65rem !important;
+        line-height: 1.15 !important;
         text-align: center;
         margin-bottom: 14px;
         letter-spacing: -0.02em;
-        /* text-wrap:balance spreads the 8 words evenly across two or
-           three lines, so VFX never lands alone on its own line. */
         text-wrap: balance;
     }
     .hero-subtitle {
@@ -4533,7 +4531,7 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
 @media (max-width: 400px) {
     .nav-pill .nav-links a:not(.nav-cta) { font-size: 0.68rem !important; padding: 7px 2px !important; }
     .nav-pill .nav-cta { font-size: 0.72rem !important; padding: 7px 11px !important; }
-    .hero-headline { font-size: 1.8rem !important; }
+    .hero-headline { font-size: 1.55rem !important; }
     .hero-subtitle { font-size: 0.8rem !important; }
     .section-heading { font-size: 1.55rem; }
 }

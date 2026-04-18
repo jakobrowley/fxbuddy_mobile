@@ -4183,7 +4183,11 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
     }
 
-    /* ---- TOP BAR: brand + theme + profile only ---- */
+    /* ---- TOP BAR: brand + theme + profile only ----
+       NOTE: backdrop-filter + transform are intentionally absent here.
+       Either of those on a parent would make it a containing block for
+       fixed-positioned descendants, which would trap .nav-pill inside
+       this 55px-tall bar instead of docking it to the viewport bottom. */
     .nav {
         top: 0;
         bottom: auto;
@@ -4194,13 +4198,14 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         flex-wrap: nowrap !important;
         justify-content: space-between;
         align-items: center;
-        background: rgba(20, 20, 22, 0.55);
+        background: rgba(20, 20, 22, 0.85);
         border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        backdrop-filter: blur(18px) saturate(1.2);
-        -webkit-backdrop-filter: blur(18px) saturate(1.2);
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        transform: none !important;
     }
     html:not(.dark) .nav {
-        background: rgba(248, 248, 250, 0.72);
+        background: rgba(248, 248, 250, 0.92);
         border-bottom-color: rgba(0, 0, 0, 0.06);
     }
     .nav-brand { font-size: 1rem; }

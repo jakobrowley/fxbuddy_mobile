@@ -4216,7 +4216,28 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .nav-brand { font-size: 1rem; }
     .nav-brand-sub { display: none; }
     .nav-actions { gap: 8px; flex-shrink: 0; }
-    .theme-toggle, .profile-icon { width: 34px; height: 34px; }
+    /* Replace the noisy neumorphic double-shadow with a subtle 1px border so
+       the buttons read cleanly against the dark top bar. */
+    .theme-toggle,
+    .profile-icon {
+        width: 34px !important;
+        height: 34px !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+    }
+    html:not(.dark) .theme-toggle,
+    html:not(.dark) .profile-icon {
+        background: rgba(0, 0, 0, 0.04) !important;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+    }
+    .theme-toggle:hover,
+    .profile-icon:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+    html:not(.dark) .theme-toggle:hover,
+    html:not(.dark) .profile-icon:hover {
+        background: rgba(0, 0, 0, 0.08) !important;
+    }
 
     /* ---- BOTTOM NAV PILL ---- */
     .nav-pill {
@@ -4261,14 +4282,17 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         align-items: center;
         gap: 0;
     }
+    .nav-pill {
+        padding: 4px !important;
+    }
     .nav-pill .nav-links a:not(.nav-cta) {
-        padding: 10px 4px !important;
+        padding: 7px 4px !important;
         font-size: 0.72rem !important;
         letter-spacing: -0.01em;
         white-space: nowrap;
     }
     .nav-pill .nav-cta {
-        padding: 10px 14px !important;
+        padding: 7px 13px !important;
         font-size: 0.75rem !important;
         margin: 0 2px;
         flex-shrink: 0;
@@ -4308,23 +4332,27 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         line-height: 1.4;
     }
     .hero-headline {
-        font-size: 2.1rem !important;
-        line-height: 1.1 !important;
+        font-size: 2.7rem !important;
+        line-height: 1.05 !important;
         text-align: center;
         margin-bottom: 14px;
+        letter-spacing: -0.02em;
     }
     .hero-subtitle {
-        font-size: 0.95rem !important;
+        font-size: 0.82rem !important;
         line-height: 1.5;
         text-align: center;
-        padding: 0 8px;
+        padding: 0 14px;
+        max-width: 340px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    /* ---- PLUGIN SHOWCASE: show on mobile, scaled ---- */
+    /* ---- PLUGIN SHOWCASE: show on mobile, sunk deeper behind the wave ---- */
     .plugin-showcase {
         display: flex !important;
         margin-top: 28px !important;
-        margin-bottom: -90px !important;
+        margin-bottom: -190px !important;
         padding: 0 20px;
     }
     .plugin-frame {
@@ -4378,11 +4406,25 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .section-heading { font-size: 1.75rem; line-height: 1.15; }
     .section-subheading { font-size: 0.95rem; }
 
-    /* ---- FAQ ---- */
-    .faq-question { font-size: 0.95rem; padding: 16px 14px; }
-    .faq-answer { padding: 0 14px 14px; font-size: 0.9rem; }
+    /* ---- FAQ ----
+       The desktop layout lives inside .faq-answer p (so the outer
+       .faq-answer can cleanly collapse to max-height: 0). Don't add
+       padding to .faq-answer itself on mobile or the closed state keeps
+       visible bottom padding and looks half-open. Style the inner <p>. */
+    .faq-question { font-size: 0.95rem; padding: 18px 16px; }
+    .faq-answer { padding: 0; }
+    .faq-answer p { padding: 0 16px 18px !important; font-size: 0.88rem; line-height: 1.6; }
 
-    /* ---- TUTORIAL VIDEO ---- */
+    /* ---- TUTORIAL / "See how it works" section ----
+       Desktop has near-zero top padding here because the hero plugin
+       overlaps into it. On mobile we sink the plugin much deeper, so
+       the heading needs breathing room between wave and text. */
+    #tutorial {
+        padding-top: 40px !important;
+    }
+    #tutorial .section-header {
+        margin-top: 10px;
+    }
     .hiw-video-wrapper { border-radius: 12px; }
 
     /* ---- FINAL CTA ---- */

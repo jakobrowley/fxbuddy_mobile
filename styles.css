@@ -4178,6 +4178,17 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
    ============================================================ */
 @media (max-width: 768px) {
 
+    /* Lock horizontal scroll. Several elements intentionally extend
+       past the viewport on mobile (wave SVGs are 110% wide, floating
+       videos use right:-14 to -18px, plugin showcase has a negative
+       margin). Without these two rules the user can scroll/pinch
+       sideways and see a big empty gap on the right. */
+    html, body {
+        overflow-x: hidden !important;
+        max-width: 100%;
+        width: 100%;
+    }
+
     /* Leave room at the bottom of every page for the fixed pill nav. */
     body {
         padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));

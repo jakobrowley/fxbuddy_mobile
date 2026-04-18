@@ -34,13 +34,13 @@
 
     const mm = gsap.matchMedia();
 
-    mm.add({
-      isDesktop: '(min-width: 768px)',
-      reduceMotion: '(prefers-reduced-motion: reduce)'
-    }, (context) => {
-      const { isDesktop, reduceMotion } = context.conditions;
-
-      // ── Baseline reveal system (same visual behavior as original IntersectionObserver) ──
+    // Baseline reveals run under 'all' so they fire on every viewport.
+    // The previous object-form mm.add({ isDesktop, reduceMotion }) only
+    // invoked the callback when at least one condition matched — on a
+    // mobile device with default motion preferences neither matched, and
+    // every .reveal section stayed stuck at opacity:0 forever.
+    mm.add('all', () => {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const revealDuration = reduceMotion ? 0.01 : 0.8;
       const stepSelector = '.step-card';
       const revealSelector = reduceMotion
@@ -70,14 +70,14 @@
         }
       });
 
-      if (!reduceMotion) {
-        initSteps();
-        if (isDesktop) {
-          initCardTilt('.pricing-card', '.pricing-grid');
-          initCardTilt('.step-card', '.steps-grid');
-          initCardTilt('.demo-review', '.demo-reviews');
-        }
-      }
+      if (!reduceMotion) initSteps();
+    });
+
+    // Card tilt only runs on desktop (needs a mouse).
+    mm.add('(min-width: 768px)', () => {
+      initCardTilt('.pricing-card', '.pricing-grid');
+      initCardTilt('.step-card', '.steps-grid');
+      initCardTilt('.demo-review', '.demo-reviews');
     });
   }
 

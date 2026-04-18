@@ -56,10 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── 5. Intersection Observer for reveal animations ──────────
-    // GSAP-MIGRATION: replaced by ScrollTrigger.batch in animations.js.
-    // To revert: uncomment this block and remove the html.gsap-ready CSS guards.
-    /*
+    // ── 5. IntersectionObserver fallback for reveal animations ──
+    //    When GSAP is loaded, animations.js adds `html.gsap-ready` and
+    //    the matching CSS guard neutralizes .reveal's initial opacity:0.
+    //    If GSAP fails to load (CDN blocked / offline), the guard never
+    //    applies — this observer adds `.revealed` so content still shows.
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -68,9 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }, { threshold: 0.1 });
-
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-    */
 
     // ── 6. Mascot instances ──────────────────────────────────────
     window.heroMascot = new Mascot({

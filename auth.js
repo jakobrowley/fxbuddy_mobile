@@ -481,14 +481,52 @@
             });
         }
 
-        /* ── Login Link ──
-           Closes the modal and explains where to log in (inside the plugin). */
+        /* ── Login / Signup mode toggle ──
+           The modal flips between register and login in place. Mode is held
+           on #signup-form[data-mode]; the form submit branches on that. */
+        function setModalMode(mode) {
+            var form       = document.getElementById('signup-form');
+            if (!form) return;
+            form.setAttribute('data-mode', mode);
+
+            var title    = document.getElementById('signup-modal-title');
+            var subtitle = document.getElementById('signup-modal-subtitle');
+            var pwInput  = document.getElementById('signup-password');
+            var submit   = document.getElementById('signup-submit-btn');
+            var btnText  = submit && submit.querySelector('.signup-btn-text');
+            var question = document.getElementById('signup-mode-toggle-question');
+            var toggle   = document.getElementById('signup-login-link');
+            var googleBl = document.getElementById('signup-google-label');
+
+            if (mode === 'login') {
+                if (title)    title.textContent    = 'Welcome back';
+                if (subtitle) subtitle.textContent = 'Log in to your FXbuddy account';
+                if (pwInput)  pwInput.setAttribute('autocomplete', 'current-password');
+                if (btnText)  btnText.textContent  = 'Log In';
+                if (question) question.textContent = "Don't have an account?";
+                if (toggle)   toggle.textContent   = 'Sign up';
+                if (googleBl) googleBl.textContent = 'Log in with Google';
+            } else {
+                if (title)    title.textContent    = 'Create your account';
+                if (subtitle) subtitle.textContent = 'Get started with FXbuddy in seconds';
+                if (pwInput)  pwInput.setAttribute('autocomplete', 'new-password');
+                if (btnText)  btnText.textContent  = 'Create Account';
+                if (question) question.textContent = 'Already have an account?';
+                if (toggle)   toggle.textContent   = 'Log in';
+                if (googleBl) googleBl.textContent = 'Continue with Google';
+            }
+
+            var errEl = document.getElementById('signup-error');
+            if (errEl) errEl.style.display = 'none';
+        }
+
         var loginRedirect = document.getElementById('signup-login-link');
         if (loginRedirect) {
             loginRedirect.addEventListener('click', function (e) {
                 e.preventDefault();
-                closeSignupModal();
-                alert('Log in with your license key directly inside the FXbuddy plugin in Premiere Pro or After Effects.');
+                var form = document.getElementById('signup-form');
+                var currentMode = form && form.getAttribute('data-mode');
+                setModalMode(currentMode === 'login' ? 'signup' : 'login');
             });
         }
 
@@ -535,6 +573,7 @@
                 var signupErrorEl = document.getElementById('signup-error');
                 if (signupErrorEl) signupErrorEl.style.display = 'none';
 
+                var mode       = signupForm.getAttribute('data-mode') === 'login' ? 'login' : 'signup';
                 var nameEl     = document.getElementById('signup-name');
                 var emailEl    = document.getElementById('signup-email');
                 var passwordEl = document.getElementById('signup-password');
@@ -559,7 +598,9 @@
                     }
                     return;
                 }
-                if (password.length < 8) {
+                // Signup has a min-length requirement; login accepts whatever
+                // the backend stored (older accounts may have had 6-char pw).
+                if (mode === 'signup' && password.length < 8) {
                     if (signupErrorEl) {
                         signupErrorEl.textContent = 'Password must be at least 8 characters';
                         signupErrorEl.style.display = 'block';
@@ -575,17 +616,28 @@
                     if (btnSpinner) btnSpinner.style.display = 'inline-flex';
                 }
 
-                // Persist name/email for use on the onboarding page
-                localStorage.setItem('fxbuddy-signup-name',  firstName);
-                localStorage.setItem('fxbuddy-signup-email', email);
+                var endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+                var payload  = mode === 'login'
+                    ? { email: email, password: password }
+                    : { name: firstName, email: email, password: password };
 
-                fetch(API_BASE + '/api/auth/register', {
+                // Persist email early so the onboarding flow can pick it up on signup.
+                if (mode === 'signup') {
+                    localStorage.setItem('fxbuddy-signup-name',  firstName);
+                    localStorage.setItem('fxbuddy-signup-email', email);
+                }
+
+                fetch(API_BASE + endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: firstName, email: email, password: password })
+                    body: JSON.stringify(payload)
                 }).then(function (regRes) {
                     return regRes.json().then(function (regData) {
-                        if (!regRes.ok) throw new Error(regData.error || 'Registration failed');
+                        if (!regRes.ok) {
+                            var msg = regData.error
+                                   || (mode === 'login' ? 'Invalid email or password' : 'Registration failed');
+                            throw new Error(msg);
+                        }
                         return regData;
                     });
                 }).then(function (regData) {
@@ -599,7 +651,8 @@
                 }).catch(function (err) {
                     var errEl = document.getElementById('signup-error');
                     if (errEl) {
-                        errEl.textContent = (err && err.message) ? err.message : 'Registration failed';
+                        var fallback = mode === 'login' ? 'Login failed — please try again' : 'Registration failed';
+                        errEl.textContent = (err && err.message) ? err.message : fallback;
                         errEl.style.display = 'block';
                     }
                     if (signupSubmit) {

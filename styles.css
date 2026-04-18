@@ -4372,17 +4372,18 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .wave-divider svg { height: 64px !important; }
     .wave-bottom--big svg { height: 74px !important; }
 
-    /* ---- BEFORE/AFTER SLIDERS ---- */
+    /* ---- BEFORE/AFTER SLIDERS ----
+       Leave .ba-handle alone (it's the full-height vertical split bar,
+       3px wide, with ::before / ::after drawing the centered white
+       circle and ↔ arrow). An earlier rule forced 40x40 on it, which
+       collapsed it into a tiny box at the TOP of the card. That was
+       the 'emoji handle' the user saw. Match desktop. */
     .ba-grid { grid-template-columns: 1fr !important; gap: 20px; }
     .ba-card { max-width: 100%; }
-    .ba-handle {
-        width: 40px !important;
-        height: 40px !important;
-    }
-    /* Hide native range thumb (the "weird emoji" the user sees) so only the
-       styled .ba-handle shows through */
-    .ba-range::-webkit-slider-thumb { opacity: 0 !important; width: 40px; height: 40px; }
-    .ba-range::-moz-range-thumb { opacity: 0 !important; width: 40px; height: 40px; }
+    /* Native range thumb stays hidden on all platforms so only the styled
+       handle shows through. */
+    .ba-range::-webkit-slider-thumb { opacity: 0; }
+    .ba-range::-moz-range-thumb { opacity: 0; }
     .ba-range { -webkit-appearance: none; appearance: none; background: transparent; }
 
     /* ---- HOW IT WORKS STEPS ---- */

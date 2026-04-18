@@ -4515,6 +4515,11 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .wave-divider svg { height: 120px !important; }
     .wave-bottom--big svg { height: 130px !important; }
 
+    /* Desktop pulls wave-bottom up by 60px so the curve overlaps the
+       section above. On mobile that overlap cuts into the Get Started
+       button — drop the negative margin-top here. */
+    .wave-bottom { margin-top: 0 !important; }
+
     /* ---- BEFORE/AFTER SLIDERS ----
        Leave .ba-handle alone (it's the full-height vertical split bar,
        3px wide, with ::before / ::after drawing the centered white

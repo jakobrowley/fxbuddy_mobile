@@ -4518,13 +4518,21 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .faq-answer p { padding: 0 16px 18px !important; font-size: 0.88rem; line-height: 1.6; }
 
     /* ---- TUTORIAL / "See how it works" section ----
-       Pull the heading up close so users see the tutorial CTA
-       right after scrolling past the hero plugin. */
+       One-line heading + video pulled up tight for a strong CTA. */
     #tutorial {
         padding-top: 24px !important;
     }
     #tutorial .section-header {
         margin-top: 6px;
+        margin-bottom: 18px;
+    }
+    #tutorial .section-heading {
+        font-size: 1.6rem !important;
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+    .how-it-works-video {
+        margin-top: 0 !important;
     }
     .hiw-video-wrapper { border-radius: 12px; }
 

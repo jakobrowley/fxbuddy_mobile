@@ -121,31 +121,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── 9. Hero headline reveal — word-mask slide-up ─────────────
-    //    Each word is wrapped in an overflow-hidden mask and its
-    //    inner span slides up from below the baseline into position.
-    //    Distinct from the blur-up word reveal on pxlsafe.
+    // ── 9. Hero headline reveal — letter scale-pop + blur ────────
+    //    Each character starts scaled down, blurred, and transparent,
+    //    then punches into place with a back-ease overshoot and a
+    //    24 ms stagger. Letters of the same word are kept together
+    //    so they never break across lines.
     const headline = document.querySelector('.hero-headline');
-    if (headline && !headline.dataset.wordSplit) {
+    if (headline && !headline.dataset.letterSplit) {
         const text = headline.textContent.trim();
         const words = text.split(/\s+/);
-        headline.dataset.wordSplit = '1';
+        headline.dataset.letterSplit = '1';
         headline.textContent = '';
-        words.forEach((word, i) => {
-            const mask = document.createElement('span');
-            mask.className = 'reveal-mask';
-            const inner = document.createElement('span');
-            inner.className = 'reveal-inner';
-            inner.textContent = word;
-            mask.appendChild(inner);
-            headline.appendChild(mask);
-            if (i < words.length - 1) headline.appendChild(document.createTextNode(' '));
+        let letterIdx = 0;
+        words.forEach((word, wi) => {
+            const wordSpan = document.createElement('span');
+            wordSpan.className = 'reveal-word';
+            for (const ch of word) {
+                const letter = document.createElement('span');
+                letter.className = 'reveal-letter';
+                letter.textContent = ch;
+                letter.style.transitionDelay = (letterIdx * 22) + 'ms';
+                wordSpan.appendChild(letter);
+                letterIdx++;
+            }
+            headline.appendChild(wordSpan);
+            if (wi < words.length - 1) {
+                const space = document.createElement('span');
+                space.className = 'reveal-space';
+                headline.appendChild(space);
+            }
         });
         requestAnimationFrame(() => {
-            headline.querySelectorAll('.reveal-mask').forEach((mask, i) => {
-                mask.querySelector('.reveal-inner').style.transitionDelay = (i * 75) + 'ms';
-                mask.classList.add('is-in');
-            });
+            headline.querySelectorAll('.reveal-letter').forEach(l => l.classList.add('is-in'));
         });
     }
 

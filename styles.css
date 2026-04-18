@@ -4342,25 +4342,33 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         text-wrap: balance;
     }
 
-    /* Headline reveal — each word sits inside an overflow-hidden mask
-       and slides up from BELOW its own baseline into position. No blur,
-       no fade — purely kinetic type reveal, distinct from the generic
-       blur-up pattern. */
-    .hero-headline .reveal-mask {
+    /* Headline reveal — letter-by-letter scale-pop + blur-in.
+       Each letter punches in from scale(0.3) + blur(12px) + opacity 0
+       to scale(1) + blur(0) + opacity 1 on a back-ease curve with a
+       24 ms stagger per letter. */
+    .hero-headline .reveal-word {
         display: inline-block;
-        overflow: hidden;
-        vertical-align: bottom;
-        padding: 0.1em 0 0.18em;
-        line-height: inherit;
+        white-space: nowrap;
     }
-    .hero-headline .reveal-inner {
+    .hero-headline .reveal-space {
         display: inline-block;
-        transform: translate3d(0, 110%, 0);
-        transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
-        will-change: transform;
+        width: 0.28em;
     }
-    .hero-headline .reveal-mask.is-in .reveal-inner {
-        transform: translate3d(0, 0, 0);
+    .hero-headline .reveal-letter {
+        display: inline-block;
+        opacity: 0;
+        transform: scale(0.3);
+        filter: blur(12px);
+        transition:
+            opacity 0.45s ease-out,
+            transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+            filter 0.5s ease-out;
+        will-change: opacity, transform, filter;
+    }
+    .hero-headline .reveal-letter.is-in {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
     }
     .hero-subtitle {
         font-size: 0.82rem !important;

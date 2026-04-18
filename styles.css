@@ -4315,22 +4315,19 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         margin-bottom: 14px;
     }
     .app-badge { width: 32px !important; height: 32px !important; }
+    /* Social proof on mobile: stars only — hide avatars + tagline. */
     .hero-social-proof {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
+        gap: 0;
         margin-bottom: 20px;
     }
-    .hero-sp-avatars { justify-content: center; }
-    .hero-sp-avatar { width: 26px !important; height: 26px !important; }
-    .hero-sp-stars { font-size: 0.85rem; letter-spacing: 1px; }
+    .hero-sp-avatars,
     .hero-sp-text {
-        font-size: 0.75rem;
-        text-align: center;
-        max-width: 280px;
-        line-height: 1.4;
+        display: none !important;
     }
+    .hero-sp-stars { font-size: 1rem; letter-spacing: 2px; }
     .hero-headline {
         /* Match the pxlsafe hero scale: ~48px, very tight line-height,
            heavy negative letter-spacing so it fills the width. */

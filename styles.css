@@ -4441,8 +4441,9 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
 }
 
 @media (max-width: 400px) {
-    .nav-pill .nav-links a:not(.nav-cta) { font-size: 0.68rem !important; padding: 9px 2px !important; }
-    .nav-pill .nav-cta { font-size: 0.72rem !important; padding: 9px 11px !important; }
-    .hero-headline { font-size: 1.9rem !important; }
+    .nav-pill .nav-links a:not(.nav-cta) { font-size: 0.68rem !important; padding: 7px 2px !important; }
+    .nav-pill .nav-cta { font-size: 0.72rem !important; padding: 7px 11px !important; }
+    .hero-headline { font-size: 2.45rem !important; }
+    .hero-subtitle { font-size: 0.8rem !important; }
     .section-heading { font-size: 1.55rem; }
 }

@@ -121,4 +121,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ── 9. Hero headline word-by-word reveal (pxlsafe-style) ─────
+    //    Each word starts blurred + translated down + transparent,
+    //    then animates to sharp/0/1 with a per-word stagger.
+    const headline = document.querySelector('.hero-headline');
+    if (headline && !headline.dataset.wordSplit) {
+        const text = headline.textContent.trim();
+        const words = text.split(/\s+/);
+        headline.dataset.wordSplit = '1';
+        headline.textContent = '';
+        words.forEach((word, i) => {
+            const span = document.createElement('span');
+            span.className = 'reveal-word';
+            span.textContent = word;
+            headline.appendChild(span);
+            if (i < words.length - 1) headline.appendChild(document.createTextNode(' '));
+        });
+        // Trigger animations with staggered delay.
+        requestAnimationFrame(() => {
+            headline.querySelectorAll('.reveal-word').forEach((span, i) => {
+                span.style.transitionDelay = (i * 90) + 'ms';
+                span.classList.add('is-in');
+            });
+        });
+    }
+
 });

@@ -4369,9 +4369,17 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .hero .float-gif {
         display: none !important;
     }
+    /* NOTE: the inline <style> in index.html sets `.fg1.dispersed { top: 8% }`
+       with !important, and since that inline block sits after the linked
+       styles.css in source order, a tied-specificity selector from here
+       loses. Include `.dispersed` in our selector so we hit (0,3,0) and
+       beat the inline (0,2,0). */
     .hero .fg1,
     .hero .fg2,
-    .hero .fg3 {
+    .hero .fg3,
+    .hero .fg1.dispersed,
+    .hero .fg2.dispersed,
+    .hero .fg3.dispersed {
         display: block !important;
         position: absolute !important;
         width: 92px !important;
@@ -4381,36 +4389,29 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         opacity: 1 !important;
         animation: none !important;
         pointer-events: none;
-        z-index: 2;
         box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
         will-change: auto !important;
     }
-    .hero .fg1.dispersed,
-    .hero .fg2.dispersed,
-    .hero .fg3.dispersed {
-        animation: none !important;
-    }
-    /* Tucked into the empty pockets of the hero layout — next to the
-       top corners and in the gap above the plugin frame — so they
-       don't overlap the headline or subtitle text. */
-    .hero .fg1 {
+    .hero .fg1.dispersed {
         top: 64px !important;
         right: -14px !important;
         left: auto !important;
-        transform: rotate(4deg);
+        transform: rotate(4deg) !important;
+        z-index: 2 !important;
     }
-    .hero .fg2 {
+    .hero .fg2.dispersed {
         top: 470px !important;
         left: -16px !important;
         right: auto !important;
-        transform: rotate(-3deg);
+        transform: rotate(-3deg) !important;
+        z-index: 2 !important;
     }
-    .hero .fg3 {
+    .hero .fg3.dispersed {
         top: 562px !important;
         right: -18px !important;
         left: auto !important;
-        transform: rotate(5deg);
-        z-index: 1;
+        transform: rotate(5deg) !important;
+        z-index: 1 !important;
     }
     .hero .fg1 video,
     .hero .fg2 video,

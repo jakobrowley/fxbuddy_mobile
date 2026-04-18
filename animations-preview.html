@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FXbuddy — Hero Animation Variations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #0c0c0e; color: #e6e6e8; font-family: 'Inter', system-ui, sans-serif; }
+  .page { max-width: 520px; margin: 0 auto; padding: 40px 20px 80px; }
+  .page-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem; margin: 0 0 8px; }
+  .page-sub { font-size: 0.9rem; color: #9b9ba1; margin: 0 0 32px; }
+  .card { background: #151517; border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 28px 20px 24px; margin-bottom: 20px; overflow: hidden; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .card-head h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; color: #c9c9cf; }
+  .replay { background: #ffd166; color: #0c0c0e; border: none; border-radius: 999px; padding: 6px 16px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.78rem; cursor: pointer; }
+  .replay:hover { background: #ffe18a; }
+  .stage { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.2rem; line-height: 0.97; letter-spacing: -0.03em; text-align: left; min-height: 180px; padding: 8px 0 4px; text-wrap: balance; }
+  .hint { font-size: 0.78rem; color: #74747b; margin-top: 12px; line-height: 1.55; }
+
+  /* A: word mask slide-up */
+  .vA .mask { display: inline-block; overflow: hidden; vertical-align: baseline; padding: 0 0 0.12em; line-height: inherit; }
+  .vA .inner { display: inline-block; transform: translate3d(0, 110%, 0); transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
+  .vA .mask.is-in .inner { transform: translate3d(0, 0, 0); }
+
+  /* B: letter scale-pop */
+  .vB .letter { display: inline-block; opacity: 0; transform: scale(0.3); transition: opacity 0.35s ease-out, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); will-change: opacity, transform; }
+  .vB .letter.is-in { opacity: 1; transform: scale(1); }
+  .vB .word-space { display: inline-block; width: 0.25em; }
+
+  /* C: word 3D flip */
+  .vC .word-flip { display: inline-block; transform-origin: 50% 100%; transform: perspective(600px) rotateX(-85deg) translateY(6px); opacity: 0; transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease-out; will-change: transform, opacity; }
+  .vC .word-flip.is-in { transform: perspective(600px) rotateX(0) translateY(0); opacity: 1; }
+
+  /* D: alternating slide from sides */
+  .vD .word-slide { display: inline-block; opacity: 0; transform: translateX(0); transition: opacity 0.55s ease-out, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; }
+  .vD .word-slide[data-from="left"]  { transform: translateX(-40px); }
+  .vD .word-slide[data-from="right"] { transform: translateX( 40px); }
+  .vD .word-slide.is-in { opacity: 1; transform: translateX(0); }
+
+  /* E: line-by-line clip-path wipe */
+  .vE .line { display: block; clip-path: inset(0 100% 0 0); transition: clip-path 0.9s cubic-bezier(0.7, 0, 0.2, 1); will-change: clip-path; }
+  .vE .line.is-in { clip-path: inset(0 0 0 0); }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1 class="page-title">Hero Headline &mdash; 5 Variations</h1>
+  <p class="page-sub">Tap <em>Replay</em> on any card to re-run that animation. Same copy, font, size, and spacing as the live mobile hero.</p>
+
+  <div class="card">
+    <div class="card-head"><h2>A &middot; Word mask slide-up</h2><button class="replay" data-target="vA">Replay</button></div>
+    <div class="stage vA" data-text="Turn words into VFX. Instantly in your timeline."></div>
+    <div class="hint">Each word sits in an overflow-hidden mask and slides up from <code>translateY(110%)</code>. Clean, no fade, no blur.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>B &middot; Letter scale-pop</h2><button class="replay" data-target="vB">Replay</button></div>
+    <div class="stage vB" data-text="Turn words into VFX. Instantly in your timeline."></div>
+    <div class="hint">Each letter punches in from <code>scale(0.3)</code> with a back-ease overshoot. Fast, snappy, playful.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>C &middot; Word 3D flip</h2><button class="replay" data-target="vC">Replay</button></div>
+    <div class="stage vC" data-text="Turn words into VFX. Instantly in your timeline."></div>
+    <div class="hint">Each word rotates from <code>rotateX(-85&deg;)</code> to flat on a bottom hinge. Physical weight.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>D &middot; Words from alternating sides</h2><button class="replay" data-target="vD">Replay</button></div>
+    <div class="stage vD" data-text="Turn words into VFX. Instantly in your timeline."></div>
+    <div class="hint">Odd words arrive from the left, even words from the right. Stitched-together feel.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>E &middot; Line-by-line clip wipe</h2><button class="replay" data-target="vE">Replay</button></div>
+    <div class="stage vE" data-text="Turn words into VFX.|Instantly in your timeline."></div>
+    <div class="hint">Whole lines wipe left-to-right via animated <code>clip-path</code>. Cinematic, title-card feel.</div>
+  </div>
+</div>
+
+<script>
+(() => {
+
+  function clearStage(stage) {
+    while (stage.firstChild) stage.removeChild(stage.firstChild);
+  }
+
+  // A: word mask slide-up
+  function renderA(stage) {
+    const words = stage.dataset.text.split(/\s+/);
+    clearStage(stage);
+    words.forEach((w, i) => {
+      const mask = document.createElement('span');
+      mask.className = 'mask';
+      const inner = document.createElement('span');
+      inner.className = 'inner';
+      inner.textContent = w;
+      inner.style.transitionDelay = (i * 75) + 'ms';
+      mask.appendChild(inner);
+      stage.appendChild(mask);
+      if (i < words.length - 1) stage.appendChild(document.createTextNode(' '));
+    });
+    requestAnimationFrame(() => {
+      stage.querySelectorAll('.mask').forEach(m => m.classList.add('is-in'));
+    });
+  }
+
+  // B: letter scale-pop
+  function renderB(stage) {
+    const words = stage.dataset.text.split(/\s+/);
+    clearStage(stage);
+    let letterIdx = 0;
+    words.forEach((w, wi) => {
+      const wrap = document.createElement('span');
+      wrap.style.display = 'inline-block';
+      wrap.style.whiteSpace = 'nowrap';
+      for (const ch of w) {
+        const s = document.createElement('span');
+        s.className = 'letter';
+        s.textContent = ch;
+        s.style.transitionDelay = (letterIdx * 24) + 'ms';
+        wrap.appendChild(s);
+        letterIdx++;
+      }
+      stage.appendChild(wrap);
+      if (wi < words.length - 1) {
+        const sp = document.createElement('span');
+        sp.className = 'word-space';
+        stage.appendChild(sp);
+      }
+    });
+    requestAnimationFrame(() => {
+      stage.querySelectorAll('.letter').forEach(l => l.classList.add('is-in'));
+    });
+  }
+
+  // C: word 3D flip
+  function renderC(stage) {
+    const words = stage.dataset.text.split(/\s+/);
+    clearStage(stage);
+    words.forEach((w, i) => {
+      const s = document.createElement('span');
+      s.className = 'word-flip';
+      s.textContent = w;
+      s.style.transitionDelay = (i * 85) + 'ms';
+      stage.appendChild(s);
+      if (i < words.length - 1) stage.appendChild(document.createTextNode(' '));
+    });
+    requestAnimationFrame(() => {
+      stage.querySelectorAll('.word-flip').forEach(w => w.classList.add('is-in'));
+    });
+  }
+
+  // D: alternating slide from sides
+  function renderD(stage) {
+    const words = stage.dataset.text.split(/\s+/);
+    clearStage(stage);
+    words.forEach((w, i) => {
+      const s = document.createElement('span');
+      s.className = 'word-slide';
+      s.dataset.from = (i % 2 === 0) ? 'left' : 'right';
+      s.textContent = w;
+      s.style.transitionDelay = (i * 90) + 'ms';
+      stage.appendChild(s);
+      if (i < words.length - 1) stage.appendChild(document.createTextNode(' '));
+    });
+    requestAnimationFrame(() => {
+      stage.querySelectorAll('.word-slide').forEach(w => w.classList.add('is-in'));
+    });
+  }
+
+  // E: line-by-line clip wipe (pipe-separated lines)
+  function renderE(stage) {
+    const lines = stage.dataset.text.split('|');
+    clearStage(stage);
+    lines.forEach((t, i) => {
+      const line = document.createElement('span');
+      line.className = 'line';
+      line.textContent = t.trim();
+      line.style.transitionDelay = (i * 220) + 'ms';
+      stage.appendChild(line);
+    });
+    requestAnimationFrame(() => {
+      stage.querySelectorAll('.line').forEach(l => l.classList.add('is-in'));
+    });
+  }
+
+  const players = { vA: renderA, vB: renderB, vC: renderC, vD: renderD, vE: renderE };
+
+  function play(which) {
+    const stage = document.querySelector('.stage.' + which);
+    if (!stage || !players[which]) return;
+    players[which](stage);
+  }
+
+  Object.keys(players).forEach(play);
+
+  document.querySelectorAll('.replay').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.target;
+      const stage = document.querySelector('.stage.' + t);
+      if (!stage) return;
+      clearStage(stage);
+      void stage.offsetWidth;
+      play(t);
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

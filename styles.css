@@ -1745,8 +1745,52 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     color: var(--text-tertiary);
 }
 
+.demo-review-author-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+}
+
+.demo-review-handle {
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    margin-top: 2px;
+    transition: color 0.15s;
+}
+
+.demo-review-handle:hover {
+    color: var(--accent);
+}
+
+.demo-review--featured .demo-review-author {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.demo-review-avatar-ring {
+    flex-shrink: 0;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    border-radius: 50%;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.demo-review-avatar {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--bg-card);
+}
+
 @media (max-width: 640px) {
     .demo-reviews { grid-template-columns: 1fr; max-width: 400px; }
+    .demo-review-avatar { width: 36px; height: 36px; }
 }
 
 .stat-number {

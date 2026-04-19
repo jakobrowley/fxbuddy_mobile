@@ -4422,70 +4422,12 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
        The Mascot JS class is already skipped under 769px, so the
        mascot renders in its default upright pose. */
 
-    /* All text pills off on mobile (too tight). Show three video tiles
-       tucked into the edges — lightning, fire, explosion — without any
-       cannon/float animation. They're purely decorative accents. */
-    .hero .float-pill {
+    /* Hero floating decorations are off entirely on mobile — both the
+       text pills and all five video tiles. Cleaner hero, faster load. */
+    .hero .float-pill,
+    .hero .float-gif,
+    .hero .float-gif.dispersed {
         display: none !important;
-    }
-    .hero .float-gif {
-        display: none !important;
-    }
-    /* NOTE: the inline <style> in index.html sets `.fg1.dispersed { top: 8% }`
-       with !important, and since that inline block sits after the linked
-       styles.css in source order, a tied-specificity selector from here
-       loses. Include `.dispersed` in our selector so we hit (0,3,0) and
-       beat the inline (0,2,0). */
-    .hero .fg1,
-    .hero .fg2,
-    .hero .fg3,
-    .hero .fg1.dispersed,
-    .hero .fg2.dispersed,
-    .hero .fg3.dispersed {
-        display: block !important;
-        position: absolute !important;
-        width: 92px !important;
-        height: 52px !important;
-        border-radius: 10px !important;
-        overflow: hidden;
-        opacity: 1 !important;
-        animation: none !important;
-        pointer-events: none;
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
-        will-change: auto !important;
-    }
-    /* Position identically before/after .dispersed so they don't jump. */
-    .hero .fg1,
-    .hero .fg1.dispersed {
-        top: 78px !important;
-        right: -14px !important;
-        left: auto !important;
-        transform: rotate(4deg) !important;
-        z-index: 2 !important;
-    }
-    .hero .fg2,
-    .hero .fg2.dispersed {
-        top: 525px !important;
-        left: -16px !important;
-        right: auto !important;
-        transform: rotate(-3deg) !important;
-        z-index: 2 !important;
-    }
-    .hero .fg3,
-    .hero .fg3.dispersed {
-        top: 620px !important;
-        right: -18px !important;
-        left: auto !important;
-        transform: rotate(5deg) !important;
-        z-index: 1 !important;
-    }
-    .hero .fg1 video,
-    .hero .fg2 video,
-    .hero .fg3 video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
     }
 
     /* Plugin frame: no slide-in on mobile, just sits in place. The hero

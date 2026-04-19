@@ -4414,28 +4414,9 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         width: 100% !important;
     }
 
-    /* ---- Plugin mascot: Dancing Sway loop (Variation D) ----
-       The Mascot JS class is skipped on mobile (index.html inline
-       script bails under 769px), so these CSS keyframes own the
-       mascot body and eye motion. Rhythmic left/right tilt with
-       eyes darting in sync. */
-    #plugin-mascot .mascot-body {
-        transform-origin: center bottom;
-        animation: mobile-mascot-dance 2.2s ease-in-out infinite;
-    }
-    #plugin-mascot .eyes {
-        animation: mobile-mascot-eye-dart 2.2s ease-in-out infinite;
-    }
-    @keyframes mobile-mascot-dance {
-        0%, 100% { transform: rotate(-8deg) translateY(0); }
-        25%      { transform: rotate(-4deg) translateY(-6px); }
-        50%      { transform: rotate( 8deg) translateY(0); }
-        75%      { transform: rotate( 4deg) translateY(-6px); }
-    }
-    @keyframes mobile-mascot-eye-dart {
-        0%, 100% { transform: translate(-7px, 0); }
-        50%      { transform: translate( 7px, 0); }
-    }
+    /* Plugin mascot stays static on mobile — no dance, no eye darts.
+       The Mascot JS class is already skipped under 769px, so the
+       mascot renders in its default upright pose. */
 
     /* All text pills off on mobile (too tight). Show three video tiles
        tucked into the edges — lightning, fire, explosion — without any

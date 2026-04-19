@@ -4288,7 +4288,11 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
             0 2px 10px rgba(0, 0, 0, 0.08);
     }
     .nav-pill .nav-links {
-        flex: 1 1 auto;
+        /* basis 0 so both sides occupy exactly equal width,
+           which keeps the Get Started CTA geometrically centered
+           regardless of differing label widths (Watch/Demo vs Plans/FAQ). */
+        flex: 1 1 0;
+        min-width: 0;
         display: flex;
         justify-content: space-around;
         align-items: center;

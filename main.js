@@ -71,6 +71,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
+    // ── 5b. Lazy autoplay for B/A grid videos ───────────────────
+    //    Videos use preload="none" + class="lazy-autoplay" so they don't
+    //    download until they scroll into view. 200px rootMargin ensures
+    //    playback starts slightly before the element is visible.
+    const lazyVideos = document.querySelectorAll('video.lazy-autoplay');
+    if (lazyVideos.length) {
+        if ('IntersectionObserver' in window) {
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.play().catch(() => {});
+                    } else {
+                        entry.target.pause();
+                    }
+                });
+            }, { rootMargin: '200px' });
+            lazyVideos.forEach(v => videoObserver.observe(v));
+        } else {
+            // Fallback: no IntersectionObserver — play all immediately (old behavior)
+            lazyVideos.forEach(v => v.play().catch(() => {}));
+        }
+    }
+
     // ── 6. Mascot instances ──────────────────────────────────────
     window.heroMascot = new Mascot({
         container: document.getElementById('hero-mascot'),

@@ -1393,6 +1393,27 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     gap: 8px;
 }
 
+.hiw-right-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.hiw-fs-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    opacity: 0.85;
+    transition: opacity 0.15s;
+    min-width: 28px;
+    min-height: 28px;
+}
+.hiw-fs-btn:hover { opacity: 1; }
+
 /* Volume */
 .hiw-volume-wrap {
     display: flex;
@@ -4589,6 +4610,50 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     .footer-col { text-align: center; }
     .footer-links { align-items: center; }
     .site-footer { padding-bottom: 28px; }
+
+    /* ---- Top nav bar: solid dark, no transparency (both themes) ---- */
+    .nav,
+    html:not(.dark) .nav {
+        background: #141416 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* ---- Remove scroll-in reveal animations ---- */
+    .reveal,
+    .reveal-stagger,
+    .reveal-stagger > *,
+    .reveal.visible,
+    .reveal-stagger > *.visible {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        animation: none !important;
+        visibility: visible !important;
+        filter: none !important;
+    }
+
+    /* ---- B/A slider handle: replace unicode arrow (renders as iOS
+       emoji on mobile) with a clean inline SVG. Pure vector, identical
+       across browsers and OSes. ---- */
+    .ba-handle::after {
+        content: '';
+        width: 14px;
+        height: 14px;
+        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23232323' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><line x1='5' y1='12' x2='19' y2='12'/><polyline points='8 8 4 12 8 16'/><polyline points='16 8 20 12 16 16'/></svg>") center/contain no-repeat;
+    }
+
+    /* ---- Tighten HIW → See It In Action spacing ---- */
+    .how-it-works-section { padding-bottom: 12px !important; }
+    .how-it-works-section .container > div[style*="margin-top:32px"],
+    .how-it-works-section .container > div[style*="margin-top: 32px"] {
+        margin-top: 18px !important;
+    }
+    .wave-bottom--big svg { height: 56px !important; }
+    .demo-section { padding-top: 8px !important; }
+    .demo-section .section-header { margin-bottom: 24px !important; }
+
 }
 
 @media (max-width: 400px) {

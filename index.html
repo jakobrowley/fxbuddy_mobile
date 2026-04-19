@@ -657,14 +657,19 @@
                                 <input class="hiw-vol-slider" id="hiwVolSlider" type="range" min="0" max="1" step="0.02" value="1" aria-label="Volume"/>
                             </div>
                         </div>
-                        <div class="hiw-speed-wrap">
-                            <button class="hiw-speed-btn" id="hiwSpeedBtn" aria-label="Playback speed">1x</button>
-                            <div class="hiw-speed-popup" id="hiwSpeedPopup">
-                                <button class="hiw-speed-opt" data-speed="0.5">0.5x</button>
-                                <button class="hiw-speed-opt active" data-speed="1">1x</button>
-                                <button class="hiw-speed-opt" data-speed="1.5">1.5x</button>
-                                <button class="hiw-speed-opt" data-speed="2">2x</button>
+                        <div class="hiw-right-controls">
+                            <div class="hiw-speed-wrap">
+                                <button class="hiw-speed-btn" id="hiwSpeedBtn" aria-label="Playback speed">1x</button>
+                                <div class="hiw-speed-popup" id="hiwSpeedPopup">
+                                    <button class="hiw-speed-opt" data-speed="0.5">0.5x</button>
+                                    <button class="hiw-speed-opt active" data-speed="1">1x</button>
+                                    <button class="hiw-speed-opt" data-speed="1.5">1.5x</button>
+                                    <button class="hiw-speed-opt" data-speed="2">2x</button>
+                                </div>
                             </div>
+                            <button class="hiw-fs-btn" id="hiwFsBtn" aria-label="Fullscreen">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -979,7 +984,7 @@
         </div>
 
         <div class="faq-list reveal">
-            <div class="faq-item faq-open">
+            <div class="faq-item">
                 <button class="faq-question">
                     <span>Can I cancel anytime?</span>
                     <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1252,6 +1257,21 @@
             });
         });
 
+        // Keep each card's before/after videos frame-synced. `before` is the
+        // clock; if `after` drifts more than ~100ms we snap it to match.
+        // Snapping also handles loops — when `before` wraps to 0, drift
+        // becomes huge and `after` is pulled back in the same tick.
+        document.querySelectorAll('.ba-slider').forEach(function(slider) {
+            var before = slider.querySelector('.ba-before video');
+            var after  = slider.querySelector('.ba-after video');
+            if (!before || !after) return;
+            before.addEventListener('timeupdate', function() {
+                if (Math.abs(after.currentTime - before.currentTime) > 0.1) {
+                    try { after.currentTime = before.currentTime; } catch (_) {}
+                }
+            });
+        });
+
         // How It Works video — play/pause, progress bar, volume, speed
         (function() {
             var hiwVideo       = document.getElementById('hiwVideo');
@@ -1399,6 +1419,24 @@
             hiwSpeedPopup.addEventListener('click', function(e) {
                 e.stopPropagation();
             });
+
+            // ── Fullscreen ────────────────────────────────────────────
+            var hiwFsBtn = document.getElementById('hiwFsBtn');
+            if (hiwFsBtn) {
+                hiwFsBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var target = hiwVideo;
+                    if (target.requestFullscreen) {
+                        target.requestFullscreen();
+                    } else if (target.webkitRequestFullscreen) {
+                        target.webkitRequestFullscreen();
+                    } else if (target.webkitEnterFullscreen) {
+                        target.webkitEnterFullscreen();
+                    } else if (target.msRequestFullscreen) {
+                        target.msRequestFullscreen();
+                    }
+                });
+            }
         })();
 
     });

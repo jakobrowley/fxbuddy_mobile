@@ -542,7 +542,7 @@
                 fetch(API_BASE + '/api/auth/google', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({})
+                    body: JSON.stringify({ origin: window.location.origin })
                 }).then(function (res) {
                     return res.json().then(function (data) {
                         if (!res.ok) throw new Error(data.error || 'Google sign-in failed');

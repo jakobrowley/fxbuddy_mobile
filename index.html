@@ -1257,18 +1257,23 @@
             });
         });
 
-        // Keep each card's before/after videos frame-synced. `before` is the
-        // clock; if `after` drifts more than ~100ms we snap it to match.
-        // Snapping also handles loops — when `before` wraps to 0, drift
-        // becomes huge and `after` is pulled back in the same tick.
+        // Keep each card's before/after pair in sync at loop boundaries.
+        // The IntersectionObserver in main.js starts both videos together, so
+        // intra-loop drift is imperceptible. The one place they can desync is
+        // at the loop wrap — when `before.currentTime` resets to 0, `after`
+        // might be a frame or two behind. Detect the wrap by watching for
+        // currentTime to decrease, then snap `after` back to 0 to realign.
+        // No corrections during smooth playback = no decoder stalls = no glitch.
         document.querySelectorAll('.ba-slider').forEach(function(slider) {
             var before = slider.querySelector('.ba-before video');
             var after  = slider.querySelector('.ba-after video');
             if (!before || !after) return;
+            var prevT = 0;
             before.addEventListener('timeupdate', function() {
-                if (Math.abs(after.currentTime - before.currentTime) > 0.1) {
-                    try { after.currentTime = before.currentTime; } catch (_) {}
+                if (before.currentTime < prevT - 0.05) {
+                    try { after.currentTime = 0; after.play(); } catch (_) {}
                 }
+                prevT = before.currentTime;
             });
         });
 

@@ -75,10 +75,29 @@ document.addEventListener('DOMContentLoaded', () => {
     //    Videos use preload="none" + class="lazy-autoplay" so they don't
     //    download until they scroll into view. 200px rootMargin ensures
     //    playback starts slightly before the element is visible.
-    const lazyVideos = document.querySelectorAll('video.lazy-autoplay');
-    if (lazyVideos.length) {
-        if ('IntersectionObserver' in window) {
-            const videoObserver = new IntersectionObserver((entries) => {
+    //
+    //    For B/A sliders (.ba-slider), the before/after pair must start
+    //    together. We observe the slider container, not the videos, so
+    //    both get a single synchronous play() call inside one microtask.
+    //    Any other .lazy-autoplay videos (none today, but keep the path)
+    //    use the solo observer below.
+    if ('IntersectionObserver' in window) {
+        const baObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const vids = entry.target.querySelectorAll('video');
+                if (entry.isIntersecting) {
+                    vids.forEach(v => { try { v.currentTime = 0; } catch (_) {} });
+                    Promise.all(Array.from(vids).map(v => v.play().catch(() => {})));
+                } else {
+                    vids.forEach(v => v.pause());
+                }
+            });
+        }, { rootMargin: '200px' });
+        document.querySelectorAll('.ba-slider').forEach(s => baObserver.observe(s));
+
+        const soloVideos = document.querySelectorAll('video.lazy-autoplay:not(.ba-slider video)');
+        if (soloVideos.length) {
+            const soloObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.play().catch(() => {});
@@ -87,11 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }, { rootMargin: '200px' });
-            lazyVideos.forEach(v => videoObserver.observe(v));
-        } else {
-            // Fallback: no IntersectionObserver — play all immediately (old behavior)
-            lazyVideos.forEach(v => v.play().catch(() => {}));
+            soloVideos.forEach(v => soloObserver.observe(v));
         }
+    } else {
+        // Fallback: play every lazy-autoplay video immediately.
+        document.querySelectorAll('video.lazy-autoplay').forEach(v => v.play().catch(() => {}));
     }
 
     // ── 6. Mascot instances ──────────────────────────────────────

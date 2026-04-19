@@ -4189,47 +4189,74 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
         width: 100%;
     }
 
-    /* Leave room at the top of every page for the fixed pill nav. */
+    /* Leave room at the bottom of every page for the fixed pill nav. */
     body {
-        padding-top: calc(78px + env(safe-area-inset-top, 0px));
+        padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
     }
 
-    /* When the user clicks a nav link, land with 78px clearance below the
-       top pill so headings don't slam into it. */
-    html { scroll-padding-top: 78px; }
-    section[id] { scroll-margin-top: 78px; }
+    /* When the user clicks a nav link, land with 66px clearance below the
+       top bar instead of slamming the heading against it. */
+    html { scroll-padding-top: 66px; }
+    section[id] { scroll-margin-top: 66px; }
 
-    /* ---- TOP BAR REMOVED ON MOBILE ----
-       Brand, theme toggle, and account icon are hidden; the .nav container
-       becomes an invisible shell whose only job is to hold the fixed-position
-       .nav-pill. No background, no padding, no pointer-events (pill re-enables
-       them on itself). */
+    /* ---- TOP BAR: brand + theme + profile only ----
+       NOTE: backdrop-filter + transform are intentionally absent here.
+       Either of those on a parent would make it a containing block for
+       fixed-positioned descendants, which would trap .nav-pill inside
+       this 55px-tall bar instead of docking it to the viewport bottom. */
     .nav {
         top: 0;
         bottom: auto;
         left: 0;
         right: 0;
-        padding: 0 !important;
-        background: transparent !important;
-        border-bottom: none !important;
+        padding: 10px 14px !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(20, 20, 22, 0.85);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         transform: none !important;
-        pointer-events: none !important;
     }
-    .nav-brand,
-    .nav-actions {
-        display: none !important;
+    html:not(.dark) .nav {
+        background: rgba(248, 248, 250, 0.92);
+        border-bottom-color: rgba(0, 0, 0, 0.06);
+    }
+    .nav-brand { font-size: 1rem; }
+    .nav-brand-sub { display: none; }
+    .nav-actions { gap: 8px; flex-shrink: 0; }
+    /* Replace the noisy neumorphic double-shadow with a subtle 1px border so
+       the buttons read cleanly against the dark top bar. */
+    .theme-toggle,
+    .profile-icon {
+        width: 34px !important;
+        height: 34px !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+    }
+    html:not(.dark) .theme-toggle,
+    html:not(.dark) .profile-icon {
+        background: rgba(0, 0, 0, 0.04) !important;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+    }
+    .theme-toggle:hover,
+    .profile-icon:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+    html:not(.dark) .theme-toggle:hover,
+    html:not(.dark) .profile-icon:hover {
+        background: rgba(0, 0, 0, 0.08) !important;
     }
 
-    /* ---- TOP NAV PILL (thicker, with CTA hanging above/below) ---- */
+    /* ---- BOTTOM NAV PILL (thicker, with CTA hanging above/below) ---- */
     .nav-pill {
-        pointer-events: auto;
         position: fixed !important;
-        bottom: auto !important;
+        top: auto !important;
         left: 12px !important;
         right: 12px !important;
-        top: calc(18px + env(safe-area-inset-top, 0px)) !important;
+        bottom: calc(18px + env(safe-area-inset-bottom, 0px)) !important;
         transform: none !important;
         order: 0 !important;
         width: auto !important;
@@ -4293,8 +4320,8 @@ html:not(.dark) .nav-links a:not(.nav-cta):hover {
     }
     .nav-pill .nav-cta-arrow { width: 12px; height: 12px; }
 
-    /* Stop .nav-scrolled from restyling the pill differently */
-    .nav-scrolled .nav-pill { top: calc(12px + env(safe-area-inset-top, 0px)) !important; }
+    /* Stop .nav-scrolled from restyling bottom pill differently */
+    .nav-scrolled .nav-pill { bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important; }
 
     /* ---- HERO: breathing-room vertical rhythm ---- */
     .hero {

@@ -221,6 +221,13 @@
 
     <div class="container">
         <div class="hero-content reveal">
+            <button class="sb-info-pill" id="sb-pill-hero" type="button" aria-label="Learn about the free SEARCHbuddy bonus">
+                <span class="sb-pill-dot" aria-hidden="true"></span>
+                <span class="sb-pill-text">
+                  First <span class="sb-pill-count" data-sb-count>97/100</span> get <span class="sb-green-text">SEARCHbuddy</span> free
+                </span>
+                <svg class="sb-pill-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </button>
             <div class="hero-app-badges">
                 <img src="assets/premiere-pro-logo.png" alt="Adobe Premiere Pro" class="app-badge">
                 <img src="assets/after-effects-logo.png" alt="Adobe After Effects" class="app-badge">
@@ -922,6 +929,17 @@
                         <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                         1080p &amp; 4K upscaling
                     </li>
+                    <li class="pricing-feature pricing-feature--bonus pricing-feature--searchbuddy">
+                        <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span class="pricing-feature-text">
+                            <span class="sb-green-text">SEARCHbuddy</span> plugin
+                            <span class="sb-free-note">Free for first 100</span>
+                            <button class="sb-eye-btn" id="sb-eye-btn" type="button" aria-label="Learn about SEARCHbuddy">
+                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6.5" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="4.5" r="0.9" fill="currentColor"/><line x1="7" y1="6.5" x2="7" y2="10.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                            </button>
+                            <span class="pricing-original-price">$99</span>
+                        </span>
+                    </li>
                     <li class="pricing-feature pricing-feature--bonus">
                         <svg class="pricing-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                         AI Compositing Masterclass <span class="pricing-original-price">$299</span>
@@ -1445,6 +1463,105 @@
         })();
 
     });
+</script>
+
+<!-- ================================================================
+     SEARCHBUDDY MODAL — opens from the hero pill or the Pro card eye btn.
+     Self-contained: markup + open/close logic + counter polling.
+     ================================================================ -->
+<div class="sbm-overlay" id="sbm-overlay" role="dialog" aria-modal="true" aria-label="SEARCHbuddy" style="display:none;">
+    <div class="sbm-card">
+        <button class="sbm-close" id="sbm-close" aria-label="Close">&times;</button>
+        <div class="sbm-header">
+            <h2 class="sbm-title"><span class="sb-green-text">SEARCHbuddy</span> — your effect &amp; preset command palette</h2>
+            <p class="sbm-subhead">Hit <kbd>⌘+1</kbd> inside Premiere Pro or After Effects. Type what you want. Hit Enter. The effect lands on your timeline.</p>
+        </div>
+        <div class="sbm-demo-wrap">
+            <video class="sbm-demo-video" id="sbm-demo-video" src="assets/searchbuddy-demo.mp4" muted loop playsinline preload="metadata"></video>
+        </div>
+        <ul class="sbm-bullets">
+            <li><strong>Type</strong> — plain English like "gaussian blur" or "whip pan"</li>
+            <li><strong>Find</strong> — fuzzy match against 200+ effects, presets &amp; commands</li>
+            <li><strong>Apply</strong> — hit Enter and the effect lands on your selected clip</li>
+        </ul>
+        <p class="sbm-footer">Bonus auto-applied at checkout for the first 100 Pro subscribers &middot; Normally $99/year</p>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var overlay = document.getElementById('sbm-overlay');
+        var closeBtn = document.getElementById('sbm-close');
+        if (!overlay || !closeBtn) return;
+        var demoVideo = document.getElementById('sbm-demo-video');
+
+        function openModal() {
+            overlay.style.display = 'flex';
+            // Lock body scroll while modal is up
+            document.body.style.overflow = 'hidden';
+            requestAnimationFrame(function () { overlay.classList.add('sbm-visible'); });
+            if (demoVideo) {
+                try { demoVideo.currentTime = 0; demoVideo.play(); } catch (e) {}
+            }
+        }
+        function closeModal() {
+            overlay.classList.remove('sbm-visible');
+            overlay.addEventListener('transitionend', function hide() {
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+                overlay.removeEventListener('transitionend', hide);
+            });
+            if (demoVideo) { try { demoVideo.pause(); } catch (e) {} }
+        }
+
+        ['sb-eye-btn', 'sb-pill-hero'].forEach(function (id) {
+            var btn = document.getElementById(id);
+            if (btn) btn.addEventListener('click', function (e) {
+                e.preventDefault(); e.stopPropagation(); openModal();
+            });
+        });
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && overlay.classList.contains('sbm-visible')) closeModal();
+        });
+
+        // Live counter — updates pill copy every 60s. Falls back to 97/100.
+        var COUNTER_URL = 'https://fxbuddy-production-eccd.up.railway.app/api/searchbuddy/counter';
+        var countEls = document.querySelectorAll('[data-sb-count]');
+        if (!countEls.length) return;
+        function updateCount() {
+            fetch(COUNTER_URL, { cache: 'no-store' })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (data) {
+                    if (!data || typeof data.remaining !== 'number') return;
+                    var remaining = Math.max(0, Math.min(100, data.remaining));
+                    countEls.forEach(function (el) {
+                        if (remaining === 0) {
+                            var pillText = el.closest('.sb-pill-text');
+                            if (pillText) {
+                                var green = document.createElement('span');
+                                green.className = 'sb-green-text';
+                                green.textContent = 'SEARCHbuddy';
+                                while (pillText.firstChild) pillText.removeChild(pillText.firstChild);
+                                pillText.appendChild(green);
+                                pillText.appendChild(document.createTextNode(' bonus fully claimed'));
+                            }
+                            var pill = el.closest('.sb-info-pill');
+                            if (pill) {
+                                var dot = pill.querySelector('.sb-pill-dot');
+                                if (dot) dot.style.display = 'none';
+                            }
+                        } else {
+                            el.textContent = remaining + '/100';
+                        }
+                    });
+                })
+                .catch(function () {});
+        }
+        updateCount();
+        setInterval(updateCount, 60000);
+    })();
 </script>
 </body>
 </html>

@@ -728,7 +728,9 @@
            .modal-plan-btn → POST /api/billing/create-checkout-session → Stripe. */
         document.querySelectorAll('.modal-plan-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                var tier = btn.dataset.tier;
+                // Read both data-plan (current HTML) and data-tier (legacy) so
+                // we don't send plan: undefined when the markup uses data-plan.
+                var tier = btn.dataset.plan || btn.dataset.tier;
                 btn.disabled = true;
                 btn.textContent = 'Loading...';
 

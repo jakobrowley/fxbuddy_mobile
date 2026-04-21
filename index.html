@@ -32,21 +32,6 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" as="style">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <script>
-    (function() {
-        var hash = window.location.hash;
-        if (hash && hash.length > 1) {
-            var params = new URLSearchParams(hash.substring(1));
-            if (params.get('access_token')) {
-                localStorage.setItem('fxbuddy-access-token', params.get('access_token'));
-                if (params.get('refresh_token')) localStorage.setItem('fxbuddy-refresh-token', params.get('refresh_token'));
-                if (params.get('email')) localStorage.setItem('fxbuddy-user-email', params.get('email'));
-                window.history.replaceState({}, '', window.location.pathname);
-            }
-        }
-    })();
-</script>
-
     <!-- Theme: dark by default, light only if explicitly saved -->
     <script>
         (function() {

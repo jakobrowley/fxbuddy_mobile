@@ -370,10 +370,10 @@
                         <p class="billing-step-title">Download FXBuddy</p>
                         <p class="billing-step-desc">Install the plugin for your operating system.</p>
                         <div class="billing-download-btns">
-                            <a href="https://fxbuddy-production-eccd.up.railway.app/api/download/plugin/mac" class="billing-dl-btn">
+                            <button type="button" class="billing-dl-btn" onclick="downloadPlugin('mac', this)">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                 Download for Mac
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -616,6 +616,28 @@
                 step.style.display = 'flex';
             }
         })();
+
+        async function downloadPlugin(platform, btnEl) {
+            const token = localStorage.getItem('fxbuddy-access-token');
+            if (!token) { window.location = '/login.html?next=' + encodeURIComponent(location.pathname); return; }
+            const originalText = btnEl?.textContent;
+            if (btnEl) { btnEl.disabled = true; btnEl.textContent = 'Preparing download\u2026'; }
+            try {
+                const res = await fetch(`${API_BASE}/api/download/plugin/${platform}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                if (res.status === 401) { window.location = '/login.html?next=' + encodeURIComponent(location.pathname); return; }
+                if (res.status === 403) { alert('This download is only available to customers.'); return; }
+                if (!res.ok) { alert("Couldn't start download. Please try again or contact support@fxbuddy.app."); return; }
+                const { url } = await res.json();
+                if (!url) { alert("Couldn't start download. Please try again."); return; }
+                window.location = url;
+            } catch (err) {
+                alert("Couldn't reach FXbuddy servers. Check your connection and try again.");
+            } finally {
+                if (btnEl) { btnEl.disabled = false; btnEl.textContent = originalText; }
+            }
+        }
     </script>
 </body>
 </html>

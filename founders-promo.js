@@ -62,16 +62,19 @@
     '  font-weight:800;letter-spacing:.02em;color:#fff;background:rgba(239,68,68,0.18);',
     '  padding:.18rem .55rem;border-radius:.5rem;border:1px solid rgba(239,68,68,0.35)}',
     '.founders-promo-countdown.expired{opacity:.45;background:transparent;border-color:transparent}',
-    // Strikethrough: red, larger, heavier, with thick red line so the SAVING is unmistakable.
-    '.founders-original{display:inline-block;color:#ef4444;font-weight:800;',
-    '  font-size:0.62em;line-height:1;margin-right:.4em;vertical-align:0.55em;letter-spacing:-.02em;',
-    '  text-decoration:line-through;text-decoration-color:#ef4444;text-decoration-thickness:0.18em;',
+    // Strikethrough: red, sits on the SAME baseline as the live price (no
+    // float-up superscript) so it reads as a single comparison line. Sized
+    // big enough to feel like an actual was-price, not a footnote.
+    '.founders-original{display:inline-block;color:#ef4444;font-weight:700;',
+    '  font-size:0.78em;line-height:1;margin-right:.42em;vertical-align:baseline;letter-spacing:-.02em;',
+    '  text-decoration:line-through;text-decoration-color:#ef4444;text-decoration-thickness:0.14em;',
     '  text-decoration-skip-ink:none;',
+    '  font-family:inherit;',
     '  text-shadow:0 1px 0 rgba(255,255,255,0.6);',
     '}',
     '@media (max-width:560px){',
     '  .founders-promo-banner{font-size:0.78125rem;padding:0.625rem 1rem;gap:0.5rem}',
-    '  .founders-original{font-size:0.55em;margin-right:.32em;vertical-align:0.5em}',
+    '  .founders-original{font-size:0.72em;margin-right:.36em}',
     '}',
     // Dark-mode override (browser pref): keep red red, but make banner softer
     // against a dark page so it doesn't look like a black-on-black blob.

@@ -36,16 +36,51 @@
   }
 
   // ─── Styles (injected once, no styles.css edits needed) ─────────────────
+  // Aesthetic: solid-black accent banner (matches .nav-cta), red price
+  // strikethrough (#ef4444 — already the brand error/urgency red).
   var STYLES = [
-    '.founders-promo-banner{display:flex;align-items:center;justify-content:center;gap:0.625rem;margin:0 auto 1.5rem auto;padding:0.625rem 1.125rem;border-radius:999px;background:var(--bg-base,#eef0f5);box-shadow:var(--shadow-pressed,inset 2px 2px 5px rgba(166,171,189,0.5),inset -2px -2px 5px rgba(255,255,255,0.7));font-size:0.8125rem;font-weight:600;color:var(--text-primary,#000);max-width:max-content;letter-spacing:-0.01em}',
-    '.founders-promo-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;animation:founders-promo-pulse 1.6s ease-in-out infinite}',
-    '@keyframes founders-promo-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}',
-    '.founders-promo-countdown{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";opacity:.85;font-weight:700;letter-spacing:.01em}',
-    '.founders-promo-countdown.expired{opacity:.5}',
-    '.founders-original{display:inline-block;text-decoration:line-through;opacity:.45;font-weight:600;font-size:0.55em;margin-right:.45em;vertical-align:0.4em;letter-spacing:-.01em}',
-    '@media (max-width:560px){.founders-promo-banner{font-size:0.75rem;padding:0.5rem 0.875rem;gap:0.5rem}.founders-original{font-size:0.5em;margin-right:.35em}}',
-    '@media (prefers-color-scheme:dark){.founders-promo-banner{background:rgba(255,255,255,0.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08);color:#fff}}',
-  ].join('\n');
+    // Banner: black pill, white text — same accent treatment as nav-cta. Adds
+    // a soft red glow so it pops against the light neumorphism page.
+    '.founders-promo-banner{',
+    '  display:inline-flex;align-items:center;justify-content:center;gap:0.625rem;',
+    '  margin:0 auto 1.75rem auto;padding:0.75rem 1.25rem;',
+    '  border-radius:999px;background:#0a0a0a;color:#fff;',
+    '  font-size:0.875rem;font-weight:600;letter-spacing:-0.01em;',
+    '  box-shadow:0 6px 20px rgba(239,68,68,0.18),0 2px 6px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.08);',
+    '  position:relative;z-index:2;',
+    '}',
+    '.founders-promo-banner-row{display:flex;justify-content:center;width:100%;margin:0 0 1.5rem 0}',
+    '.founders-promo-dot{width:9px;height:9px;border-radius:50%;background:#ef4444;flex-shrink:0;',
+    '  box-shadow:0 0 0 0 rgba(239,68,68,0.55);animation:founders-promo-pulse 1.6s ease-out infinite}',
+    '@keyframes founders-promo-pulse{',
+    '  0%{box-shadow:0 0 0 0 rgba(239,68,68,0.6);transform:scale(1)}',
+    '  70%{box-shadow:0 0 0 8px rgba(239,68,68,0);transform:scale(.92)}',
+    '  100%{box-shadow:0 0 0 0 rgba(239,68,68,0);transform:scale(1)}',
+    '}',
+    '.founders-promo-label{opacity:.92;font-weight:600}',
+    '.founders-promo-countdown{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";',
+    '  font-weight:800;letter-spacing:.02em;color:#fff;background:rgba(239,68,68,0.18);',
+    '  padding:.18rem .55rem;border-radius:.5rem;border:1px solid rgba(239,68,68,0.35)}',
+    '.founders-promo-countdown.expired{opacity:.45;background:transparent;border-color:transparent}',
+    // Strikethrough: red, larger, heavier, with thick red line so the SAVING is unmistakable.
+    '.founders-original{display:inline-block;color:#ef4444;font-weight:800;',
+    '  font-size:0.62em;line-height:1;margin-right:.4em;vertical-align:0.55em;letter-spacing:-.02em;',
+    '  text-decoration:line-through;text-decoration-color:#ef4444;text-decoration-thickness:0.18em;',
+    '  text-decoration-skip-ink:none;',
+    '  text-shadow:0 1px 0 rgba(255,255,255,0.6);',
+    '}',
+    '@media (max-width:560px){',
+    '  .founders-promo-banner{font-size:0.78125rem;padding:0.625rem 1rem;gap:0.5rem}',
+    '  .founders-original{font-size:0.55em;margin-right:.32em;vertical-align:0.5em}',
+    '}',
+    // Dark-mode override (browser pref): keep red red, but make banner softer
+    // against a dark page so it doesn't look like a black-on-black blob.
+    '@media (prefers-color-scheme:dark){',
+    '  .founders-promo-banner{background:#171717;color:#fff;',
+    '    box-shadow:0 8px 24px rgba(239,68,68,0.22),inset 0 1px 0 rgba(255,255,255,0.06)}',
+    '  .founders-original{text-shadow:0 1px 0 rgba(0,0,0,0.5)}',
+    '}',
+  ].join('');
 
   function injectStyles() {
     if (document.getElementById('founders-promo-styles')) return;
@@ -105,8 +140,12 @@
     if (existing) return existing;
 
     // Build with createElement / textContent — no innerHTML, no XSS surface.
+    // Outer wrapper centers the inline-flex pill on the page.
+    var row = document.createElement('div');
+    row.id = 'founders-promo-banner';
+    row.className = 'founders-promo-banner-row';
+
     var banner = document.createElement('div');
-    banner.id = 'founders-promo-banner';
     banner.className = 'founders-promo-banner';
 
     var dot = document.createElement('span');
@@ -114,7 +153,8 @@
     dot.setAttribute('aria-hidden', 'true');
 
     var label = document.createElement('span');
-    label.textContent = CONFIG.badgeText + ' · ' + CONFIG.badgeSubtext + ' ';
+    label.className = 'founders-promo-label';
+    label.textContent = CONFIG.badgeText + ' · ' + CONFIG.badgeSubtext;
 
     var time = document.createElement('span');
     time.className = 'founders-promo-countdown';
@@ -124,12 +164,13 @@
     banner.appendChild(dot);
     banner.appendChild(label);
     banner.appendChild(time);
+    row.appendChild(banner);
 
     // Insert above the pricing-toggle if present, otherwise above the grid.
     var toggle = document.getElementById('pricing-toggle');
     var anchor = toggle || grid;
-    anchor.parentNode.insertBefore(banner, anchor);
-    return banner;
+    anchor.parentNode.insertBefore(row, anchor);
+    return row;
   }
 
   function tickCountdown() {

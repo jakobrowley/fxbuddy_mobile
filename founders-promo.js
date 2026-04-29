@@ -36,52 +36,68 @@
   }
 
   // ─── Styles (injected once, no styles.css edits needed) ─────────────────
-  // Aesthetic: solid-black accent banner (matches .nav-cta), red price
-  // strikethrough (#ef4444 — already the brand error/urgency red).
+  // Aesthetic: founders pill mirrors the SearchBuddy green pill — same shape,
+  // same vertical rhythm — but black/red urgency styling. Both pills get a
+  // matched whole-pill pulse so they read as a coordinated row.
   var STYLES = [
-    // Banner: black pill, white text — same accent treatment as nav-cta. Adds
-    // a soft red glow so it pops against the light neumorphism page.
+    // Sit beside the green sb-info-pill in the same section-header. The
+    // sb-info-pill has margin-top:14px applied in styles.css, so we match it
+    // with the same margin between the green pill and the founders pill so
+    // the gap reads as equal vertical rhythm.
+    '.founders-promo-banner-row{display:flex;justify-content:center;width:100%;margin-top:14px}',
+    // Black pill, white text, red urgency glow. Whole pill pulses softly.
     '.founders-promo-banner{',
-    '  display:inline-flex;align-items:center;justify-content:center;gap:0.625rem;',
-    '  margin:0 auto 1.75rem auto;padding:0.75rem 1.25rem;',
-    '  border-radius:999px;background:#0a0a0a;color:#fff;',
-    '  font-size:0.875rem;font-weight:600;letter-spacing:-0.01em;',
-    '  box-shadow:0 6px 20px rgba(239,68,68,0.18),0 2px 6px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.08);',
+    '  display:inline-flex;align-items:center;justify-content:center;gap:8px;',
+    '  padding:10px 18px;border-radius:999px;background:#0a0a0a;color:#fff;',
+    '  font-family:var(--font-body,"Inter",sans-serif);',
+    '  font-size:13px;font-weight:600;line-height:1;letter-spacing:-0.01em;',
+    '  border:1px solid rgba(239,68,68,0.45);',
+    '  box-shadow:0 6px 22px rgba(239,68,68,0.22),0 2px 6px rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.06);',
+    '  animation:founders-pill-breathe 2.4s ease-in-out infinite;',
     '  position:relative;z-index:2;',
     '}',
-    '.founders-promo-banner-row{display:flex;justify-content:center;width:100%;margin:0 0 1.5rem 0}',
-    '.founders-promo-dot{width:9px;height:9px;border-radius:50%;background:#ef4444;flex-shrink:0;',
-    '  box-shadow:0 0 0 0 rgba(239,68,68,0.55);animation:founders-promo-pulse 1.6s ease-out infinite}',
-    '@keyframes founders-promo-pulse{',
-    '  0%{box-shadow:0 0 0 0 rgba(239,68,68,0.6);transform:scale(1)}',
-    '  70%{box-shadow:0 0 0 8px rgba(239,68,68,0);transform:scale(.92)}',
+    // Whole-pill breathing pulse — gentle scale + outer red glow oscillation.
+    '@keyframes founders-pill-breathe{',
+    '  0%,100%{transform:scale(1);box-shadow:0 6px 22px rgba(239,68,68,0.22),0 2px 6px rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.06)}',
+    '  50%{transform:scale(1.025);box-shadow:0 10px 32px rgba(239,68,68,0.42),0 2px 6px rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.06)}',
+    '}',
+    // Dot pulse — independent ring expansion mirrors .sb-pill-dot rhythm.
+    '.founders-promo-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;',
+    '  box-shadow:0 0 0 0 rgba(239,68,68,0.6);animation:founders-dot-flash 1.6s ease-out infinite}',
+    '@keyframes founders-dot-flash{',
+    '  0%{box-shadow:0 0 0 0 rgba(239,68,68,0.65);transform:scale(1)}',
+    '  70%{box-shadow:0 0 0 9px rgba(239,68,68,0);transform:scale(.9)}',
     '  100%{box-shadow:0 0 0 0 rgba(239,68,68,0);transform:scale(1)}',
     '}',
-    '.founders-promo-label{opacity:.92;font-weight:600}',
+    '.founders-promo-label{opacity:.95}',
     '.founders-promo-countdown{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";',
-    '  font-weight:800;letter-spacing:.02em;color:#fff;background:rgba(239,68,68,0.18);',
-    '  padding:.18rem .55rem;border-radius:.5rem;border:1px solid rgba(239,68,68,0.35)}',
-    '.founders-promo-countdown.expired{opacity:.45;background:transparent;border-color:transparent}',
-    // Strikethrough: red, sits on the SAME baseline as the live price (no
-    // float-up superscript) so it reads as a single comparison line. Sized
-    // big enough to feel like an actual was-price, not a footnote.
-    '.founders-original{display:inline-block;color:#ef4444;font-weight:700;',
-    '  font-size:0.78em;line-height:1;margin-right:.42em;vertical-align:baseline;letter-spacing:-.02em;',
-    '  text-decoration:line-through;text-decoration-color:#ef4444;text-decoration-thickness:0.14em;',
-    '  text-decoration-skip-ink:none;',
-    '  font-family:inherit;',
-    '  text-shadow:0 1px 0 rgba(255,255,255,0.6);',
+    '  font-weight:800;letter-spacing:.02em;color:#fff;background:rgba(239,68,68,0.22);',
+    '  padding:3px 8px;border-radius:6px;border:1px solid rgba(239,68,68,0.45)}',
+    '.founders-promo-countdown.expired{opacity:.45;background:transparent;border-color:transparent;animation:none}',
+    // Match the green pill so both have the same whole-pill breathing pulse.
+    '.sb-info-pill{animation:founders-pill-breathe-green 2.4s ease-in-out infinite}',
+    '@keyframes founders-pill-breathe-green{',
+    '  0%,100%{transform:scale(1);box-shadow:0 6px 22px rgba(40,200,64,0.18),0 2px 6px rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.06)}',
+    '  50%{transform:scale(1.025);box-shadow:0 10px 32px rgba(40,200,64,0.34),0 2px 6px rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.06)}',
+    '}',
+    // Strikethrough — full-size, deep red, same display font + weight as the
+    // live price so the comparison reads "$39  $29" as two equally-loud
+    // numbers, with a thick red line gutting the old one.
+    '.founders-original{display:inline-block;color:#dc2626;',
+    '  font-family:var(--font-display,inherit);font-weight:800;letter-spacing:-0.03em;',
+    '  font-size:0.95em;line-height:1;margin-right:0.45em;vertical-align:baseline;',
+    '  text-decoration:line-through;text-decoration-color:#dc2626;',
+    '  text-decoration-thickness:0.11em;text-decoration-skip-ink:none;',
     '}',
     '@media (max-width:560px){',
-    '  .founders-promo-banner{font-size:0.78125rem;padding:0.625rem 1rem;gap:0.5rem}',
-    '  .founders-original{font-size:0.72em;margin-right:.36em}',
+    '  .founders-promo-banner{font-size:12px;padding:9px 16px;gap:7px}',
+    '  .founders-original{font-size:0.88em;margin-right:0.38em}',
     '}',
-    // Dark-mode override (browser pref): keep red red, but make banner softer
-    // against a dark page so it doesn't look like a black-on-black blob.
+    // Dark-mode override — keep founders pill black-with-red-edge; bump green
+    // pill glow slightly so the pulse stays visible against dark page bg.
     '@media (prefers-color-scheme:dark){',
-    '  .founders-promo-banner{background:#171717;color:#fff;',
-    '    box-shadow:0 8px 24px rgba(239,68,68,0.22),inset 0 1px 0 rgba(255,255,255,0.06)}',
-    '  .founders-original{text-shadow:0 1px 0 rgba(0,0,0,0.5)}',
+    '  .founders-promo-banner{background:#0f0f0f}',
+    '  .founders-original{color:#ef4444;text-decoration-color:#ef4444}',
     '}',
   ].join('');
 
@@ -169,7 +185,18 @@
     banner.appendChild(time);
     row.appendChild(banner);
 
-    // Insert above the pricing-toggle if present, otherwise above the grid.
+    // Place the founders pill IMMEDIATELY AFTER the green sb-info-pill so
+    // both pills sit in the same section-header row, separated by an equal
+    // 14px margin (matched to the green pill's own margin-top in styles.css).
+    // Falls back to "above the pricing toggle" if the green pill isn't on
+    // this page (e.g. a future pricing-only page without it).
+    var greenPill = document.getElementById('sb-pill-pricing')
+      || document.querySelector('.sb-info-pill');
+    if (greenPill && greenPill.parentNode) {
+      // insertAdjacentElement('afterend', row) — works in all evergreen browsers.
+      greenPill.parentNode.insertBefore(row, greenPill.nextSibling);
+      return row;
+    }
     var toggle = document.getElementById('pricing-toggle');
     var anchor = toggle || grid;
     anchor.parentNode.insertBefore(row, anchor);

@@ -32,9 +32,9 @@
     '@media (max-width:560px){',
     '  .founders-original{font-size:0.88em;margin-right:0.38em}',
     '}',
-    '@media (prefers-color-scheme:dark){',
-    '  .founders-original{color:#ef4444;text-decoration-color:#fff}',
-    '}',
+    // No prefers-color-scheme:dark override — the public site is always
+    // rendered light, so an OS-dark visitor was seeing the dark-mode line
+    // colour (white) on a light page. Keep the line black everywhere.
   ].join('');
 
   function injectStyles() {

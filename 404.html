@@ -13,8 +13,8 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
             height: 100%;
-            background: #1a1a2e;
-            color: #fff;
+            background: #eef0f5;
+            color: #000;
             font-family: 'Inter', sans-serif;
         }
         body {
@@ -32,16 +32,15 @@
             font-weight: 800;
             letter-spacing: -0.02em;
             margin-bottom: 3rem;
-            color: #fff;
+            color: #000;
         }
-        .logo span { color: #7c6af7; }
         .code {
             font-family: 'Syne', sans-serif;
             font-size: clamp(6rem, 20vw, 10rem);
             font-weight: 800;
             line-height: 1;
             letter-spacing: -0.04em;
-            color: rgba(124,106,247,0.18);
+            color: rgba(0,0,0,0.12);
             user-select: none;
             margin-bottom: 1.5rem;
         }
@@ -54,27 +53,28 @@
         }
         p {
             font-size: 1rem;
-            color: rgba(255,255,255,0.55);
+            color: rgba(0,0,0,0.55);
             max-width: 340px;
             line-height: 1.6;
             margin-bottom: 2.25rem;
         }
         a.home-btn {
             display: inline-block;
-            background: #7c6af7;
-            color: #fff;
+            background: #000;
+            color: #eef0f5;
             text-decoration: none;
             font-size: 0.9375rem;
             font-weight: 600;
             padding: 0.75rem 1.75rem;
-            border-radius: 10px;
-            transition: opacity 0.15s;
+            border-radius: 9999px;
+            box-shadow: 6px 6px 12px #b8b9be, -6px -6px 12px #ffffff;
+            transition: transform 0.15s, box-shadow 0.2s;
         }
-        a.home-btn:hover { opacity: 0.85; }
+        a.home-btn:hover { transform: translateY(-1px); box-shadow: 8px 8px 16px #b8b9be, -8px -8px 16px #ffffff; }
     </style>
 </head>
 <body>
-    <div class="logo">FX<span>buddy</span></div>
+    <div class="logo">FXbuddy</div>
     <div class="code">404</div>
     <h1>Page not found</h1>
     <p>The page you're looking for doesn't exist or may have moved.</p>

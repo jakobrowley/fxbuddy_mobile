@@ -370,9 +370,9 @@
                         <p class="billing-step-title">Download FXBuddy</p>
                         <p class="billing-step-desc">Install the plugin for your operating system.</p>
                         <div class="billing-download-btns">
-                            <button type="button" class="billing-dl-btn" onclick="downloadPlugin('mac', this)">
+                            <button type="button" class="billing-dl-btn" onclick="downloadPlugin('all', this)">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                Download for Mac
+                                Download
                             </button>
                         </div>
                     </div>
@@ -617,16 +617,29 @@
             }
         })();
 
+        // If the user lands here from Stripe and isn't logged in (Stripe's
+        // success_url doesn't carry localStorage), open the in-page signup
+        // modal that auth.js exposes globally as window.FXAuth.openSignupModal.
+        // Falls back to the homepage if FXAuth isn't ready yet \u2014 anything but
+        // the dead /login.html link that 404s.
+        function _promptLogin() {
+            if (window.FXAuth && typeof window.FXAuth.openSignupModal === 'function') {
+                try { window.FXAuth.openSignupModal('login'); return; } catch (e) {}
+                try { window.FXAuth.openSignupModal(); return; } catch (e) {}
+            }
+            window.location = '/?next=' + encodeURIComponent(location.pathname);
+        }
+
         async function downloadPlugin(platform, btnEl) {
             const token = localStorage.getItem('fxbuddy-access-token');
-            if (!token) { window.location = '/login.html?next=' + encodeURIComponent(location.pathname); return; }
+            if (!token) { _promptLogin(); return; }
             const originalText = btnEl?.textContent;
             if (btnEl) { btnEl.disabled = true; btnEl.textContent = 'Preparing download\u2026'; }
             try {
                 const res = await fetch(`${API_BASE}/api/download/plugin/${platform}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                if (res.status === 401) { window.location = '/login.html?next=' + encodeURIComponent(location.pathname); return; }
+                if (res.status === 401) { _promptLogin(); return; }
                 if (res.status === 403) { alert('This download is only available to customers.'); return; }
                 if (!res.ok) { alert("Couldn't start download. Please try again or contact support@fxbuddy.app."); return; }
                 const { url } = await res.json();
@@ -639,5 +652,8 @@
             }
         }
     </script>
+    <!-- Loads window.FXAuth (signup/login modal) so _promptLogin can open it
+         in-place if the user lands here without an access token. -->
+    <script defer src="auth.js"></script>
 </body>
 </html>

@@ -363,17 +363,21 @@
 
             <div class="billing-steps">
 
-                <!-- Step 1: Download -->
+                <!-- Step 1: Download — mobile users can't actually install
+                     the Premiere/AE plugin on their phone. Send them to the
+                     desktop account page (mobile-responsive) where they can
+                     copy the license key and grab the installer when they
+                     get to their computer. -->
                 <div class="billing-step">
                     <div class="billing-step-num">1</div>
                     <div class="billing-step-body">
                         <p class="billing-step-title">Download FXBuddy</p>
-                        <p class="billing-step-desc">Install the plugin for your operating system.</p>
+                        <p class="billing-step-desc">Install on your computer — open <strong>fxbuddy.app</strong> on desktop and the installer is waiting on your account page.</p>
                         <div class="billing-download-btns">
-                            <button type="button" class="billing-dl-btn" onclick="downloadPlugin('all', this)">
+                            <a href="https://fxbuddy.app/account.html#download" class="billing-dl-btn" style="text-decoration:none;">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                Download
-                            </button>
+                                Go to your account
+                            </a>
                         </div>
                     </div>
                 </div>

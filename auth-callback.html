@@ -130,11 +130,10 @@
             if (data.email) {
                 localStorage.setItem('fxbuddy-user-email', data.email);
             }
-            if (data.isNew) {
-                window.location.href = '/onboarding.html';
-            } else {
-                window.location.href = '/';
-            }
+            // Always land on the home page after sign-in. Returning users
+            // and brand-new signups both see the canonical landing experience
+            // (hero + pricing) — no separate onboarding interstitial.
+            window.location.href = '/';
         })
         .catch(function (err) {
             showError(err && err.message ? err.message : 'Something went wrong. Please try again.');

@@ -734,17 +734,27 @@
                 btn.disabled = true;
                 btn.textContent = 'Loading...';
 
+                // Owner-only test path: ?coupon=XYZ in URL applies a Stripe
+                // coupon to checkout. Backend rejects coupons unless the user
+                // has plan='none', so this is safe to leave wired up.
+                var couponFromUrl = new URLSearchParams(location.search).get('coupon');
+                if (couponFromUrl) sessionStorage.setItem('fxbuddy_pending_coupon', couponFromUrl);
+                var coupon = couponFromUrl || sessionStorage.getItem('fxbuddy_pending_coupon');
+
+                var checkoutBody = {
+                    type: 'subscription',
+                    plan: tier,
+                    billing: window.isYearly ? 'yearly' : 'monthly'
+                };
+                if (coupon) checkoutBody.coupon = coupon;
+
                 fetch(API_BASE + '/api/billing/create-checkout-session', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + _storedAccessToken
                     },
-                    body: JSON.stringify({
-                        type: 'subscription',
-                        plan: tier,
-                        billing: window.isYearly ? 'yearly' : 'monthly'
-                    })
+                    body: JSON.stringify(checkoutBody)
                 }).then(function (checkoutRes) {
                     return checkoutRes.json().then(function (checkoutData) {
                         if (!checkoutRes.ok) throw new Error(checkoutData.error || 'Failed to start checkout');

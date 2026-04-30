@@ -407,17 +407,6 @@
                     </div>
                 </div>
 
-                <!-- Step 4: Bonuses (rendered by JS if plan has bonuses) -->
-                <div class="billing-divider" id="billing-bonuses-divider" style="display:none;"></div>
-                <div class="billing-step" id="billing-bonuses-step" style="display:none;">
-                    <div class="billing-step-num">4</div>
-                    <div class="billing-step-body">
-                        <p class="billing-step-title">Your Bonuses</p>
-                        <p class="billing-step-desc">These extras are included with your plan.</p>
-                        <div class="billing-bonus-list" id="billing-bonus-list"></div>
-                    </div>
-                </div>
-
             </div>
 
             <a href="index.html" class="billing-home-link">Back to Home</a>
@@ -517,11 +506,6 @@
                 container.textContent = '';
                 container.appendChild(wrap);
 
-                // Render bonuses (Step 4) if the /me response includes them
-                var bonuses = data.bonuses;
-                if (bonuses && bonuses.length > 0) {
-                    renderBonuses(bonuses);
-                }
             })
             .catch(function() {
                 setMsg('Could not load license key. Please refresh or contact support.');

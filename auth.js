@@ -160,8 +160,8 @@
             // Explicit allowlist of paid plan slugs — defaults to "not paid" for
             // null / unknown / malformed plan values so we never accidentally
             // expose a license key or manage-sub button to a free account.
-            var PAID_PLANS = ['starter', 'pro', 'studio', 'team', 'enterprise'];
-            var plan    = (balance && balance.plan) || 'free';
+            var PAID_PLANS = ['starter', 'pro'];
+            var plan    = (balance && balance.plan) || 'none';
             var hasActivePlan = PAID_PLANS.indexOf(String(plan).toLowerCase()) !== -1;
 
             setPaidOnlyVisible(hasActivePlan);

@@ -9,6 +9,16 @@
     /* ── Constants ── */
     var API_BASE = 'https://fxbuddy-production-eccd.up.railway.app';
 
+    /* ── Capture ?coupon= URL param immediately ──
+       Persisted to sessionStorage so it survives Google OAuth round-trips,
+       page nav within the modal, and the auth-callback redirect to '/'.
+       Backend's create-checkout-session reads it from the request body and
+       only honours it when user.plan === 'none', so it's safe to leave on. */
+    try {
+        var _couponParam = new URLSearchParams(location.search).get('coupon');
+        if (_couponParam) sessionStorage.setItem('fxbuddy_pending_coupon', _couponParam);
+    } catch (_) { /* sessionStorage might be blocked in some contexts */ }
+
     /* ── Token Refresh Lock ──
        Prevents concurrent 401 responses from each spawning their own
        refresh request. All callers share a single in-flight promise. */
@@ -368,7 +378,11 @@
                     body: JSON.stringify({ type: 'topup', packSize: packSize })
                 }).then(function (res) { return res.json(); })
                   .then(function (data) {
-                    if (data.url) window.location.href = data.url;
+                    if (data.url) {
+                        var topupValue = packSize === 'large' ? 50 : packSize === 'medium' ? 30 : packSize === 'small' ? 12 : 0;
+                        if (window.fbqTrack) window.fbqTrack('InitiateCheckout', { value: topupValue, currency: 'USD', content_name: 'topup_' + packSize });
+                        window.location.href = data.url;
+                    }
                 }).catch(function () {
                     alert('Could not start checkout. Please try again.');
                 }).finally(function () {
@@ -646,6 +660,7 @@
                         localStorage.setItem('fxbuddy-refresh-token', regData.refreshToken);
                     }
                     localStorage.setItem('fxbuddy-user-email', email);
+                    if (mode === 'signup' && window.fbqTrack) window.fbqTrack('CompleteRegistration', { content_name: 'fxbuddy_signup' });
                     closeSignupModal();
                     updateProfileState();
                 }).catch(function (err) {
@@ -761,6 +776,9 @@
                         return checkoutData;
                     });
                 }).then(function (checkoutData) {
+                    var icMonthly = tier === 'pro' ? 59 : tier === 'starter' ? 29 : 0;
+                    var icValue = window.isYearly ? icMonthly * 10 : icMonthly;
+                    if (window.fbqTrack) window.fbqTrack('InitiateCheckout', { value: icValue, currency: 'USD', content_name: tier });
                     window.location.href = checkoutData.url;
                 }).catch(function (err) {
                     alert(err.message);

@@ -716,6 +716,9 @@
                         return res.json().then(function (data) { return { ok: res.ok, data: data }; });
                     }).then(function (r) {
                         if (r.ok && r.data.url) {
+                            var icMonthly = tier === 'pro' ? 59 : tier === 'starter' ? 29 : 0;
+                            var icValue = window.isYearly ? icMonthly * 10 : icMonthly;
+                            if (window.fbqTrack) window.fbqTrack('InitiateCheckout', { value: icValue, currency: 'USD', content_name: tier });
                             window.location.href = r.data.url;
                             return;
                         }

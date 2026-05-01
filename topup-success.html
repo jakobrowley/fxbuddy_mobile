@@ -182,6 +182,7 @@
             font-weight: 600;
         }
     </style>
+<script defer src="/meta-pixel.js"></script>
 </head>
 <body>
     <div class="billing-page">
@@ -216,5 +217,18 @@
             <a href="index.html" class="billing-home-link">Back to Home</a>
         </div>
     </div>
+    <script>
+        // Meta Pixel — fire Purchase event for the topup. Pack size comes from
+        // the success_url query param (set by /api/billing/create-checkout-session).
+        (function () {
+            try {
+                var pack = new URLSearchParams(location.search).get('pack');
+                var value = pack === 'large' ? 50 : pack === 'medium' ? 30 : pack === 'small' ? 12 : 0;
+                if (value > 0 && window.fbqTrack) {
+                    window.fbqTrack('Purchase', { value: value, currency: 'USD', content_name: 'topup_' + pack });
+                }
+            } catch (_) { /* ignore */ }
+        })();
+    </script>
 </body>
 </html>

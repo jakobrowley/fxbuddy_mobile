@@ -9,7 +9,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://t.contentsquare.net https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://fxbuddy-production-eccd.up.railway.app https://www.google-analytics.com; frame-src https://www.youtube-nocookie.com https://lookerstudio.google.com; object-src 'none'; base-uri 'self'; form-action 'self' https://fxbuddy-production-eccd.up.railway.app"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://t.contentsquare.net https://cdn.jsdelivr.net https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://fxbuddy-production-eccd.up.railway.app https://www.google-analytics.com https://www.facebook.com; frame-src https://www.youtube-nocookie.com https://lookerstudio.google.com; object-src 'none'; base-uri 'self'; form-action 'self' https://fxbuddy-production-eccd.up.railway.app"
         },
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },

@@ -3,6 +3,10 @@
   "buildCommand": null,
   "installCommand": null,
   "outputDirectory": null,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/effects/:slug", "destination": "/Effects/:slug" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

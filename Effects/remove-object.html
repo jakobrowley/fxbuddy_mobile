@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Object Removal in Premiere Pro &mdash; FXbuddy</title>
+    <meta name="description" content="Remove unwanted objects from video footage directly inside Premiere Pro. FXbuddy uses Runway Gen-4 to erase microphones, logos, people, and props from your clips.">
+    <link rel="canonical" href="https://fxbuddy.app/effects/remove-object.html">
+    <meta property="og:image" content="https://fxbuddy.app/og-cover.png">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            var s = localStorage.getItem('fxbuddy-v2-theme');
+            if (s !== 'light') document.documentElement.classList.add('dark');
+        })();
+    </script>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .legal-page { max-width: 760px; margin: 0 auto; padding: 100px 20px 60px; }
+        .legal-page h1 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); margin: 0 0 20px; }
+        .legal-page h2 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 36px 0 10px; }
+        .legal-page p { font-size: 1rem; line-height: 1.7; color: var(--text-secondary); margin: 0 0 14px; }
+        .legal-page ul, .legal-page ol { margin: 0 0 16px 0; padding-left: 22px; }
+        .legal-page li { font-size: 1rem; line-height: 1.65; color: var(--text-secondary); margin-bottom: 6px; }
+        .legal-back { display: inline-block; margin-top: 40px; font-size: 0.875rem; color: var(--text-secondary); text-decoration: none; }
+        .legal-back:hover { color: var(--text-primary); }
+        .legal-breadcrumb { font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 24px; }
+        .legal-breadcrumb a { color: var(--text-tertiary); text-decoration: none; }
+        .mobile-cta { display: block; margin-top: 40px; padding: 14px 24px; background: var(--text-primary); color: var(--bg-base); border-radius: 8px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; text-decoration: none; text-align: center; }
+    </style>
+    <script defer src="/meta-pixel.js"></script>
+</head>
+<body>
+    <main class="legal-page">
+        <nav class="legal-breadcrumb">
+            <a href="/">Home</a> &rsaquo; <a href="/resources.html">Effects</a> &rsaquo; AI Object Removal
+        </nav>
+        <h1>AI Object Removal in Premiere Pro</h1>
+        <p>Erase microphones, logos, power lines, unwanted props, or distracting background elements from your footage without leaving your timeline. FXbuddy sends the clip to Runway Gen-4 and fills the gap with a plausible background.</p>
+
+        <h2>How it works</h2>
+        <ol>
+            <li>Select the clip and set in/out points around the section that needs cleaning up.</li>
+            <li>Describe what should be removed and where it is in frame in FXbuddy's panel.</li>
+            <li>Runway Gen-4 inpaints the removed area across the full clip duration. Result returns to your timeline as a new layer.</li>
+        </ol>
+
+        <h2>Example prompts</h2>
+        <ul>
+            <li>Remove the boom microphone from the top of the frame. Fill with the ceiling behind it.</li>
+            <li>Erase the coffee cup on the desk in the lower left. Replace with the table surface.</li>
+            <li>Remove the parked van from the right side of the street scene.</li>
+            <li>Clean up the power lines crossing the sky in the establishing shot.</li>
+        </ul>
+
+        <h2>Best for</h2>
+        <ul>
+            <li>Equipment mistakes (boom mics, C-stand legs, lighting rigs)</li>
+            <li>Uncleared logos or signage</li>
+            <li>Location distractions in documentary or run-and-gun footage</li>
+            <li>Product shot cleanup</li>
+        </ul>
+
+        <a href="https://fxbuddy.app/effects/remove-object.html" class="mobile-cta">Read the full guide on desktop</a>
+        <a href="https://fxbuddy.app" class="legal-back">&larr; Get FXbuddy</a>
+    </main>
+</body>
+</html>

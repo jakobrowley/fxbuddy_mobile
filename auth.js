@@ -240,6 +240,30 @@
     /* ── Signup Modal ── */
     var _signupMascot = null;
 
+    /* Re-paint the signup modal's monthly/yearly UI to match the current
+       window.isYearly value. Called by both the modal toggle-button click
+       handler and openSignupModal() so both pricing surfaces stay in sync.
+       Mirror of the desktop fix in fxbuddy_frontend/auth.js — see the
+       comment there for the customer-report context. */
+    function _syncModalPricing() {
+        var yearly = !!window.isYearly;
+        var toggle = document.getElementById('modal-pricing-toggle-switch');
+        if (toggle) toggle.classList.toggle('yearly', yearly);
+
+        var labels = document.querySelectorAll('.modal-toggle-label');
+        for (var i = 0; i < labels.length; i++) {
+            var period = labels[i].getAttribute('data-period');
+            labels[i].classList.toggle('active', period === (yearly ? 'yearly' : 'monthly'));
+        }
+
+        var amounts = document.querySelectorAll('.modal-plan-card .modal-plan-amount[data-monthly]');
+        for (var j = 0; j < amounts.length; j++) {
+            var m = amounts[j].getAttribute('data-monthly');
+            var y = amounts[j].getAttribute('data-yearly');
+            amounts[j].textContent = '$' + (yearly ? (y || m) : m);
+        }
+    }
+
     function openSignupModal() {
         var signupModal = document.getElementById('signup-modal');
         var step1       = document.getElementById('signup-step-1');
@@ -251,6 +275,10 @@
             if (step1) step1.style.display = '';
             if (step2) step2.style.display = 'none';
             if (signupError) signupError.style.display = 'none';
+
+            // Reflect the current window.isYearly state on open so the modal
+            // and the main pricing-page toggle stay visually consistent.
+            _syncModalPricing();
 
             // Initialize the mascot with mouse tracking + blinking (like the plugin UI one)
             if (!_signupMascot && typeof Mascot !== 'undefined') {
@@ -348,6 +376,18 @@
                 profileDropdown.style.display = 'none';
             }
         });
+
+        /* ── Signup-modal monthly/yearly toggle ──
+           The toggle button at index.html:1188 had no listener — clicks
+           did nothing visually and customers couldn't switch to yearly
+           via the modal. Mirror of the desktop fix. */
+        var modalPricingToggle = document.getElementById('modal-pricing-toggle-switch');
+        if (modalPricingToggle) {
+            modalPricingToggle.addEventListener('click', function () {
+                window.isYearly = !window.isYearly;
+                _syncModalPricing();
+            });
+        }
 
         /* ── Logout ──
            Clears all stored tokens and restores the "Get Started" nav state. */

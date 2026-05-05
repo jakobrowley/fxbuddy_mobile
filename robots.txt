@@ -1,7 +1,47 @@
+# m.fxbuddy.app robots.txt
+# Mobile site canonicalizes back to https://fxbuddy.app — every public page
+# carries a <link rel="canonical" href="https://fxbuddy.app/..."> so the
+# desktop URL collects all the organic authority. We still let crawlers
+# index the mobile pages (the canonical resolves the duplicate-content
+# concern) but they won't be the URL that ranks.
+
 User-agent: *
 Disallow: /admin.html
 Disallow: /billing-success.html
 Disallow: /billing-cancel.html
 Disallow: /topup-success.html
 Disallow: /auth-callback.html
+Disallow: /report-bug.html
+Disallow: /welcome.html
 Allow: /
+
+# Explicit AI search crawler allowlist (parity with desktop robots.txt).
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Point both crawlers at the desktop sitemap — that's the canonical URL set.
+Sitemap: https://fxbuddy.app/sitemap.xml

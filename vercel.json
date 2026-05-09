@@ -5,7 +5,10 @@
   "outputDirectory": null,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/effects/:slug", "destination": "/Effects/:slug" }
+    { "source": "/effects/:slug", "destination": "/Effects/:slug" },
+    { "source": "/prompts/:slug", "destination": "/Prompts/:slug.html" },
+    { "source": "/for-music-videos", "destination": "/For/music-videos.html" },
+    { "source": "/for-indie-filmmakers", "destination": "/For/indie-filmmakers.html" }
   ],
   "headers": [
     {

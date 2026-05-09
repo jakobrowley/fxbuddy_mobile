@@ -8,7 +8,10 @@
     { "source": "/effects/:slug", "destination": "/Effects/:slug" },
     { "source": "/prompts/:slug", "destination": "/Prompts/:slug" },
     { "source": "/for-music-videos", "destination": "/For/music-videos" },
-    { "source": "/for-indie-filmmakers", "destination": "/For/indie-filmmakers" }
+    { "source": "/for-indie-filmmakers", "destination": "/For/indie-filmmakers" },
+    { "source": "/guides/:slug", "destination": "/Guides/:slug" },
+    { "source": "/tools/:slug", "destination": "/Tools/:slug" },
+    { "source": "/for-youtube-creators", "destination": "/For/youtube-creators" }
   ],
   "headers": [
     {

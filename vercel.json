@@ -6,9 +6,9 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/effects/:slug", "destination": "/Effects/:slug" },
-    { "source": "/prompts/:slug", "destination": "/Prompts/:slug.html" },
-    { "source": "/for-music-videos", "destination": "/For/music-videos.html" },
-    { "source": "/for-indie-filmmakers", "destination": "/For/indie-filmmakers.html" }
+    { "source": "/prompts/:slug", "destination": "/Prompts/:slug" },
+    { "source": "/for-music-videos", "destination": "/For/music-videos" },
+    { "source": "/for-indie-filmmakers", "destination": "/For/indie-filmmakers" }
   ],
   "headers": [
     {

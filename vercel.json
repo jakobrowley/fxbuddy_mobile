@@ -11,7 +11,8 @@
     { "source": "/for-indie-filmmakers", "destination": "/For/indie-filmmakers" },
     { "source": "/guides/:slug", "destination": "/Guides/:slug" },
     { "source": "/tools/:slug", "destination": "/Tools/:slug" },
-    { "source": "/for-youtube-creators", "destination": "/For/youtube-creators" }
+    { "source": "/for-youtube-creators", "destination": "/For/youtube-creators" },
+    { "source": "/for-short-form-creators", "destination": "/For/short-form-creators" }
   ],
   "headers": [
     {

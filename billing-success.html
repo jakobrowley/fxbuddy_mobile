@@ -365,22 +365,30 @@
 
             <div class="billing-steps">
 
-                <!-- Step 1: Download — mobile users can't actually install
-                     the Premiere/AE plugin on their phone. Send them to the
-                     desktop account page (mobile-responsive) where they can
-                     copy the license key and grab the installer when they
-                     get to their computer. -->
+                <!-- Step 1: Download — serve signed download URLs directly so
+                     mobile users don't need to open fxbuddy.app on desktop. -->
                 <div class="billing-step">
                     <div class="billing-step-num">1</div>
                     <div class="billing-step-body">
                         <p class="billing-step-title">Download FXBuddy</p>
-                        <p class="billing-step-desc">Install on your computer — open <strong>fxbuddy.app</strong> on desktop and the installer is waiting on your account page.</p>
-                        <div class="billing-download-btns">
-                            <a href="https://fxbuddy.app/account.html#download" class="billing-dl-btn" style="text-decoration:none;">
+                        <p class="billing-step-desc" id="billing-dl-desc">Download the installer now (or email the link to yourself for your computer). We've also emailed both download links to you.</p>
+                        <div class="billing-download-btns" id="billing-dl-btns">
+                            <a id="billing-dl-mac" class="billing-dl-btn" style="text-decoration:none;opacity:0.5;pointer-events:none;" aria-disabled="true">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                Go to your account
+                                <span id="billing-dl-mac-label">Loading...</span>
+                            </a>
+                            <a id="billing-dl-win" class="billing-dl-btn" style="text-decoration:none;opacity:0.5;pointer-events:none;" aria-disabled="true">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                <span id="billing-dl-win-label">Loading...</span>
                             </a>
                         </div>
+                        <div style="margin-top:0.5rem;">
+                            <button id="billing-copy-link" class="billing-dl-btn" style="opacity:0.5;pointer-events:none;cursor:default;border:none;background:var(--bg-base);box-shadow:var(--shadow-raised);" aria-disabled="true">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                <span id="billing-copy-label">Copy Mac link</span>
+                            </button>
+                        </div>
+                        <p id="billing-dl-error" style="display:none;font-size:0.8125rem;color:#ef4444;margin:0.5rem 0 0;line-height:1.4;">Couldn't generate download link &mdash; check your email.</p>
                     </div>
                 </div>
 
@@ -409,6 +417,17 @@
                     </div>
                 </div>
 
+                <div class="billing-divider"></div>
+
+                <!-- Step 4: Account page (informational) -->
+                <div class="billing-step">
+                    <div class="billing-step-num">4</div>
+                    <div class="billing-step-body">
+                        <p class="billing-step-title">Manage Your Account</p>
+                        <p class="billing-step-desc">View your license key, billing, and downloads anytime at <a href="https://fxbuddy.app/account.html" style="color:var(--text-primary);font-weight:600;">fxbuddy.app/account</a>.</p>
+                    </div>
+                </div>
+
             </div>
 
             <a href="index.html" class="billing-home-link">Back to Home</a>
@@ -433,8 +452,88 @@
 
             if (!token) {
                 setMsg('Log in to your account to see your license key');
+                // Hide download buttons and show email fallback message
+                var dlBtns = document.getElementById('billing-dl-btns');
+                var copyLinkBtn = document.getElementById('billing-copy-link');
+                var dlDesc = document.getElementById('billing-dl-desc');
+                if (dlBtns) dlBtns.style.display = 'none';
+                if (copyLinkBtn) copyLinkBtn.parentElement.style.display = 'none';
+                if (dlDesc) dlDesc.textContent = "We’ve emailed your download links to you — check your inbox.";
                 return;
             }
+
+            // Fetch signed download URLs for Mac and Windows in parallel
+            (function() {
+                var macBtn = document.getElementById('billing-dl-mac');
+                var winBtn = document.getElementById('billing-dl-win');
+                var macLabel = document.getElementById('billing-dl-mac-label');
+                var winLabel = document.getElementById('billing-dl-win-label');
+                var copyBtn = document.getElementById('billing-copy-link');
+                var copyLabel = document.getElementById('billing-copy-label');
+                var errorEl = document.getElementById('billing-dl-error');
+                var macUrl = null;
+
+                function enableBtn(el) {
+                    el.style.opacity = '1';
+                    el.style.pointerEvents = '';
+                    el.removeAttribute('aria-disabled');
+                }
+
+                function fetchDownloadUrl(platform) {
+                    return fetch(API_BASE + '/api/download/plugin/' + platform, {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    }).then(function(res) {
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.json();
+                    }).then(function(data) {
+                        if (!data || !data.url) throw new Error('no url');
+                        return data.url;
+                    });
+                }
+
+                Promise.all([
+                    fetchDownloadUrl('mac'),
+                    fetchDownloadUrl('windows')
+                ]).then(function(urls) {
+                    macUrl = urls[0];
+                    var winUrl = urls[1];
+
+                    if (macBtn && macUrl) {
+                        macBtn.href = macUrl;
+                        if (macLabel) macLabel.textContent = 'Download for Mac';
+                        enableBtn(macBtn);
+                    }
+                    if (winBtn && winUrl) {
+                        winBtn.href = winUrl;
+                        if (winLabel) winLabel.textContent = 'Download for Windows';
+                        enableBtn(winBtn);
+                    }
+                    if (copyBtn && macUrl) {
+                        copyBtn.style.opacity = '1';
+                        copyBtn.style.pointerEvents = '';
+                        copyBtn.style.cursor = 'pointer';
+                        copyBtn.removeAttribute('aria-disabled');
+                        copyBtn.addEventListener('click', function() {
+                            navigator.clipboard.writeText(macUrl).then(function() {
+                                if (copyLabel) copyLabel.textContent = 'Copied!';
+                                setTimeout(function() {
+                                    if (copyLabel) copyLabel.textContent = 'Copy Mac link';
+                                }, 1500);
+                            }).catch(function() {
+                                if (copyLabel) copyLabel.textContent = 'Copy failed';
+                                setTimeout(function() {
+                                    if (copyLabel) copyLabel.textContent = 'Copy Mac link';
+                                }, 1500);
+                            });
+                        });
+                    }
+                }).catch(function() {
+                    if (macBtn) macBtn.style.display = 'none';
+                    if (winBtn) winBtn.style.display = 'none';
+                    if (copyBtn) copyBtn.parentElement.style.display = 'none';
+                    if (errorEl) errorEl.style.display = '';
+                });
+            })();
 
             fetch(API_BASE + '/api/auth/me', {
                 headers: { 'Authorization': 'Bearer ' + token }

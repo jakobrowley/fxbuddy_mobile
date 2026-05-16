@@ -12,7 +12,11 @@
     { "source": "/guides/:slug", "destination": "/Guides/:slug" },
     { "source": "/tools/:slug", "destination": "/Tools/:slug" },
     { "source": "/for-youtube-creators", "destination": "/For/youtube-creators" },
-    { "source": "/for-short-form-creators", "destination": "/For/short-form-creators" }
+    { "source": "/for-short-form-creators", "destination": "/For/short-form-creators" },
+    { "source": "/mp/lib.min.js", "destination": "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" },
+    { "source": "/mp/decide", "destination": "https://decide.mixpanel.com/decide" },
+    { "source": "/mp/track/:path*", "destination": "https://api.mixpanel.com/track/:path*" },
+    { "source": "/mp/engage/:path*", "destination": "https://api.mixpanel.com/engage/:path*" }
   ],
   "headers": [
     {

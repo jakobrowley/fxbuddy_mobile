@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- UTM / click-id capture — runs synchronously before anything else so
+         params are preserved even if a later script triggers a navigation. -->
+    <script src="/utm-capture.js"></script>
+
     <!-- Mobile clone of the desktop site at m.fxbuddy.app.
          The UA redirect intentionally lives only on fxbuddy.app/index.html
          and is NOT duplicated here, to avoid an infinite redirect loop. -->
@@ -60,6 +64,9 @@
       gtag('config', 'G-W4CX6Q6K75');
     </script>
 <script defer src="/meta-pixel.js"></script>
+<!-- Mixpanel token — set by deploy before shipping. Empty = no-op (safe). -->
+<script>window.MIXPANEL_TOKEN = "";</script>
+<script src="/mixpanel.js" defer></script>
 </head>
 <body>
 

@@ -421,6 +421,7 @@
                     if (data.url) {
                         var topupValue = packSize === 'large' ? 50 : packSize === 'medium' ? 30 : packSize === 'small' ? 12 : 0;
                         if (window.fbqTrack) window.fbqTrack('InitiateCheckout', { value: topupValue, currency: 'USD', content_name: 'topup_' + packSize });
+                        window.mp?.track('checkout_initiated', { plan: 'topup_' + packSize, price_usd: topupValue });
                         window.location.href = data.url;
                     }
                 }).catch(function () {
@@ -519,6 +520,9 @@
                     window.location.href = '/pricing.html';
                     return;
                 }
+                // Track signup button click for funnel analytics.
+                var loc = btn.id || btn.closest('[id]')?.id || btn.className || 'unknown';
+                window.mp?.track('signup_button_clicked', { location: loc, plan_context: null });
                 openSignupModal();
             });
         });
@@ -671,9 +675,17 @@
                 }
 
                 var endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
-                var payload  = mode === 'login'
+                var _basePayload = mode === 'login'
                     ? { email: email, password: password }
                     : { name: firstName, email: email, password: password };
+                var payload = mode === 'signup'
+                    ? Object.assign(
+                        _basePayload,
+                        (typeof window.fxbGetAttributionForSignup === 'function')
+                            ? window.fxbGetAttributionForSignup()
+                            : {}
+                      )
+                    : _basePayload;
 
                 // Persist email early so the onboarding flow can pick it up on signup.
                 if (mode === 'signup') {
@@ -701,6 +713,13 @@
                     }
                     localStorage.setItem('fxbuddy-user-email', email);
                     if (mode === 'signup' && window.fbqTrack) window.fbqTrack('CompleteRegistration', { content_name: 'fxbuddy_signup' });
+                    // Mixpanel: merge anonymous timeline into known user, then track.
+                    if (mode === 'signup' && regData.user && regData.user.id) {
+                        window.mp?.alias(regData.user.id);
+                        window.mp?.identify(regData.user.id);
+                        window.mp?.peopleSet({ '$email': email, '$name': firstName, plan: 'none' });
+                    }
+                    if (mode === 'signup') window.mp?.track('signup_form_submitted', { source: 'mobile_web' });
                     closeSignupModal();
                     updateProfileState();
                 }).catch(function (err) {
@@ -759,6 +778,7 @@
                             var icMonthly = tier === 'pro' ? 59 : tier === 'starter' ? 29 : 0;
                             var icValue = window.isYearly ? icMonthly * 10 : icMonthly;
                             if (window.fbqTrack) window.fbqTrack('InitiateCheckout', { value: icValue, currency: 'USD', content_name: tier });
+                            window.mp?.track('checkout_initiated', { plan: tier, price_usd: icValue });
                             window.location.href = r.data.url;
                             return;
                         }
@@ -822,6 +842,7 @@
                     var icMonthly = tier === 'pro' ? 59 : tier === 'starter' ? 29 : 0;
                     var icValue = window.isYearly ? icMonthly * 10 : icMonthly;
                     if (window.fbqTrack) window.fbqTrack('InitiateCheckout', { value: icValue, currency: 'USD', content_name: tier });
+                    window.mp?.track('checkout_initiated', { plan: tier, price_usd: icValue });
                     window.location.href = checkoutData.url;
                 }).catch(function (err) {
                     alert(err.message);

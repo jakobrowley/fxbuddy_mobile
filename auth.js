@@ -527,6 +527,31 @@
             });
         });
 
+        /* ── Hero plugin-panel input: focus + generate intent tracking ──
+           The .pf-textarea is readonly (visual demo), so we instrument
+           the first click on it as "focus intent" and the .pf-gen-btn
+           click as a signup_button_clicked signal (same event name used
+           by all other signup paths so the funnel aggregates correctly). */
+        var _heroFocusFired = false;
+        var pfTextarea = document.querySelector('.pf-textarea');
+        if (pfTextarea) {
+            pfTextarea.addEventListener('click', function () {
+                if (!_heroFocusFired) {
+                    _heroFocusFired = true;
+                    window.mp && window.mp.track && window.mp.track('hero_input_focused', { location: 'hero' });
+                }
+            });
+        }
+        var pfGenBtn = document.querySelector('.pf-gen-btn');
+        if (pfGenBtn) {
+            pfGenBtn.addEventListener('click', function () {
+                window.mp && window.mp.track && window.mp.track('signup_button_clicked', { location: 'hero_input', plan_context: null });
+                if (!isLoggedIn()) {
+                    openSignupModal();
+                }
+            });
+        }
+
         /* ── Signup Modal: Close ── */
         document.querySelectorAll('.signup-modal-close').forEach(function (btn) {
             btn.addEventListener('click', closeSignupModal);

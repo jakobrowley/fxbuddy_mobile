@@ -82,17 +82,25 @@ document.addEventListener('DOMContentLoaded', () => {
     //    Any other .lazy-autoplay videos (none today, but keep the path)
     //    use the solo observer below.
     if ('IntersectionObserver' in window) {
+        // Stagger video start across sliders so we don't kick off 8 H.264 decoders
+        // in the same frame on weak mobile CPUs. Each newly-intersecting card waits
+        // an extra 120ms — the poster image covers the gap so it's visually invisible.
+        let baStartDelay = 0;
         const baObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const vids = entry.target.querySelectorAll('video');
                 if (entry.isIntersecting) {
-                    vids.forEach(v => { try { v.currentTime = 0; } catch (_) {} });
-                    Promise.all(Array.from(vids).map(v => v.play().catch(() => {})));
+                    const delay = baStartDelay;
+                    baStartDelay += 120;
+                    setTimeout(() => {
+                        vids.forEach(v => { try { v.currentTime = 0; } catch (_) {} });
+                        Promise.all(Array.from(vids).map(v => v.play().catch(() => {})));
+                    }, delay);
                 } else {
                     vids.forEach(v => v.pause());
                 }
             });
-        }, { rootMargin: '200px' });
+        }, { rootMargin: '100px' });
         document.querySelectorAll('.ba-slider').forEach(s => baObserver.observe(s));
 
         const soloVideos = document.querySelectorAll('video.lazy-autoplay:not(.ba-slider video)');
@@ -105,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         entry.target.pause();
                     }
                 });
-            }, { rootMargin: '200px' });
+            }, { rootMargin: '100px' });
             soloVideos.forEach(v => soloObserver.observe(v));
         }
     } else {

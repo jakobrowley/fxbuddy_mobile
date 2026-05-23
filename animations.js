@@ -15,12 +15,28 @@
   const urlDisabled = new URLSearchParams(window.location.search).get('gsap') === '0';
   if (!GSAP_ENABLED || urlDisabled) return;
 
-  if (!window.gsap || !window.ScrollTrigger) {
-    console.warn('[fxbuddy] GSAP not loaded — falling back to CSS animations.');
+  if (!window.gsap) {
+    console.warn('[fxbuddy] GSAP core not loaded — falling back to CSS animations.');
     return;
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+  // ScrollTrigger may be loaded dynamically via loadGsapPlugin().
+  // Wait for it before proceeding; fall back gracefully if unavailable.
+  var pluginReady = (typeof window.loadGsapPlugin === 'function')
+    ? window.loadGsapPlugin('ScrollTrigger')
+    : (window.ScrollTrigger ? Promise.resolve(window.ScrollTrigger) : Promise.reject());
+
+  pluginReady
+    .then(function () {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })
+    .catch(function () {
+      console.warn('[fxbuddy] ScrollTrigger unavailable — falling back to CSS animations.');
+    });
 
   function init() {
     gsap.registerPlugin(ScrollTrigger);

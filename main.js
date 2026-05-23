@@ -1,3 +1,27 @@
+// ── GSAP plugin dynamic loader ────────────────────────────────
+// Idempotent: returns a cached Promise if the plugin was already requested.
+// Usage: window.loadGsapPlugin('ScrollTrigger').then(() => { /* use it */ });
+(function () {
+    const GSAP_CDN = 'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/';
+    const _promises = {};
+    window.loadGsapPlugin = function (name) {
+        if (_promises[name]) return _promises[name];
+        // If already on window (e.g. static script tag still present), resolve immediately.
+        if (window[name]) {
+            _promises[name] = Promise.resolve(window[name]);
+            return _promises[name];
+        }
+        _promises[name] = new Promise(function (resolve, reject) {
+            var s = document.createElement('script');
+            s.src = GSAP_CDN + name + '.min.js';
+            s.onload = function () { resolve(window[name]); };
+            s.onerror = function () { reject(new Error('Failed to load GSAP plugin: ' + name)); };
+            document.head.appendChild(s);
+        });
+        return _promises[name];
+    };
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // ── 1. Theme toggle ──────────────────────────────────────────
@@ -72,15 +96,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
     // ── 5b. Lazy autoplay for B/A grid videos ───────────────────
-    //    Videos use preload="none" + class="lazy-autoplay" so they don't
-    //    download until they scroll into view. 200px rootMargin ensures
-    //    playback starts slightly before the element is visible.
+    //    Videos use preload="none" + data-src + class="lazy-autoplay" so they
+    //    don't download until they scroll into view. On intersect, src is
+    //    assigned from data-src before play() is called (idempotent — once src
+    //    is set, subsequent intersects skip the assignment).
     //
     //    For B/A sliders (.ba-slider), the before/after pair must start
     //    together. We observe the slider container, not the videos, so
     //    both get a single synchronous play() call inside one microtask.
-    //    Any other .lazy-autoplay videos (none today, but keep the path)
-    //    use the solo observer below.
+    //    Any other .lazy-autoplay videos use the solo observer below.
+
+    // Helper: assign src from data-src if not yet done.
+    function loadVideoSrc(v) {
+        if (!v.src && v.dataset.src) {
+            v.src = v.dataset.src;
+        }
+    }
+
     if ('IntersectionObserver' in window) {
         // Stagger video start across sliders so we don't kick off 8 H.264 decoders
         // in the same frame on weak mobile CPUs. Each newly-intersecting card waits
@@ -93,14 +125,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     const delay = baStartDelay;
                     baStartDelay += 120;
                     setTimeout(() => {
-                        vids.forEach(v => { try { v.currentTime = 0; } catch (_) {} });
+                        vids.forEach(v => {
+                            loadVideoSrc(v);
+                            try { v.currentTime = 0; } catch (_) {}
+                        });
                         Promise.all(Array.from(vids).map(v => v.play().catch(() => {})));
                     }, delay);
                 } else {
                     vids.forEach(v => v.pause());
                 }
             });
-        }, { rootMargin: '100px' });
+        }, { rootMargin: '200px 0px' });
         document.querySelectorAll('.ba-slider').forEach(s => baObserver.observe(s));
 
         const soloVideos = document.querySelectorAll('video.lazy-autoplay:not(.ba-slider video)');
@@ -108,17 +143,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const soloObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
+                        loadVideoSrc(entry.target);
                         entry.target.play().catch(() => {});
                     } else {
                         entry.target.pause();
                     }
                 });
-            }, { rootMargin: '100px' });
+            }, { rootMargin: '200px 0px' });
             soloVideos.forEach(v => soloObserver.observe(v));
         }
     } else {
-        // Fallback: play every lazy-autoplay video immediately.
-        document.querySelectorAll('video.lazy-autoplay').forEach(v => v.play().catch(() => {}));
+        // Fallback: load and play every lazy-autoplay video immediately.
+        document.querySelectorAll('video.lazy-autoplay').forEach(v => {
+            loadVideoSrc(v);
+            v.play().catch(() => {});
+        });
     }
 
     // ── 6. Mascot instances ──────────────────────────────────────

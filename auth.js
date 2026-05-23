@@ -897,11 +897,22 @@
         closeSignupModal:   closeSignupModal
     };
 
-    /* ── Auto-Init ── */
+    /* ── Auto-Init ──
+       Deferred behind requestIdleCallback (with setTimeout fallback) so auth
+       never competes with first paint. DOMContentLoaded has already fired by
+       the time this deferred script runs, so we go straight to idle queuing. */
+    var scheduleInit = function () {
+        if (typeof requestIdleCallback === 'function') {
+            requestIdleCallback(init, { timeout: 2000 });
+        } else {
+            setTimeout(init, 1);
+        }
+    };
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', scheduleInit);
     } else {
-        init();
+        scheduleInit();
     }
 
 })();

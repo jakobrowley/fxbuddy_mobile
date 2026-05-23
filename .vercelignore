@@ -4,3 +4,5 @@ node_modules/
 *.md
 .vscode/
 .playwright-mcp/
+assets/ba/_originals/
+styles.src.css

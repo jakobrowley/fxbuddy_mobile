@@ -1,3 +1,77 @@
+// ── First-interaction deferred loader ─────────────────────────
+// Fires fn once on the first of: scroll, pointerdown, keydown, or 3s timeout.
+// Use to defer non-critical script downloads (e.g. auth, promo) until the user
+// shows intent, freeing critical-path bandwidth for first paint.
+window.onFirstInteraction = (function () {
+    var fired = false, queue = [];
+    function go() {
+        if (fired) return;
+        fired = true;
+        ['scroll','pointerdown','keydown','touchstart'].forEach(function(ev){
+            window.removeEventListener(ev, go, { passive: true, capture: true });
+        });
+        queue.forEach(function(fn){ try { fn(); } catch(e){ console.error(e); } });
+        queue = null;
+    }
+    ['scroll','pointerdown','keydown','touchstart'].forEach(function(ev){
+        window.addEventListener(ev, go, { passive: true, capture: true });
+    });
+    setTimeout(go, 3000);
+    return function (fn) {
+        if (fired) { try { fn(); } catch(e){ console.error(e); } }
+        else queue.push(fn);
+    };
+})();
+
+// Inject a script tag and return a promise that resolves on load.
+function injectScript(src) {
+    return new Promise(function (resolve, reject) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.async = false;  // preserve execution order if multiple
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+    });
+}
+
+// Schedule non-critical scripts to load on first interaction.
+window.onFirstInteraction(function () {
+    injectScript('/mascot.js').then(function () {
+        // ── Mascot instances (hero + CTA) ──────────────────────
+        window.heroMascot = new Mascot({
+            container: document.getElementById('hero-mascot'),
+            hasZzz: false,
+            hasPhysicsBody: true,
+        });
+
+        window.ctaMascot = new Mascot({
+            container: document.getElementById('cta-mascot'),
+            eyesSelector: '.cta-eyes',
+            eyeOvalSelector: '.cta-eye-oval',
+            eyePathSelector: '.cta-eye-path',
+            bodySelector: '.cta-mascot-body',
+            hasZzz: false,
+            hasPhysicsBody: true,
+            maxMove: 5,
+            springStiffness: 0.06,
+            damping: 0.8,
+        });
+        if (window.ctaMascot) window.ctaMascot.setStatus('success');
+
+        // ── Plugin mascot (desktop only) ───────────────────────
+        if (window.matchMedia('(min-width: 769px)').matches) {
+            window.pluginMascot = new Mascot({
+                container: document.getElementById('plugin-mascot'),
+                hasZzz: false,
+                hasPhysicsBody: true,
+            });
+        }
+    });
+    injectScript('/auth.js');
+    injectScript('/founders-promo.js');
+});
+
 // ── GSAP plugin dynamic loader ────────────────────────────────
 // Idempotent: returns a cached Promise if the plugin was already requested.
 // Usage: window.loadGsapPlugin('ScrollTrigger').then(() => { /* use it */ });
@@ -161,27 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ── 6. Mascot instances ──────────────────────────────────────
-    window.heroMascot = new Mascot({
-        container: document.getElementById('hero-mascot'),
-        hasZzz: false,
-        hasPhysicsBody: true,
-    });
-
-    window.ctaMascot = new Mascot({
-        container: document.getElementById('cta-mascot'),
-        eyesSelector: '.cta-eyes',
-        eyeOvalSelector: '.cta-eye-oval',
-        eyePathSelector: '.cta-eye-path',
-        bodySelector: '.cta-mascot-body',
-        hasZzz: false,
-        hasPhysicsBody: true,
-        maxMove: 5,
-        springStiffness: 0.06,
-        damping: 0.8,
-    });
-
-    // CTA mascot starts happy
-    if (window.ctaMascot) window.ctaMascot.setStatus('success');
+    //    Mascots are instantiated after mascot.js loads via onFirstInteraction
+    //    (defined at top of this file). Hover handlers below guard with
+    //    if (window.heroMascot) so they are safe before that fires.
 
     // ── 7. Smooth scroll for anchor links ────────────────────────
     document.querySelectorAll('a[href^="#"]').forEach(a => {
